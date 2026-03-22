@@ -1,6 +1,6 @@
 services:
   axonasp:
-    image: ghcr.io/axonasp/axonasp:latest
+    image: ghcr.io/guimaraeslucas/axonasp:latest
     container_name: axonasp-prod
     ports:
       - "4050:4050"

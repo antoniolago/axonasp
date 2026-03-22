@@ -449,10 +449,10 @@ AxonASP provides Docker images for containerized deployments:
 
 ```bash
 # Run latest image from GitHub Container Registry
-docker run -d -p 4050:4050 -v ./www:/app/www -v ./.env:/app/.env ghcr.io/axonasp/axonasp:latest
+docker run -d -p 4050:4050 -v ./www:/app/www -v ./.env:/app/.env ghcr.io/guimaraeslucas/axonasp:latest
 
 # Or with docker-compose
-git clone https://github.com/axonasp/axonasp.git
+git clone https://github.com/guimaraeslucas/axonasp.git
 cd axonasp
 docker-compose -f docker-compose-dev.yaml up -d
 # or
