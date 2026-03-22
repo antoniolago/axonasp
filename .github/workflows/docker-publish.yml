@@ -27,6 +27,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME_CGI: ${{ github.repository }}-cgi
 
 jobs:
   # ─── Job 1: Unit & Integration Tests ───────────────────────────────────────
@@ -88,25 +89,22 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract Docker metadata (tags & labels)
+      # ─── Build and push axonasp image (standalone) ──────────────────────────
+      - name: Extract metadata for axonasp
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            # Branch push → :latest (main only) and :sha-<short>
             type=raw,value=latest,enable={{is_default_branch}}
             type=sha,prefix=sha-,format=short
-            # Semver tags → :v1.2.3, :1.2, :1
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-            # Branch name tag (e.g. :main)
             type=ref,event=branch
-            # PR tag (not pushed, but useful for labeling)
             type=ref,event=pr
 
-      - name: Build and push Docker image
+      - name: Build and push axonasp image
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -117,7 +115,37 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             VERSION=${{ steps.version.outputs.value }}
-          # GitHub Actions cache for faster rebuilds
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: false
+
+      # ─── Build and push axonaspcgi image (FastCGI) ─────────────────────────
+      - name: Extract metadata for axonaspcgi
+        id: meta-cgi
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_CGI }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha,prefix=sha-,format=short
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=ref,event=branch
+            type=ref,event=pr
+
+      - name: Build and push axonaspcgi image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          target: fastcgi
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta-cgi.outputs.tags }}
+          labels: ${{ steps.meta-cgi.outputs.labels }}
+          build-args: |
+            VERSION=${{ steps.version.outputs.value }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           provenance: false

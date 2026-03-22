@@ -445,7 +445,13 @@ SERVER_PORT=4052 WEB_ROOT=./app3/www ./axonasp
 
 ## Docker
 
-AxonASP provides Docker images for containerized deployments:
+AxonASP provides Docker images for containerized deployments with **two production options**:
+
+**Available Images:**
+- `ghcr.io/guimaraeslucas/axonasp` - Standalone HTTP server
+- `ghcr.io/guimaraeslucas/axonasp-cgi` - FastCGI application server
+
+### Quick Start (Standalone Mode)
 
 ```bash
 # Run latest image from GitHub Container Registry
@@ -455,9 +461,45 @@ docker run -d -p 4050:4050 -v ./www:/app/www -v ./.env:/app/.env ghcr.io/guimara
 git clone https://github.com/guimaraeslucas/axonasp.git
 cd axonasp
 docker-compose -f docker-compose-dev.yaml up -d
-# or
-# docker-compose -f docker-compose-production.yaml up -d
 ```
+
+### Production Deployment Options
+
+#### Option 1: Standalone Mode (Simple)
+Best for: Smaller deployments, simple infrastructure, quick setup
+
+```bash
+docker-compose -f docker-compose-production.yaml up -d
+```
+
+Features:
+- Single container with built-in HTTP server
+- Simple configuration
+
+#### Option 2: FastCGI Mode with Nginx (High Traffic)
+Best for: High-traffic sites, existing nginx infrastructure, advanced caching needs
+
+```bash
+# Using docker-compose (recommended)
+docker-compose -f docker-compose-production-fastcgi.yaml up -d
+
+# Or run FastCGI image directly
+docker run -d -p 9000:9000 -v ./www:/app/www -v ./.env:/app/.env ghcr.io/guimaraeslucas/axonasp-cgi:latest
+```
+
+Features:
+- **Nginx** handles static files (faster)
+- **AxonASP FastCGI** processes ASP files
+- Native HTTPS/SSL support via nginx
+- Advanced caching and compression
+- Better performance under load
+
+Setup requirements:
+1. Place SSL certificates in `./ssl/` folder (optional but recommended to enable HTTPS)
+2. Configure `.env` with your settings
+3. Run the compose file
+
+The nginx configuration is at `docker/nginx-fastcgi.conf` - customize as needed.
 
 ---
 
