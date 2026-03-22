@@ -1,8 +1,11 @@
 # Binaries
 axonasp.exe
 axonaspcgi.exe
-axonasp
-axonaspcgi
+
+# Exclude root-level binaries but include source directories
+/axonasp
+/axonaspcgi
+!axonaspcgi/
 
 # Build output
 build/

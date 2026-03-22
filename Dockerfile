@@ -36,7 +36,9 @@ RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} \
 RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} \
     go build -trimpath \
     -ldflags "-s -w -X main.Version=${VERSION}" \
-    -o axonaspcgi ./axonaspcgi
+    -o /tmp/axonaspcgi ./axonaspcgi/ && \
+    rm -rf /build/axonaspcgi && \
+    mv /tmp/axonaspcgi /build/axonaspcgi
 
 # ─── Stage 2: Runtime ─────────────────────────────────────────────────────────
 FROM alpine:3.21
