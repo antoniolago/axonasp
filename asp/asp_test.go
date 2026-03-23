@@ -236,7 +236,7 @@ func TestASPParser_QuickerSiteDefault(t *testing.T) {
 	defaultPath := filepath.Join(rootDir, "QuickerSite-test", "default.asp")
 	content, err := ReadFileText(defaultPath)
 	if err != nil {
-		t.Fatalf("failed to read ckeditor.asp: %v", err)
+		t.Fatalf("failed to read default.asp: %v", err)
 	}
 
 	options := NewASPParsingOptions()
