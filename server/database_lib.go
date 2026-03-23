@@ -23,6 +23,7 @@ package server
 import (
 	"database/sql"
 	"fmt"
+	"net/url"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -945,7 +946,9 @@ func parseConnectionString(connStr string) (driver string, dsn string) {
 		if dbq != "" {
 			// Dbq can be a TNS name or a full connection descriptor
 			// Format: oracle://user:pass@dbq_string
-			dsn = fmt.Sprintf("oracle://%s:%s@%s", uid, pwd, dbq)
+			// URL encode password to handle special characters like #
+			pwdEncoded := url.QueryEscape(pwd)
+			dsn = fmt.Sprintf("oracle://%s:%s@%s", uid, pwdEncoded, dbq)
 			return
 		}
 		
@@ -956,13 +959,16 @@ func parseConnectionString(connStr string) (driver string, dsn string) {
 		}
 		serviceName := firstNonEmpty(params["service name"], params["servicename"], database)
 		sid := params["sid"]
+		
+		// URL encode password to handle special characters like #
+		pwdEncoded := url.QueryEscape(pwd)
 
 		if serviceName != "" {
-			dsn = fmt.Sprintf("oracle://%s:%s@%s:%s/%s", uid, pwd, server, port, serviceName)
+			dsn = fmt.Sprintf("oracle://%s:%s@%s:%s/%s", uid, pwdEncoded, server, port, serviceName)
 		} else if sid != "" {
-			dsn = fmt.Sprintf("oracle://%s:%s@%s:%s/%s", uid, pwd, server, port, sid)
+			dsn = fmt.Sprintf("oracle://%s:%s@%s:%s/%s", uid, pwdEncoded, server, port, sid)
 		} else if server != "" {
-			dsn = fmt.Sprintf("oracle://%s:%s@%s:%s", uid, pwd, server, port)
+			dsn = fmt.Sprintf("oracle://%s:%s@%s:%s", uid, pwdEncoded, server, port)
 		}
 		return
 	}
