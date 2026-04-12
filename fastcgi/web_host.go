@@ -65,6 +65,9 @@ type FastCGIHost struct {
 }
 
 // NewFastCGIHost creates a host object bound to one FastCGI request.
+// It properly handles FastCGI parameters (DOCUMENT_ROOT, SCRIPT_NAME) passed by
+// reverse proxies like nginx and Apache, allowing AxonASP to serve multiple
+// document roots from a single FastCGI process.
 func NewFastCGIHost(w http.ResponseWriter, r *http.Request) *FastCGIHost {
 	session, isNew := loadOrCreateFastCGISession(r)
 
@@ -79,8 +82,24 @@ func NewFastCGIHost(w http.ResponseWriter, r *http.Request) *FastCGIHost {
 	host.response.SetRequest(r)
 	host.response.SetMaxBufferBytes(ResponseBufferLimitBytes)
 	host.request.SetHTTPRequest(r)
-	host.server.SetRootDir(RootDir)
-	host.server.SetRequestPath(r.URL.Path)
+
+	// Resolve the effective document root for this specific FastCGI request.
+	// In FastCGI mode, each virtual host can provide its own DOCUMENT_ROOT.
+	effectiveRoot := RootDir
+	if documentRoot := getFastCGIParam(r, "DOCUMENT_ROOT"); documentRoot != "" {
+		effectiveRoot = documentRoot
+	}
+	host.server.SetRootDir(effectiveRoot)
+
+	// SCRIPT_NAME from FastCGI is already consumed by cgi.RequestFromMap and exposed
+	// as r.URL.Path. Use it directly so relative MapPath/Execute semantics follow
+	// the current script path under this request's DOCUMENT_ROOT.
+	scriptName := r.URL.Path
+	if scriptName == "" {
+		scriptName = "/"
+	}
+
+	host.server.SetRequestPath(scriptName)
 	_ = host.server.SetScriptTimeout(ScriptTimeout)
 
 	for key, values := range r.URL.Query() {
@@ -115,8 +134,9 @@ func NewFastCGIHost(w http.ResponseWriter, r *http.Request) *FastCGIHost {
 	host.request.ServerVars.Add("REQUEST_METHOD", r.Method)
 	host.request.ServerVars.Add("SERVER_NAME", fastCGIRequestServerName(r))
 	host.request.ServerVars.Add("SERVER_PORT", fastCGIRequestServerPort(r))
-	host.request.ServerVars.Add("SCRIPT_NAME", r.URL.Path)
-	host.request.ServerVars.Add("URL", r.URL.Path)
+	host.request.ServerVars.Add("DOCUMENT_ROOT", effectiveRoot)
+	host.request.ServerVars.Add("SCRIPT_NAME", scriptName)
+	host.request.ServerVars.Add("URL", scriptName)
 	host.request.ServerVars.Add("HTTP_USER_AGENT", r.UserAgent())
 	host.request.ServerVars.Add("HTTP_ACCEPT_LANGUAGE", r.Header.Get("Accept-Language"))
 	host.request.ServerVars.Add("CONTENT_LENGTH", strconv.FormatInt(host.request.TotalBytes(), 10))

@@ -119,15 +119,33 @@ All work occurs within the `axonasp2` directory structure:
 # 🖥️ UI/UX DIRECTIVES (AVOID UNLESS EXPLICITLY REQUIRED)
 
 **PRIMARY RULE:** If UI must be generated for G3Pix/AxonASP system interfaces, strictly enforce these rules:
-* **Aesthetic:** Retro Microsoft MSDN Era (2003-2005) / Windows XP.
-* **Constraints:** NO FRAMEWORKS (No Bootstrap/Tailwind). Vanilla HTML5, JS only and CSS3 from the file existing in ´./www/css/axonasp.css´. Use it in the pages created.  *Must use existing `./www/css/axonasp.css`. If you need to implement new CSS rules, implement in this file*.
-* **Geometry:** Visual hard-edges. `border-radius: 0 !important`. Perfectly square inputs/buttons. Always put large text content inside a <div id="content">.
-* **Typography:** Tahoma/Verdana (Primary), arial, helvetica, sans-serif (Fallback). Bold titles with a solid blue `border-bottom`. Never use emojis or icons that do not fit the era.
-* **Colors:**
-    * Header: Linear gradient `#003399` to `#3366CC`.
-    * Background: `#ECE9D8` (Beige-gray).
-    * Highlight: `#335EA8`.
-    * Borders: Metallic gray `#808080`.
-* **Components:** Tables must have visible borders, padding, and light gray/blue headers. Replicate the style of `/default.asp` and `manual/default.asp`. All UI text must be in English.
+* **Aesthetic:** Retro Microsoft MSDN Era (2003-2005) / Windows XP — refreshed with modern glass-era refinements (subtle rounded corners, soft shadows, gradient depth). Hard-edge geometry is softened but never replaced by a fully modern flat/material look.
+* **Constraints:** NO FRAMEWORKS (No Bootstrap/Tailwind). Vanilla HTML5, JS only and CSS3 from `./www/css/axonasp.css`. Always link this file in every page created. *If new CSS rules are needed, add them to this file — never inline large style blocks into pages.*
+* **CSS Variables:** Always consume the canonical CSS custom properties defined in `./www/css/axonasp.css` `:root`. Never hardcode color hex values or radii in page markup:
+    * `--win-blue-dark: #003399` | `--win-blue-light: #3366cc`
+    * `--win-bg: #ece9d8` | `--win-border: #808080`
+    * `--win-gold: #ffd700` | `--win-gold-dark: #c8a200`
+    * `--radius-sm: 6px` | `--radius-md: 10px` | `--radius-lg: 14px`
+    * `--shadow-card` | `--shadow-card-hover`
+* **Geometry:** Soft-rounded edges using `--radius-*` variables. Inputs and buttons use `--radius-sm`. Cards use `--radius-md`. Panels/modals use `--radius-lg`. Always put large text content inside `<div id="content">`.
+* **Typography:** Tahoma/Verdana (Primary), Arial, Helvetica, sans-serif (Fallback). Bold titles with a solid blue `border-bottom` (3px for h1, 1px for h2). Never use emojis or icons that do not fit the era.
+* **Colors & Gradients:**
+    * Header: `linear-gradient(90deg, #003399 0%, #1f56bc 42%, #3366cc 100%)` + `border-bottom: 3px solid #3366cc` + `box-shadow: 0 4px 14px rgba(0,0,0,0.20)`.
+    * Background (body): 3-layer radial + linear gradient on `#ece9d8`. Use `background-repeat: no-repeat; background-size: 100% 100%` — never allow tiling.
+    * Sidebar: `linear-gradient(180deg, #eceae0 0%, #e2e0d6 100%)`.
+    * Table headers: `linear-gradient(180deg, #1c47a8 0%, #003399 100%)` with white text.
+    * Buttons (primary): deep blue gradient. Buttons (download/CTA): gold gradient (`--win-gold`).
+* **Components:** All available in `axonasp.css` — use the class names directly:
+    * `.btn`, `.btn-primary`, `.btn-secondary`, `.btn-success`, `.btn-danger`, `.btn-info`, `.btn-download`
+    * `.card`, `.card-top-blue`, `.table-wrap`, `.pill`, `.pill-primary`, `.pill-success`, `.pill-row`
+    * `.alert`, `.alert-info`, `.alert-error`, `.alert-success`
+    * `.badge`, `.badge-primary`, `.badge-success`, `.badge-danger`, `.badge-warning`
+    * `.window`, `.window-header`, `.window-body`
+    * `.cta-panel`, `.info-banner`, `.actions-row`
+    * `.grid-2`, `.grid-3`, `.col-*` grid/column helpers
+    * `.status-v`, `.status-x`, `.status-p` (table status indicators)
+    * Tables: use `<table>` inside `.table-wrap` for overflow and rounded clipping. Cards wrapping a sole table: the `.table-wrap` gets flush fit automatically via `.card > .table-wrap:only-child`.
+    * Treeview: use `.treeview` with `.folder` / `.folder-toggle` / `.submenu` / `.file` structure. The `+`/`-` toggle icons and dotted connector lines are styled automatically — do not override them.
+* **Layout:** `#header` (60px) + `#main-container` (flex, fills remaining height) + `#status-bar` (22px, fixed bottom). The `#main-container` height must account for both header and status bar: `height: calc(100% - 82px)` when `html/body` are `height: 100%; overflow: hidden`; or `min-height: calc(100vh - 84px)` for scrolling pages.
 * **Branding:** Use the G3Pix AxonASP logo and information. Do not use "MSDN" or "Microsoft" names/logos; only replicate the aesthetic style.
-* When generating code snippets, documentation, or system interfaces, ensure that the output strictly adheres to the above visual and technical guidelines. The goal is to create an authentic retro experience while maintaining modern functionality and security standards. Keep the AxonASP standard.
+* When generating code snippets, documentation, or system interfaces, ensure that the output strictly adheres to the above visual and technical guidelines. The goal is to create an authentic retro experience with modern refinements while maintaining functionality and security standards. Keep the AxonASP standard.

@@ -25,6 +25,7 @@ import (
 	"net"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -235,5 +236,63 @@ func TestNewFastCGIHostLoadsBodyOnBinaryRead(t *testing.T) {
 	}
 	if body.reads == 0 {
 		t.Fatalf("expected body reads after BinaryRead")
+	}
+}
+
+// TestNewFastCGIHostUsesDocumentRootForMapPath verifies FastCGI per-request
+// DOCUMENT_ROOT drives Server.MapPath resolution instead of global RootDir.
+func TestNewFastCGIHostUsesDocumentRootForMapPath(t *testing.T) {
+	tmpDir := t.TempDir()
+	docRoot := filepath.Join(tmpDir, "site-a")
+	if err := os.MkdirAll(filepath.Join(docRoot, "manual", "assets"), 0755); err != nil {
+		t.Fatalf("failed to create doc root layout: %v", err)
+	}
+
+	originalRootDir := RootDir
+	defer func() { RootDir = originalRootDir }()
+	RootDir = filepath.Join(tmpDir, "configured-root")
+
+	req := newFCGIRequest(t, http.MethodGet, "/manual/default.asp", map[string]string{
+		"DOCUMENT_ROOT": docRoot,
+	})
+	rec := httptest.NewRecorder()
+	host := NewFastCGIHost(rec, req)
+
+	resolved := host.Server().MapPath("assets/file.js")
+	want := filepath.Join(docRoot, "manual", "assets", "file.js")
+	wantAbs, err := filepath.Abs(want)
+	if err != nil {
+		t.Fatalf("failed to resolve expected absolute path: %v", err)
+	}
+	if resolved != wantAbs {
+		t.Fatalf("expected MapPath relative resolution %q, got %q", wantAbs, resolved)
+	}
+}
+
+// TestNewFastCGIHostFallsBackToRootDirWithoutDocumentRoot verifies backward
+// compatibility when reverse proxy does not provide DOCUMENT_ROOT.
+func TestNewFastCGIHostFallsBackToRootDirWithoutDocumentRoot(t *testing.T) {
+	tmpDir := t.TempDir()
+	configuredRoot := filepath.Join(tmpDir, "configured-root")
+	if err := os.MkdirAll(filepath.Join(configuredRoot, "manual", "assets"), 0755); err != nil {
+		t.Fatalf("failed to create configured root layout: %v", err)
+	}
+
+	originalRootDir := RootDir
+	defer func() { RootDir = originalRootDir }()
+	RootDir = configuredRoot
+
+	req := httptest.NewRequest(http.MethodGet, "http://example.local/manual/default.asp", nil)
+	rec := httptest.NewRecorder()
+	host := NewFastCGIHost(rec, req)
+
+	resolved := host.Server().MapPath("assets/file.js")
+	want := filepath.Join(configuredRoot, "manual", "assets", "file.js")
+	wantAbs, err := filepath.Abs(want)
+	if err != nil {
+		t.Fatalf("failed to resolve expected absolute path: %v", err)
+	}
+	if resolved != wantAbs {
+		t.Fatalf("expected fallback MapPath relative resolution %q, got %q", wantAbs, resolved)
 	}
 }

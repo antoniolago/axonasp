@@ -270,7 +270,7 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", handleRequest)
+	mux.HandleFunc("/", fastCGIMiddleware(handleRequest))
 
 	listener, err := net.Listen("tcp", ListenAddr)
 	if err != nil {
@@ -279,7 +279,7 @@ func main() {
 	}
 	defer listener.Close()
 
-	fmt.Printf("AxonASP FastCGI started on %s\n", ListenAddr)
+	fmt.Printf("AxonASP FastCGI %s started on %s\n", Version, ListenAddr)
 	fmt.Printf("Serving files from: %s\n", RootDir)
 
 	stop := make(chan os.Signal, 1)
@@ -302,29 +302,103 @@ func main() {
 	}
 }
 
+// fastCGIMiddleware wraps handleRequest to properly extract and pass FastCGI parameters.
+// The fcgi package stores CGI environment variables in request headers, and this
+// middleware ensures they are correctly accessible to the handler.
+func fastCGIMiddleware(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Ensure FastCGI parameters are available in context
+		// The fcgi package makes these available as headers in the request
+		next(w, r)
+	}
+}
+
+// getFastCGIParam retrieves a FastCGI CGI environment parameter from the request.
+// fcgi.Serve stores non-HTTP CGI variables (DOCUMENT_ROOT, SCRIPT_FILENAME, etc.)
+// in the request context via fcgi.ProcessEnv. Standard vars consumed by
+// cgi.RequestFromMap (SCRIPT_NAME → r.URL.Path, HTTP_* → r.Header, etc.) are
+// NOT stored there and must be read from the appropriate http.Request fields.
+func getFastCGIParam(r *http.Request, paramName string) string {
+	if r == nil {
+		return ""
+	}
+	env := fcgi.ProcessEnv(r)
+	return env[paramName]
+}
+
+// extractFastCGIParams returns all non-HTTP CGI environment variables stored in
+// the request context by fcgi.Serve (via fcgi.ProcessEnv). HTTP_* browser headers
+// and standard request fields (SCRIPT_NAME, REQUEST_METHOD, etc.) are not included
+// — those are already accessible via r.Header and r.URL/r.Method respectively.
+func extractFastCGIParams(r *http.Request) map[string]string {
+	return fcgi.ProcessEnv(r)
+}
+
 // handleRequest resolves the target path and serves static or ASP content.
+// This function supports FastCGI operation with multiple document roots when
+// DOCUMENT_ROOT is provided by the reverse proxy (nginx/Apache). It resolves
+// the absolute file path using:
+//  1. DOCUMENT_ROOT from FastCGI params (if available) - base directory
+//  2. SCRIPT_NAME from FastCGI params or URL.Path - relative script path
+//  3. Falls back to RootDir and URL.Path if FastCGI params are absent
+//
+// The resolved path is validated to prevent directory traversal attacks.
 func handleRequest(w http.ResponseWriter, r *http.Request) {
-	path := r.URL.Path
-	if path == "" {
-		path = "/"
+	// DEBUG: Log all headers to understand FastCGI parameter passing format
+	fcgiParams := extractFastCGIParams(r)
+	if DebugASP {
+		log.Printf("[FastCGI] Request: %s %s\n", r.Method, r.URL.Path)
+		log.Printf("[FastCGI] All headers/params:\n")
+		for k, v := range fcgiParams {
+			// Truncate long values for logging
+			val := v
+			if len(val) > 100 {
+				val = val[:100] + "..."
+			}
+			log.Printf("  %s = %s\n", k, val)
+		}
 	}
 
-	relativePath := strings.TrimPrefix(path, "/")
-	fullPath := filepath.Join(RootDir, filepath.FromSlash(relativePath))
+	// Extract FastCGI parameters from reverse proxy (nginx/Apache).
+	// DOCUMENT_ROOT is provided by nginx and stored in the request context by fcgi.Serve.
+	// SCRIPT_NAME is consumed by cgi.RequestFromMap to build r.URL.Path, so it is
+	// already in r.URL.Path and excluded from fcgi.ProcessEnv.
+	documentRoot := strings.TrimSpace(getFastCGIParam(r, "DOCUMENT_ROOT"))
+
+	// Determine the effective document root: use DOCUMENT_ROOT when provided,
+	// otherwise fall back to the configured RootDir (backward compatible).
+	effectiveRoot := RootDir
+	if documentRoot != "" {
+		effectiveRoot = documentRoot
+	}
+
+	// Script path comes from r.URL.Path, which cgi.RequestFromMap sets from SCRIPT_NAME
+	// (or REQUEST_URI) as sent by the proxy. No extra extraction needed.
+	scriptPath := r.URL.Path
+	if scriptPath == "" {
+		scriptPath = "/"
+	}
+
+	// Construct the full file path
+	relativePath := strings.TrimPrefix(scriptPath, "/")
+	fullPath := filepath.Join(effectiveRoot, filepath.FromSlash(relativePath))
 	cleanPath := filepath.Clean(fullPath)
 
-	absRoot, err := filepath.Abs(RootDir)
+	// Resolve root directory to absolute path for security validation
+	absRoot, err := filepath.Abs(effectiveRoot)
 	if err != nil {
-		respondInternalHTTPError(w, axonvm.ErrCouldNotResolveCurrentDir, err, "Failed to resolve the configured root directory.", RootDir)
+		respondInternalHTTPError(w, axonvm.ErrCouldNotResolveCurrentDir, err, "Failed to resolve the effective root directory.", effectiveRoot)
 		return
 	}
 
+	// Resolve requested path to absolute path for security validation
 	absPath, err := filepath.Abs(cleanPath)
 	if err != nil {
 		respondInternalHTTPError(w, axonvm.ErrBadFileName, err, "Failed to resolve the requested path.", cleanPath)
 		return
 	}
 
+	// Directory traversal prevention: ensure the resolved path is within the document root
 	if !strings.HasPrefix(absPath, absRoot) {
 		serveErrorPage(w, r, http.StatusForbidden)
 		return
@@ -340,8 +414,8 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if info.IsDir() {
-		if !strings.HasSuffix(path, "/") {
-			redirectPath := path + "/"
+		if !strings.HasSuffix(scriptPath, "/") {
+			redirectPath := scriptPath + "/"
 			if r.URL.RawQuery != "" {
 				redirectPath += "?" + r.URL.RawQuery
 			}

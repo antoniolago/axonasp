@@ -182,6 +182,9 @@
                     <img src="PoweredBy.png" alt="Powered by AxonASP" />
                 </div>
             </div>
+            <div id="status-bar">
+                <%= Now() %>
+            </div>
         </div>
     </body>
 </html>

@@ -86,15 +86,112 @@ End Function
         <meta charset="UTF-8" />
         <title>AxonASP Documentation Library</title>
         <style>
-            body,
-            html {
+            :root {
+                --win-blue-dark: #003399;
+                --win-blue-light: #3366cc;
+                --win-blue-soft: #c7d7f8;
+                --win-bg: #ece9d8;
+                --win-border: #808080;
+                --win-text: #0f0f0f;
+                --win-muted: #404040;
+                --win-link: #003399;
+                --win-link-hover: #335ea8;
+                --win-gold: #ffd700;
+                --win-gold-dark: #c8a200;
+                --radius-sm: 6px;
+                --radius-md: 10px;
+                --radius-lg: 14px;
+                --shadow-card:
+                    0 4px 16px rgba(0, 51, 153, 0.1),
+                    0 2px 6px rgba(0, 0, 0, 0.07);
+            }
+
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+            }
+
+            html,
+            body {
                 margin: 0;
                 padding: 0;
                 height: 100%;
-                font-family: Tahoma, Verdana, sans-serif;
-                background-color: #ece9d8;
-                color: #000;
                 overflow: hidden;
+                font-family: Tahoma, Verdana, Arial, sans-serif;
+                font-size: 12px;
+                color: var(--win-text);
+                background-color: var(--win-bg);
+                background-image:
+                    radial-gradient(
+                        ellipse at 10% 15%,
+                        rgba(51, 102, 204, 0.1),
+                        transparent 38%
+                    ),
+                    radial-gradient(
+                        ellipse at 88% 8%,
+                        rgba(0, 51, 153, 0.07),
+                        transparent 32%
+                    ),
+                    linear-gradient(
+                        180deg,
+                        #f2efe4 0%,
+                        #ece9d8 40%,
+                        #e4e0cc 100%
+                    );
+                background-repeat: no-repeat;
+                background-size: 100% 100%;
+            }
+
+            /* ── Header ─────────────────────────────────────────── */
+            #header {
+                background: linear-gradient(
+                    90deg,
+                    var(--win-blue-dark) 0%,
+                    #1f56bc 42%,
+                    var(--win-blue-light) 100%
+                );
+                color: #fff;
+                padding: 0 15px;
+                height: 60px;
+                display: flex;
+                align-items: center;
+                border-bottom: 3px solid var(--win-blue-light);
+                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+                z-index: 100;
+            }
+
+            #header h1 {
+                font-family: Tahoma, Verdana, serif;
+                font-style: normal;
+                font-size: 24px;
+                margin: 0 0 0 12px;
+                font-weight: normal;
+                color: #fff;
+                text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.35);
+            }
+
+            #header .logo {
+                margin-right: 3px;
+                flex-shrink: 0;
+            }
+
+            /* ── Main Layout ─────────────────────────────────────── */
+            #main-container {
+                display: flex;
+                height: calc(100% - 82px);
+                border-top: 1px solid #fff;
+            }
+
+            /* ── Sidebar ─────────────────────────────────────────── */
+            #sidebar {
+                width: 300px;
+                background: linear-gradient(180deg, #eceae0 0%, #e2e0d6 100%);
+                border-right: 1px solid var(--win-border);
+                overflow-y: auto;
+                padding: 10px;
+                font-size: 12px;
+                flex-shrink: 0;
             }
 
             #sidebar .section-title {
@@ -102,66 +199,26 @@ End Function
                 margin-top: 15px;
                 margin-bottom: 10px;
                 font-weight: bold;
-                color: #333;
-                border-bottom: 1px solid #aca899;
+                color: #1a3470;
+                border-bottom: 2px solid var(--win-blue-light);
                 text-transform: uppercase;
                 font-size: 11px;
+                letter-spacing: 0.4px;
             }
 
             #sidebar a {
-                color: #000;
+                color: #111;
                 text-decoration: none;
                 display: block;
                 padding: 2px 4px;
             }
 
             #sidebar a:hover {
-                color: #0000ff;
+                color: var(--win-blue-dark);
                 text-decoration: underline;
             }
 
-            #header {
-                background: linear-gradient(to right, #003399, #3366cc);
-                color: #fff;
-                padding: 0 15px;
-                height: 60px;
-                /* Explicit Directive */
-                display: flex;
-                align-items: center;
-                border-bottom: 3px solid #3366cc;
-                z-index: 100;
-            }
-
-            #header h1 {
-                font-family: "Tahoma", "Verdana", serif;
-                font-style: normal;
-                font-size: 24px;
-                margin: 0;
-                font-weight: normal;
-            }
-
-            #header .logo {
-                margin-right: 15px;
-            }
-
-            /* Layout Main */
-            #main-container {
-                display: flex;
-                height: calc(100% - 72px);
-                border-top: 1px solid #fff;
-            }
-
-            /* Sidebar / Tree Navigation */
-            #sidebar {
-                width: 300px;
-                background-color: #e2e2e2;
-                border-right: 1px solid #aca899;
-                overflow-y: auto;
-                padding: 10px;
-                font-size: 12px;
-            }
-
-            /* Content Area */
+            /* ── Content Area ────────────────────────────────────── */
             #content {
                 flex: 1;
                 background-color: #fff;
@@ -169,7 +226,7 @@ End Function
                 padding: 20px 40px;
             }
 
-            /* Tree View Styling */
+            /* ── Treeview — preserved exactly, colors updated ────── */
             .treeview,
             .treeview ul {
                 list-style-type: none;
@@ -189,18 +246,17 @@ End Function
                 position: relative;
             }
 
-            /* Custom icons using CSS pseudo-elements for that retro feel */
             .treeview li.folder > .folder-toggle::before {
                 content: "+";
                 display: inline-block;
                 width: 9px;
                 height: 9px;
                 border: 1px solid #808080;
-                line-height: 7px;
+                line-height: 8px;
                 text-align: center;
                 margin-right: 5px;
                 background: #fff;
-                font-family: monospace;
+                font-family: "Courier New", monospace;
                 font-weight: bold;
                 font-size: 10px;
                 vertical-align: middle;
@@ -214,7 +270,7 @@ End Function
                 display: none;
                 padding-left: 15px;
                 border-left: 1px dotted #aca899;
-                margin-left: 5px;
+                margin-left: 7px;
             }
 
             .treeview li.folder.expanded > ul.submenu {
@@ -229,9 +285,9 @@ End Function
             .treeview li.file::before {
                 content: "";
                 position: absolute;
-                left: 0;
+                left: -15px;
                 top: 10px;
-                width: 10px;
+                width: 31px;
                 border-top: 1px dotted #aca899;
             }
 
@@ -239,32 +295,49 @@ End Function
                 color: #000;
                 text-decoration: none;
                 padding: 1px 2px;
+                display: inline-block;
+                border-radius: 3px;
             }
 
-            .treeview a:hover {
-                color: #0000ff;
+            .treeview a:hover:not(.selected-node) {
+                color: var(--win-blue-dark);
                 text-decoration: underline;
             }
 
-            /* Content Typography */
+            .selected-node,
+            .treeview a.selected-node {
+                background-color: var(--win-blue-dark) !important;
+                color: #fff !important;
+                text-decoration: none;
+            }
+
+            /* ── Content Typography ──────────────────────────────── */
             #content h1 {
                 font-family: Tahoma, Verdana, sans-serif;
-                font-style: normal;
-                color: #000000;
-                font-size: 26px;
-                border-bottom: 2px solid #3366cc;
-                padding-bottom: 3px;
+                color: var(--win-blue-dark);
+                font-size: 22px;
+                border-bottom: 3px solid var(--win-blue-light);
+                padding-bottom: 6px;
                 margin-top: 0;
                 margin-bottom: 15px;
             }
 
             #content h2 {
                 font-family: Tahoma, Verdana, sans-serif;
-                color: #003399;
-                font-size: 18px;
+                color: var(--win-blue-dark);
+                font-size: 16px;
                 margin-top: 25px;
-                border-bottom: 1px solid #e2e2e2;
-                padding-bottom: 2px;
+                border-bottom: 1px solid #c0c8d8;
+                padding-bottom: 3px;
+                margin-bottom: 10px;
+            }
+
+            #content h3 {
+                font-family: Tahoma, Verdana, sans-serif;
+                color: #0e2f78;
+                font-size: 14px;
+                margin-top: 18px;
+                margin-bottom: 7px;
             }
 
             #content p,
@@ -274,26 +347,52 @@ End Function
                 color: #333;
             }
 
+            #content ul,
+            #content ol {
+                padding-left: 20px;
+                margin-bottom: 12px;
+            }
+
+            #content ul {
+                list-style: disc;
+            }
+
+            #content ol {
+                list-style: decimal;
+            }
+
             #content pre {
-                background-color: #f8f8f8;
-                border-left: 4px solid #3366cc;
+                background-color: #f0f3f8;
+                border-left: 4px solid var(--win-blue-light);
                 border-right: 1px solid #ccc;
                 border-top: 1px solid #ccc;
                 border-bottom: 1px solid #ccc;
-                padding: 10px;
+                border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+                padding: 12px 14px;
                 overflow-x: auto;
                 font-family: "Courier New", Courier, monospace;
                 font-size: 12px;
+                line-height: 1.6;
                 margin: 15px 0;
             }
 
             #content code {
                 font-family: "Courier New", Courier, monospace;
-                background-color: #f0f0f0;
-                padding: 1px 3px;
+                background: rgba(0, 51, 153, 0.07);
+                border: 1px solid rgba(0, 51, 153, 0.14);
+                border-radius: 3px;
+                padding: 1px 5px;
+                font-size: 11px;
             }
 
-            /* Tables */
+            #content pre code {
+                background: none;
+                border: none;
+                padding: 0;
+                font-size: 12px;
+            }
+
+            /* ── Tables ──────────────────────────────────────────── */
             #content table {
                 border-collapse: collapse;
                 width: 100%;
@@ -304,39 +403,50 @@ End Function
             #content table th,
             #content table td {
                 border: 1px solid #aca899;
-                padding: 8px;
+                padding: 8px 10px;
                 text-align: left;
             }
 
             #content table th {
-                background-color: #e2e2e2;
+                background: linear-gradient(
+                    180deg,
+                    #1c47a8 0%,
+                    var(--win-blue-dark) 100%
+                );
                 font-weight: bold;
+                color: #fff;
             }
 
-            /* Status Bar */
+            #content table tr:nth-child(even) td {
+                background-color: #f4f6fa;
+            }
+
+            #content table tr:hover td {
+                background-color: #edf3ff;
+                color: #0a1f55;
+            }
+
+            /* ── Blockquote ──────────────────────────────────────── */
+            blockquote {
+                margin: 14px 0;
+                padding: 8px 14px;
+                background: linear-gradient(135deg, #eaf0fc 0%, #dce9ff 100%);
+                border: 1px solid #8097c4;
+                border-left: 4px solid var(--win-blue-dark);
+                border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+                color: #001a4d;
+            }
+
+            /* ── Status Bar ──────────────────────────────────────── */
             #status-bar {
                 height: 22px;
-                background-color: #ece9d8;
+                background-color: var(--win-bg);
                 border-top: 1px solid #aca899;
                 font-size: 11px;
                 padding: 0 10px;
                 display: flex;
                 align-items: center;
                 color: #000;
-            }
-
-            .selected-node {
-                background-color: #335ea8;
-                color: white !important;
-            }
-
-            blockquote {
-                margin: 14px 0;
-                padding: 5px 12px;
-                background-color: #e6eefb;
-                border: 1px solid #8097c4;
-                border-left: 4px solid #003399;
-                color: #001a4d;
             }
         </style>
     </head>
@@ -376,9 +486,19 @@ End Function
                             width: 100%;
                             box-sizing: border-box;
                             font-size: 11px;
-                            font-family: Tahoma;
+                            font-family: Tahoma, Verdana, sans-serif;
                             border: 1px solid #aca899;
-                            padding: 2px;
+                            border-radius: 4px;
+                            padding: 3px 6px;
+                            background: #fff;
+                            transition:
+                                border-color 0.15s,
+                                box-shadow 0.15s;
+                        "
+                        onfocus="this.style.borderColor='#3366cc';this.style.boxShadow='0 0 0 2px rgba(51,102,204,0.18)'"
+                        onblur="
+                            this.style.borderColor = '#aca899';
+                            this.style.boxShadow = '';
                         "
                     />
                 </div>
