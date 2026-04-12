@@ -4,10 +4,8 @@
   <img src="www/axonasp.svg" alt="G3Pix AxonASP Logo" width="400"/>
 </p>
 
-<h1 align="center">G3Pix AxonASP</h1>
-
 <p align="center">
-  **Supercharge your legacy code. Build blazing-fast modern APIs. Experience Classic ASP like never before.**
+  <b> Supercharge your legacy code. Build blazing-fast modern APIs. Experience Classic ASP like never before. </b>
   <br>
   Run your new and legacy ASP Classic applications with modern speed and cross-platform compatibility
 </p>
