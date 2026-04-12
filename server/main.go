@@ -350,14 +350,14 @@ func main() {
 
 	httpServer := &http.Server{
 		Addr:    ":" + Port,
-		Handler: mux,
+		Handler: withServerHeader(mux),
 	}
 
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
 
 	go func() {
-		fmt.Println("\033[H\033[2J\033[1mG3Pix AxonASP Server >\033[0m")
+		fmt.Printf("\033[H\033[2J\033[1mG3Pix AxonASP Server %s >\033[0m\n", Version)
 		fmt.Print("\033]11;#3b6ea5\007\033[1;37m")
 		fmt.Println("--------------------")
 		fmt.Printf("HTTP Server starting on port %s\n", Port)
@@ -387,6 +387,15 @@ func main() {
 	}
 
 	fmt.Println("Server exited gracefully.")
+}
+
+// withServerHeader ensures every HTTP response advertises the AxonASP server header.
+func withServerHeader(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Server", "AxonASP")
+		w.Header().Set("X-Powered-By", "AxonASP")
+		next.ServeHTTP(w, r)
+	})
 }
 
 // registerPprofHandlers exposes runtime profiling endpoints on the main server mux.

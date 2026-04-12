@@ -304,11 +304,10 @@ func main() {
 
 // fastCGIMiddleware wraps handleRequest to properly extract and pass FastCGI parameters.
 // The fcgi package stores CGI environment variables in request headers, and this
-// middleware ensures they are correctly accessible to the handler.
+// middleware also ensures FastCGI responses advertise AxonASP via X-Powered-By.
 func fastCGIMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// Ensure FastCGI parameters are available in context
-		// The fcgi package makes these available as headers in the request
+		w.Header().Set("X-Powered-By", "AxonASP")
 		next(w, r)
 	}
 }

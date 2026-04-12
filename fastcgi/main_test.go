@@ -213,6 +213,21 @@ func TestGetFastCGIParam(t *testing.T) {
 	}
 }
 
+// TestFastCGIMiddlewareSetsPoweredByHeader verifies FastCGI responses emit X-Powered-By: AxonASP.
+func TestFastCGIMiddlewareSetsPoweredByHeader(t *testing.T) {
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "http://example.local/", nil)
+	handler := fastCGIMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNoContent)
+	})
+
+	handler(rec, req)
+
+	if got := rec.Header().Get("X-Powered-By"); got != "AxonASP" {
+		t.Fatalf("expected X-Powered-By header AxonASP, got %q", got)
+	}
+}
+
 // TestHandleRequestWithDocumentRoot verifies that handleRequest correctly
 // resolves files using DOCUMENT_ROOT from FastCGI parameters.
 func TestHandleRequestWithDocumentRoot(t *testing.T) {

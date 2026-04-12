@@ -26,6 +26,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"sync"
 
 	"g3pix.com.br/axonasp/axonvm"
@@ -215,6 +216,7 @@ func (h *WebHost) setSessionCookie() {
 		return
 	}
 
+	replaceResponseCookie(writer, sessionCookieName)
 	http.SetCookie(writer, &http.Cookie{
 		Name:     sessionCookieName,
 		Value:    h.session.ID,
@@ -222,6 +224,37 @@ func (h *WebHost) setSessionCookie() {
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
 	})
+}
+
+// replaceResponseCookie removes any pending Set-Cookie header for one cookie name before rewriting it.
+func replaceResponseCookie(writer http.ResponseWriter, cookieName string) {
+	if writer == nil {
+		return
+	}
+
+	headers := writer.Header()
+	if headers == nil {
+		return
+	}
+
+	existing := headers.Values("Set-Cookie")
+	if len(existing) == 0 {
+		return
+	}
+
+	prefix := cookieName + "="
+	filtered := make([]string, 0, len(existing))
+	for _, value := range existing {
+		if strings.HasPrefix(value, prefix) {
+			continue
+		}
+		filtered = append(filtered, value)
+	}
+
+	headers.Del("Set-Cookie")
+	for _, value := range filtered {
+		headers.Add("Set-Cookie", value)
+	}
 }
 
 // Write forwards raw bytes into the ASP Response buffer.

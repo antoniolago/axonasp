@@ -146,3 +146,18 @@ func TestServeErrorPageHTMLPreservesStatus(t *testing.T) {
 		t.Fatalf("expected non-empty error page body")
 	}
 }
+
+// TestWithServerHeaderSetsAxonASPValue verifies the HTTP runtime always emits Server: AxonASP.
+func TestWithServerHeaderSetsAxonASPValue(t *testing.T) {
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "http://example.local/", nil)
+	handler := withServerHeader(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNoContent)
+	}))
+
+	handler.ServeHTTP(rec, req)
+
+	if got := rec.Header().Get("Server"); got != "AxonASP" {
+		t.Fatalf("expected Server header AxonASP, got %q", got)
+	}
+}

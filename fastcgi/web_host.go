@@ -26,6 +26,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"sync"
 
 	"g3pix.com.br/axonasp/axonvm"
@@ -275,6 +276,7 @@ func (h *FastCGIHost) setSessionCookie() {
 		return
 	}
 
+	replaceResponseCookie(writer, fastCGISessionCookieName)
 	http.SetCookie(writer, &http.Cookie{
 		Name:     fastCGISessionCookieName,
 		Value:    h.session.ID,
@@ -282,6 +284,37 @@ func (h *FastCGIHost) setSessionCookie() {
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
 	})
+}
+
+// replaceResponseCookie removes any pending Set-Cookie header for one cookie name before rewriting it.
+func replaceResponseCookie(writer http.ResponseWriter, cookieName string) {
+	if writer == nil {
+		return
+	}
+
+	headers := writer.Header()
+	if headers == nil {
+		return
+	}
+
+	existing := headers.Values("Set-Cookie")
+	if len(existing) == 0 {
+		return
+	}
+
+	prefix := cookieName + "="
+	filtered := make([]string, 0, len(existing))
+	for _, value := range existing {
+		if strings.HasPrefix(value, prefix) {
+			continue
+		}
+		filtered = append(filtered, value)
+	}
+
+	headers.Del("Set-Cookie")
+	for _, value := range filtered {
+		headers.Add("Set-Cookie", value)
+	}
 }
 
 // fastCGIRequestRemoteAddr normalizes RemoteAddr into the client host without the port suffix.

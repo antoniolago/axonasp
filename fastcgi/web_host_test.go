@@ -114,6 +114,32 @@ func TestNewFastCGIHostReusesExistingSession(t *testing.T) {
 	}
 }
 
+// TestFastCGIHostPersistSessionKeepsSingleSessionCookie verifies session persistence rewrites ASPSESSIONID instead of duplicating it.
+func TestFastCGIHostPersistSessionKeepsSingleSessionCookie(t *testing.T) {
+	asp.SetSessionStorageDir(t.TempDir())
+	defer asp.SetSessionStorageDir(filepath.Join("temp", "session"))
+
+	req := httptest.NewRequest(http.MethodGet, "http://example.local/default.asp", nil)
+	recorder := httptest.NewRecorder()
+	host := NewFastCGIHost(recorder, req)
+
+	host.PersistSession()
+
+	count := 0
+	for _, cookie := range recorder.Result().Cookies() {
+		if cookie.Name == fastCGISessionCookieName {
+			count++
+			if cookie.Value != host.Session().ID {
+				t.Fatalf("expected response cookie value %q, got %q", host.Session().ID, cookie.Value)
+			}
+		}
+	}
+
+	if count != 1 {
+		t.Fatalf("expected 1 %s cookie, got %d", fastCGISessionCookieName, count)
+	}
+}
+
 // TestFastCGIHostClassLifecycleParity verifies class lifecycle semantics execute consistently in FastCGI host path.
 func TestFastCGIHostClassLifecycleParity(t *testing.T) {
 	source := `<%
