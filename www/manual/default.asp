@@ -7,17 +7,18 @@ Set g3md = Server.CreateObject("G3Md")
 
 ' 1. Get requested page
 page = Request.QueryString("page")
-If page = "" Then page = "axonasp/welcome"
+If page = "" Then page = "md/axonasp/welcome"
 
 ' Security: Basic path sanitization
 page = Replace(page, "..", "")
+
 ' Accept menu links that include .md and normalize to internal page key
 If LCase(Right(page, 3)) = ".md" Then
     page = Left(page, Len(page) - 3)
 End If
 
 ' 2. Load Content
-mdPath = Server.MapPath("md/" & page & ".md")
+mdPath = Server.MapPath(page & ".md")
 If fso.FileExists(mdPath) Then
     mdContent = ReadFile(mdPath)
 Else
@@ -510,8 +511,8 @@ End Function
         </div>
 
         <div id="status-bar">
-            Ready | Page:
-            <%= page %>
+            Page:
+            <%= page %>.md
         </div>
 
         <script>
