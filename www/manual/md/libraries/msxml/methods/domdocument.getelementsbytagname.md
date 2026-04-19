@@ -1,39 +1,39 @@
 # DOMDocument.GetElementsByTagName Method
 
-## Overview
-Calls the GetElementsByTagName member on the MSXML2 DOMDocument compatibility object.
+Returns all descendant elements in the document that match the given tag name.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-Set list = obj.GetElementsByTagName("item")
+Set oList = objXML.GetElementsByTagName(tagName)
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `tagName` | String | Yes | The element tag name to search for. The match is case-insensitive. |
+
+## Return Value
+
+XMLNodeList. A list of all matching elements, ordered by document order. An empty XMLNodeList is returned if the document has no root or no elements match.
 
 ## Remarks
-- Returns node list for matching element names.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- The search traverses the entire document tree, not just direct children.
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-obj.GetElementsByTagName
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
-End If
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oList, i
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<books><book>A</book><book>B</book><book>C</book></books>"
+Set oList = oXML.GetElementsByTagName("book")
+For i = 0 To oList.Length - 1
+    Response.Write oList.Item(i).Text & "<br>"
+Next
+Set oXML = Nothing
 %>
 ```

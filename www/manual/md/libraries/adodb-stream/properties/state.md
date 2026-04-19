@@ -2,38 +2,47 @@
 
 ## Overview
 
-The State property is exposed by the ADODB.Stream object in AxonASP.
+Returns whether the stream is open or closed.
 
 ## Syntax
 
 ```asp
-value = obj.State
-obj.State = newValue
+value = stm.State
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns `0` when the stream is closed and `1` when the stream is open.
 
 ## Remarks
 
-- Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Property names are case-insensitive in G3Pix AxonASP.
+- This property is read-only.
+- Check `State` before calling read and write methods.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Stream")
-value = obj.State
-Response.Write CStr(value)
-Set obj = Nothing
+Dim stm
+
+Set stm = Server.CreateObject("ADODB.Stream")
+Response.Write "Before open: " & CStr(stm.State) & "<br>"
+
+stm.Open
+Response.Write "After open: " & CStr(stm.State) & "<br>"
+
+stm.Close
+Response.Write "After close: " & CStr(stm.State)
+
+Set stm = Nothing
 %>
 ```
+
+## API Reference
+
+- Object: ADODB.Stream
+- Property: State
+- Access: Read-only
+- Type: Integer (`0` closed, `1` open)

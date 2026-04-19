@@ -1,30 +1,37 @@
-# axisset
+# Check If a Value Is Set
 
 ## Overview
 
-The `axisset` method checks if a value has been initialized and is neither `Empty` nor `Null`.
+Determines whether a value has been initialized and is neither `Empty` nor `Null`.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
 
 ```asp
-result = obj.axisset(value)
+result = ax.AxIsSet(value)
 ```
 
-## Parameters and Arguments
+## Parameters
 
-- **value** (Variant): The value to check.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **value** | Variant | Yes | The value to inspect. |
 
-## Return Values
+## Return Value
 
-Returns a Boolean indicating whether the value is set. Returns `True` if the value is not `Empty` and not `Null`, otherwise `False`.
+- **Boolean `True`**: The value is initialized and is not `Empty` or `Null`.
+- **Boolean `False`**: The value is `Empty` or `Null`.
 
 ## Remarks
 
-- This method is part of the G3Pix AxonASP library.
-- It is the inverse of checking for `Empty` or `Null` using standard VBScript functions.
-- Method names in G3Pix AxonASP are case-insensitive.
+- This method is the inverse of the VBScript `IsEmpty` and `IsNull` checks combined.
+- Unlike `AxEmpty`, this method does not consider zero (`0`), empty string (`""`), or `False` as unset. Only `Empty` and `Null` return `False`.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
 ```asp
 <%
@@ -32,16 +39,22 @@ Option Explicit
 Dim ax, val
 Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-If Not ax.axisset(val) Then
-    Response.Write "Variable 'val' is not set.<br>"
-End If
+' val is uninitialized (Empty)
+Response.Write ax.AxIsSet(val) & "<br>"   ' False
 
-val = "Initialized"
+val = 0
+Response.Write ax.AxIsSet(val) & "<br>"   ' True (0 is a set value)
 
-If ax.axisset(val) Then
-    Response.Write "Variable 'val' is now set.<br>"
-End If
+val = "hello"
+Response.Write ax.AxIsSet(val) & "<br>"   ' True
 
 Set ax = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxIsSet`
+- **Arguments**: `value` (Variant, required)
+- **Returns**: Boolean — `True` if value is not `Empty` or `Null`; `False` otherwise

@@ -1,51 +1,56 @@
-# Query Method
+# Execute a Query and Return a Result Set
 
 ## Overview
 
-The **Query** method executes a SQL query, such as a SELECT statement, and returns a result set object in G3Pix AxonASP.
+Executes a SQL query and returns a forward-only G3DBResultSet object.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3DB")`.
 
 ## Syntax
 
 ```asp
-Set result = obj.Query(sql [, params...])
+Set rs = db.Query(sql[, params...])
 ```
 
-## Parameters and Arguments
+## Parameters
 
-- **sql** (String, Required): The SQL query statement to be executed.
-- **params** (Variant, Optional): One or more values to be used as parameters in the SQL statement, replacing the `?` placeholders.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **sql** | String | Yes | SQL query text. |
+| **params** | Any | No | Positional values for query placeholders. |
 
-## Return Values
+## Return Value
 
-Returns a **G3DBResultSet** object. This object provides a forward-only cursor to navigate and retrieve the data returned by the database.
+- **G3DBResultSet**: Returned when query execution succeeds.
+- **Empty**: Returned when connection is not open, SQL is missing, or query execution fails.
 
 ## Remarks
 
-- The method automatically rewrites the `?` placeholders into the format required by the current database driver (e.g., `$1, $2` for PostgreSQL or `@p1, @p2` for MS SQL Server).
-- Parameterization is highly recommended to protect against SQL injection attacks.
-- If the query fails, the method returns an **Empty** value, and the error description can be retrieved from the **LastError** property.
-- The returned **G3DBResultSet** should be closed using its **Close** method when it is no longer needed.
+- Close the result set when processing is complete.
 
-## Code Example
+## Example
 
 ```asp
 <%
+Option Explicit
 Dim db, rs
 Set db = Server.CreateObject("G3DB")
 
-If db.Open("mysql", "user:pass@tcp(localhost)/dbname") Then
-    ' Simple query with parameters
-    Set rs = db.Query("SELECT username, email FROM users WHERE id = ?", 123)
-
-    If Not rs.EOF Then
-        Response.Write "Username: " & rs("username") & "<br>"
-        Response.Write "Email: " & rs("email")
-    End If
-
-    rs.Close
+If db.Open("mysql", "user:pass@tcp(localhost)/db") Then
+    Set rs = db.Query("SELECT id FROM users WHERE active = ?", 1)
+    If Not IsEmpty(rs) Then rs.Close
     db.Close
 End If
 
 Set db = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3DB`
+- **Method**: `Query`
+- **Arguments**: `sql` (String, required), `params...` (Any, optional)
+- **Returns**: G3DBResultSet on success, Empty on failure

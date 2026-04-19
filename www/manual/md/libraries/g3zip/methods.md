@@ -1,22 +1,26 @@
 # G3ZIP Methods
 
 ## Overview
-This page provides a summary of the methods available in the **G3ZIP** library for archive manipulation in AxonASP.
 
-## Method List
+This page summarizes every method exposed by `G3ZIP` in G3Pix AxonASP.
 
-- **AddFile**: Includes a physical file into the current write-mode archive. Returns a **Boolean**.
-- **AddFolder**: Recursively adds a directory and its contents into the archive. Returns a **Boolean**.
-- **AddText**: Creates a new file inside the archive using a provided string. Returns a **Boolean**.
-- **Close**: Finalizes the archive and releases all file handles. Returns a **Boolean**.
-- **Create**: Creates a new ZIP file on the server and prepares it for writing. Returns a **Boolean**.
-- **ExtractAll**: Unpacks all files from the current read-mode archive to a directory. Returns a **Boolean**.
-- **ExtractFile**: Unpacks a specific file from the archive to a directory. Returns a **Boolean**.
-- **GetInfo**: Retrieves detailed metadata for a file within the archive. Returns a **Scripting.Dictionary**.
-- **List**: Returns a collection of all file names present in the archive. Returns a **VBArray**.
-- **Open**: Opens an existing ZIP file for reading and inspection. Returns a **Boolean**.
+## Methods
+
+| Method | Returns | Description |
+|---|---|---|
+| `Open(path)` | Boolean | Opens an existing ZIP archive for read mode. Returns `True` on success; otherwise `False`. |
+| `Create(path)` | Boolean | Creates a ZIP archive for write mode. Returns `True` on success; otherwise `False`. |
+| `AddFile(sourcePath [, nameInZip])` | Boolean | Adds one file to an archive in write mode. Returns `True` on success; otherwise `False`. |
+| `AddFolder(sourcePath [, nameInZip])` | Boolean | Adds one folder recursively to an archive in write mode. Returns `True` on success; otherwise `False`. |
+| `AddText(nameInZip, text)` | Boolean | Adds text content as an entry in write mode. Returns `True` on success; otherwise `False`. |
+| `ExtractAll(destinationPath)` | Boolean | Extracts all entries in read mode. Returns `True` on success; otherwise `False`. |
+| `ExtractFile(nameInZip, destinationPath)` | Boolean | Extracts one entry in read mode. Returns `True` on success; otherwise `False`. |
+| `List()` | Array | Returns an array of entry names from the open archive. |
+| `GetInfo(nameInZip)` | Scripting.Dictionary or Empty | Returns metadata dictionary for one entry, or Empty when argument is missing or entry is not found. |
+| `Close()` | Boolean | Closes archive resources and returns `True`. |
 
 ## Remarks
-- All method names are case-insensitive.
-- Methods that modify the archive (AddFile, AddText, etc.) require the object to be in Write mode.
-- Methods that inspect or extract (List, ExtractAll, etc.) require the object to be in Read mode.
+
+- Instantiate the library with `Server.CreateObject("G3ZIP")`.
+- Method names are case-insensitive.
+- Write operations require write mode; read/extract operations require read mode.

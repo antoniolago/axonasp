@@ -1,41 +1,47 @@
-﻿# Errors.Count Method
+# Errors.Count Method
 
-## Overview
-
-The Errors.Count method is exposed by the ADODB.Connection object in AxonASP.
+Returns the number of error objects in the Errors collection.
 
 ## Syntax
 
 ```asp
-result = obj.Errors.Count(...)
+count = conn.Errors.Count
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+No parameters.
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Integer. Returns the number of errors currently stored in the connection Errors collection.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- The Errors collection is associated with a Connection object.
+- The count increases when an operation fails and adds an ADODB.Error item.
+- Call `Errors.Clear` to reset the collection.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Errors.Count()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+Dim conn
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+' Force an error to populate Errors collection.
+On Error Resume Next
+conn.Execute "SELECT * FROM table_that_does_not_exist"
+On Error GoTo 0
+
+Response.Write "Errors count: " & CStr(conn.Errors.Count)
+
+conn.Close
+Set conn = Nothing
 %>
 ```

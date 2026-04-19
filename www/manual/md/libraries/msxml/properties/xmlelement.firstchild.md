@@ -1,33 +1,31 @@
 # XMLElement.FirstChild Property
 
-## Overview
-Reads or writes the FirstChild property on the MSXML2 XMLElement compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.FirstChild
-```
+Returns the first direct child node of this element.
 
 ## Access
-Read Only
 
-## Return Values
-Returns a Variant-compatible value.
+Read-only.
+
+## Type
+
+XMLElement or Null.
 
 ## Remarks
-- First child node.
-- Property names are case-insensitive.
+
+- Returns Null if the element has no children.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.FirstChild)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oRoot, oFirst
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<root><a>First</a><b>Second</b></root>"
+Set oRoot = oXML.DocumentElement
+Set oFirst = oRoot.FirstChild
+If Not IsNull(oFirst) Then
+    Response.Write oFirst.Text
+End If
+Set oXML = Nothing
 %>
 ```

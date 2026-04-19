@@ -1,36 +1,58 @@
-# Parse Method
+# Parse JSON Text
 
 ## Overview
-Converts a JSON-formatted string into a native AxonASP structure (Dictionary or Array).
+
+Parses JSON text and returns the corresponding native G3Pix AxonASP value.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3JSON")`.
 
 ## Syntax
+
 ```asp
-result = json.Parse(jsonString)
+result = json.Parse(jsonText)
 ```
 
-## Parameters and Arguments
-- **jsonString** (String, Required): The JSON string to be parsed.
+## Parameters
 
-## Return Values
-Returns a **Variant** containing the parsed JSON structure. 
-- Returns a **Scripting.Dictionary** object for JSON objects (`{}`).
-- Returns a standard **Array** for JSON arrays (`[]`).
-- Returns **Empty** if the input is invalid or cannot be parsed.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **jsonText** | String | Yes | JSON payload to parse. |
+
+## Return Value
+
+- **Scripting.Dictionary**: Returned when the JSON root is an object.
+- **Array**: Returned when the JSON root is an array.
+- **String / Integer / Double / Boolean / Null**: Returned when the JSON root is a primitive.
+- **Empty**: Returned when the argument is missing, empty, or invalid JSON.
 
 ## Remarks
-The **Parse** method supports deep nesting and various JSON data types, including numbers, booleans, strings, and nulls. JSON nulls are converted to VBScript **Null**.
 
-## Code Example
+- Method names are case-insensitive.
+- Object and array values are converted recursively.
+
+## Example
+
 ```asp
 <%
+Option Explicit
 Dim json, data
 Set json = Server.CreateObject("G3JSON")
-Set data = json.Parse("{""id"": 101, ""active"": true}")
 
+Set data = json.Parse("{""name"": ""AxonASP"", ""enabled"": true}")
 If IsObject(data) Then
-    Response.Write "ID: " & data("id")
+    Response.Write data("name")
 End If
 
+Set data = Nothing
 Set json = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3JSON`
+- **Method**: `Parse`
+- **Arguments**: `jsonText` (String, required)
+- **Returns**: Dictionary, Array, scalar primitive, Null, or Empty on failure

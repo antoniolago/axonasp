@@ -1,39 +1,42 @@
 # DOMDocument.LoadXML Method
 
-## Overview
-Calls the LoadXML member on the MSXML2 DOMDocument compatibility object.
+Parses an XML string and loads it into the document object.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-ok = obj.LoadXML(xmlText)
+bSuccess = objXML.LoadXML(xmlString)
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `xmlString` | String | Yes | A well-formed XML string to parse. |
+
+## Return Value
+
+Boolean. Returns True if the XML was parsed successfully. Returns False if the string is empty, Null, or contains invalid XML. Check `ParseError.ErrorCode` for details on failure.
 
 ## Remarks
-- Parses XML from string.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- On a failed parse, `ParseError` is populated with the error code, reason, and the source position where the parse stopped.
+- Calling `LoadXML` replaces any previously loaded or built document.
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-obj.LoadXML
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
+Dim oXML
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+If oXML.LoadXML("<catalog><item>First</item><item>Second</item></catalog>") Then
+    Dim oRoot
+    Set oRoot = oXML.DocumentElement
+    Response.Write "Root: " & oRoot.NodeName
+Else
+    Response.Write "Parse error: " & oXML.ParseError.Reason
 End If
-On Error GoTo 0
-Set obj = Nothing
+Set oXML = Nothing
 %>
 ```

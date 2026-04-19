@@ -1,44 +1,53 @@
-# Run Method
+# Run a Command with Run
 
 ## Overview
-
-The Run method is exposed by the WScript.Shell library object. Use it to execute this library operation from Classic ASP/VBScript with AxonASP runtime behavior.
+Use Run to execute a command line and receive an Integer status code.
 
 ## Syntax
 
 ```asp
-result = obj.Run(...)
-`````
+exitCode = shell.Run(command, windowStyle, waitOnReturn)
+```
 
-## Parameters and Arguments
+## Parameters
 
-- Parameters (Variant, Optional): This method accepts arguments according to the runtime dispatch of the WScript.Shell object.
-- Argument validation: invalid count or type raises runtime errors.
+- command (String, required): Command line to execute.
+- windowStyle (Integer, optional): Accepted for compatibility. Current AxonASP runtime does not apply this value.
+- waitOnReturn (Boolean, optional): When True, waits for process completion before returning. Default is True.
 
-## Return Values
+## Return Value
 
-Returns a Variant result. Depending on the operation, this can be String, Boolean, Number, Array, Dictionary/object handle, or Empty.
+Returns Integer 0 when command start succeeds and either:
+- the process finishes successfully when waitOnReturn is True, or
+- the process starts successfully when waitOnReturn is False.
+
+Returns an Integer greater than 0 when waitOnReturn is True and the process exits with a non-zero exit code.
+
+Returns Integer -1 when command is missing, blank, or process startup fails.
+
+## How It Works
+
+- On Windows, AxonASP executes the command through cmd.exe /c.
+- On non-Windows environments, AxonASP executes through sh -c.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Prefer explicit variable assignment and defensive checks before using returned values.
-- For object values, use Set when assigning the return value.
+- Run does not return process output. Use Exec when you need StdOut or StdErr streams.
 
-## Code Example
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("WScript.Shell")
-result = obj.Run()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+
+Dim shell, code
+Set shell = Server.CreateObject("WScript.Shell")
+
+code = shell.Run("cmd /c echo G3Pix AxonASP", 0, True)
+Response.Write "Run returned: " & code
+
+Set shell = Nothing
 %>
-`````
+```
 

@@ -1,39 +1,43 @@
 # DOMDocument.SetProperty Method
 
-## Overview
-Calls the SetProperty member on the MSXML2 DOMDocument compatibility object.
+Sets a named document property that controls parsing and query behaviour.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-obj.SetProperty "SelectionNamespaces", "xmlns:x=\"urn:x\""
+objXML.SetProperty name, value
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `name` | String | Yes | The name of the property to set. |
+| `value` | Variant | Yes | The new value for the property. |
+
+## Return Value
+
+Empty. This method does not return a value.
 
 ## Remarks
-- Sets compatible DOM option value.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- This method is equivalent to assigning the corresponding named property directly.
+- The most commonly used property is `SelectionNamespaces`, which binds namespace prefixes for XPath queries. Format: `xmlns:prefix='uri'`.
+- Setting an unknown property name is silently ignored.
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-obj.SetProperty
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
+Dim oXML, oNode
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<ns:root xmlns:ns='urn:test'><ns:item>Value</ns:item></ns:root>"
+oXML.SetProperty "SelectionNamespaces", "xmlns:ns='urn:test'"
+Set oNode = oXML.SelectSingleNode("//ns:item")
+If Not IsNull(oNode) Then
+    Response.Write oNode.Text
 End If
-On Error GoTo 0
-Set obj = Nothing
+Set oXML = Nothing
 %>
 ```

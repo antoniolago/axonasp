@@ -2,43 +2,51 @@
 
 ## Overview
 
-The CreateTextFile method is exposed by the Scripting.FileSystemObject library object. Use it to execute this library operation from Classic ASP/VBScript with AxonASP runtime behavior.
+Creates a new text file on disk and returns a TextStream object opened for writing.
 
 ## Syntax
 
 ```asp
-result = obj.CreateTextFile(...)
-`````
+Set ts = fso.CreateTextFile(filename [, overwrite])
+```
 
-## Parameters and Arguments
+## Parameters
 
-- Parameters (Variant, Optional): This method accepts arguments according to the runtime dispatch of the Scripting.FileSystemObject object.
-- Argument validation: invalid count or type raises runtime errors.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| filename | String | Yes | The full path of the file to create. |
+| overwrite | Boolean | No | Set to True (default) to truncate and overwrite an existing file. Set to False to fail if the file already exists. |
 
-## Return Values
+## Return Value
 
-Returns a Variant result. Depending on the operation, this can be String, Boolean, Number, Array, Dictionary/object handle, or Empty.
+Returns a **TextStream** object opened for writing (mode 2). Returns **Empty** if the path cannot be resolved, if `overwrite` is False and the file already exists, or if the OS rejects the file creation.
+
+## How It Works
+
+The path is resolved against the web root. The runtime opens the file with `O_CREATE | O_WRONLY`. When `overwrite` is True, `O_TRUNC` is added to clear any existing content. When `overwrite` is False, `O_EXCL` is added so the open call fails if the file exists. The resulting TextStream starts at position line 1, column 1.
 
 ## Remarks
 
-- Method names are case-insensitive.
-- Prefer explicit variable assignment and defensive checks before using returned values.
-- For object values, use Set when assigning the return value.
+- The returned TextStream is write-only. Calling read methods on it returns Empty or empty String.
+- Always call `ts.Close` and then `Set ts = Nothing` when you are finished writing.
+- If the parent directory does not exist, file creation fails and the method returns Empty.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("Scripting.FileSystemObject")
-result = obj.CreateTextFile()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
+Dim fso, ts
+Set fso = Server.CreateObject("Scripting.FileSystemObject")
+
+Set ts = fso.CreateTextFile(Server.MapPath("output/log.txt"), True)
+If Not IsNull(ts) And Not IsEmpty(ts) Then
+    ts.WriteLine "Log started: " & Now
+    ts.Close
+    Set ts = Nothing
 End If
-Set obj = Nothing
+
+Set fso = Nothing
 %>
-`````
+```
 

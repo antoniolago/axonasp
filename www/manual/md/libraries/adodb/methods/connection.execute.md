@@ -1,41 +1,48 @@
-﻿# Connection.Execute Method
+# Connection.Execute Method
 
-## Overview
-
-The Connection.Execute method is exposed by the ADODB.Connection object in AxonASP.
+Executes a SQL statement directly on the connection.
 
 ## Syntax
 
 ```asp
-result = obj.Connection.Execute(...)
+result = conn.Execute(commandText)
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `commandText` | String | Yes | SQL statement to run. |
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Variant. Returns an ADODB.Recordset for query statements. Returns an Integer for affected rows in action statements. Returns Empty on failure.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- Query detection is based on SQL statement type in the runtime.
+- Use this method for quick execution when a dedicated Command object is not needed.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Connection.Execute()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
+Dim conn, result
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set result = conn.Execute("SELECT id, name FROM users")
+If Not result.EOF Then
+    Response.Write result.Fields("name").Value
 End If
-Set obj = Nothing
+
+result.Close
+conn.Close
+Set result = Nothing
+Set conn = Nothing
 %>
 ```

@@ -1,39 +1,34 @@
 ﻿# Connection.Version Property
 
-## Overview
-
-The Connection.Version property is exposed by the ADODB.Connection object in AxonASP.
+Returns the ADODB compatibility version string exposed by the runtime.
 
 ## Syntax
 
 ```asp
-value = obj.Connection.Version
-obj.Connection.Version = newValue
+text = conn.Version
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+String. Returns the version identifier for the ADODB compatibility surface.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- This property is read-only.
+- Use this value for diagnostics and compatibility reporting.
+- The value does not represent the underlying database engine version.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Connection.Version
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn
+
+Set conn = Server.CreateObject("ADODB.Connection")
+Response.Write "ADODB compatibility version: " & conn.Version
+
+Set conn = Nothing
 %>
 ```

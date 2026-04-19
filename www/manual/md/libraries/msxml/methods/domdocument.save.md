@@ -1,39 +1,40 @@
 # DOMDocument.Save Method
 
-## Overview
-Calls the Save member on the MSXML2 DOMDocument compatibility object.
+Serializes the document and writes it to a file at the specified path.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-obj.Save path
+bSuccess = objXML.Save(filename)
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `filename` | String | Yes | An absolute or relative file path to write the XML to. |
+
+## Return Value
+
+Boolean. Returns True if the file was written successfully. Returns False if the document has no content, the context is unavailable, or the file write fails.
 
 ## Remarks
-- Writes XML to target file path.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- The file is written with UTF-8 encoding.
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-obj.Save
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
+Dim oXML
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<data><entry>Test</entry></data>"
+If oXML.Save(Server.MapPath("output.xml")) Then
+    Response.Write "Saved."
+Else
+    Response.Write "Save failed."
 End If
-On Error GoTo 0
-Set obj = Nothing
+Set oXML = Nothing
 %>
 ```

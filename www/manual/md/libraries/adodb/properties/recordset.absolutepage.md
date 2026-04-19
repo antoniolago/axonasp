@@ -1,39 +1,42 @@
-﻿# Recordset.AbsolutePage Property
+# Recordset.AbsolutePage Property
 
-## Overview
-
-The Recordset.AbsolutePage property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets the current page number in paged recordset navigation.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.AbsolutePage
-obj.Recordset.AbsolutePage = newValue
+page = rs.AbsolutePage
+rs.AbsolutePage = newPage
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns the current page index.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Page behavior depends on `PageSize` and provider support.
+- Set `PageSize` before relying on page-based navigation.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.AbsolutePage
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+Set rs = conn.Execute("SELECT id, name FROM users")
+
+rs.PageSize = 10
+Response.Write "Page: " & CStr(rs.AbsolutePage)
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

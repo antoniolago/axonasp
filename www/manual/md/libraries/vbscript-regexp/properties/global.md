@@ -2,39 +2,47 @@
 
 ## Overview
 
-The Global property is exposed by the VBScript.RegExp library object and returns the current state/value associated with this member.
+Gets or sets whether the regular expression operates in global mode, applying to all matches in the input string rather than only the first.
 
 ## Syntax
 
 ```asp
-value = obj.Global
-obj.Global = newValue
+re.Global = True
+value = re.Global
 ```
 
-## Parameters and Arguments
+## Return Value
 
-- Getter: no arguments.
-- Setter (when supported): one Variant value.
+Returns a **Boolean** indicating the current global mode setting. Returns **False** by default when the object is first created.
 
-## Return Values
+## How It Works
 
-Returns the current property value as Variant. Read-only members reject assignments.
+Setting `Global` to True or False updates the internal flag only. **The pattern is not recompiled** when `Global` changes. The flag is read at the moment `Execute` or `Replace` is called:
+
+- `Execute` with `Global = True` calls `FindAllStringSubmatchIndex` to collect all non-overlapping matches.
+- `Execute` with `Global = False` calls `FindStringSubmatchIndex` and returns at most one match.
+- `Replace` with `Global = True` replaces all matches; `Global = False` replaces only the first.
+- `Test` is unaffected by `Global`.
 
 ## Remarks
 
-- Property names are case-insensitive.
-- Setters are validated by dispatch logic and can raise runtime errors.
-- For object-typed values, assign with Set.
+- The default value is **False**.
+- Changing `Global` does not trigger pattern recompilation. Only `Pattern`, `IgnoreCase`, and `MultiLine` trigger recompilation.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("VBScript.RegExp")
-value = obj.Global
-Response.Write CStr(value)
-Set obj = Nothing
+Dim re, result
+Set re = Server.CreateObject("VBScript.RegExp")
+re.Pattern = "\\d+"
+re.Global = True
+
+result = re.Replace("Room 101, Floor 3, Unit 42", "#")
+Response.Write result
+' Output: Room #, Floor #, Unit #
+
+Set re = Nothing
 %>
 ```

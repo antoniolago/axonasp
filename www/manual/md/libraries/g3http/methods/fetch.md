@@ -1,51 +1,67 @@
-# Fetch Method
+# Send an HTTP Request with Fetch
 
 ## Overview
-Sends an HTTP request to a remote server and returns the response body, automatically parsing JSON content into native AxonASP objects or arrays.
+
+Executes an outbound HTTP request and returns parsed JSON content or raw response text.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3HTTP")`.
 
 ## Syntax
+
 ```asp
-result = http.Fetch(url [, method] [, body])
+result = http.Fetch(url[, method][, body])
 ```
 
-## Parameters and Arguments
-- **url** (String, Required): The absolute URL for the request.
-- **method** (String, Optional): The HTTP verb (e.g., "GET", "POST", "PUT", "DELETE"). The default is "GET".
-- **body** (String, Optional): The request body payload. If provided, the library automatically sets the `Content-Type` header to `application/json`.
+## Parameters
 
-## Return Values
-Returns a **Variant** containing the response from the remote server. 
-- Returns a **Scripting.Dictionary** if the response `Content-Type` is `application/json` and the root element is an object.
-- Returns an **Array** if the response `Content-Type` is `application/json` and the root element is an array.
-- Returns a **String** for all other response types.
-- Returns **Empty** if the request fails (e.g., network error or timeout).
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **url** | String | Yes | Absolute request URL. |
+| **method** | String | No | HTTP method. Default is `GET`. |
+| **body** | String | No | Request payload. When present, `Content-Type` is set to `application/json`. |
+
+## Return Value
+
+- **Scripting.Dictionary**: Returned when response content type is JSON and the root is an object.
+- **Array**: Returned when response content type is JSON and the root is an array.
+- **String / Integer / Double / Boolean / Null**: Returned when response content type is JSON and the root is a primitive that parses successfully.
+- **String**: Raw response body for non-JSON responses.
+- **String**: Raw response body when content type is JSON but parsing fails.
+- **Empty**: Returned when URL is missing, request creation fails, request execution fails, or response read fails.
 
 ## Remarks
-- The G3HTTP library uses a default timeout of 10 seconds.
-- JSON parsing is performed automatically for all `application/json` responses.
 
-## Code Example
-The following example demonstrates how to send a POST request with a JSON body.
+- Request timeout is 10 seconds.
+- Method names are case-insensitive.
+
+## Example
 
 ```asp
 <%
-Dim http, postData, responseBody, apiUrl
+Option Explicit
+Dim http, result, payload
 Set http = Server.CreateObject("G3HTTP")
 
-apiUrl = "https://api.example.com/v1/update"
-postData = "{""id"": 123, ""status"": ""active""}"
+payload = "{""id"": 10}"
+result = http.Fetch("https://api.example.com/items", "POST", payload)
 
-' Perform a POST request
-responseBody = http.Fetch(apiUrl, "POST", postData)
-
-If IsObject(responseBody) Then
-    Response.Write "Response ID: " & responseBody("id")
-ElseIf Not IsEmpty(responseBody) Then
-    Response.Write "Raw Response: " & responseBody
+If IsObject(result) Then
+    Response.Write result("status")
+ElseIf Not IsEmpty(result) Then
+    Response.Write result
 Else
-    Response.Write "Request failed."
+    Response.Write "Request failed"
 End If
 
 Set http = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3HTTP`
+- **Method**: `Fetch`
+- **Arguments**: `url` (String, required), `method` (String, optional), `body` (String, optional)
+- **Returns**: Dictionary, Array, scalar primitive, raw response String, or Empty on request failure

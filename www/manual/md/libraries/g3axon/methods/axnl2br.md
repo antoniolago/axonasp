@@ -1,27 +1,54 @@
 # Convert Newlines to HTML Line Breaks
 
-Inserts HTML line breaks before all newlines in a string.
+## Overview
+
+Replaces all newline sequences in a string with `<br>` HTML tags.
 
 ## Prerequisites
-The `G3AXON.FUNCTIONS` object must be instantiated to use this method.
-This feature is available in the G3Pix AxonASP environment.
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
-```vbscript
-String = obj.AxNl2br(input)
+
+```asp
+result = obj.AxNl2br(str)
 ```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| str | String | Yes | The source string containing newlines to replace. |
 
 ## Return Value
-Returns a String.
+
+- **String**: Returns a copy of `str` with all `CRLF` (`\r\n`), `LF` (`\n`), and `CR` (`\r`) sequences replaced by `<br>`.
+- **String**: Returns an empty string when no argument is provided.
+
+## Remarks
+
+- `CRLF` sequences are replaced first before individual `LF` and `CR` characters.
+- Method names are case-insensitive in VBScript dispatch.
 
 ## Example
-```vbscript
-Dim obj, result
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
 
-result = obj.AxNl2br(input)
+```asp
+<%
+Option Explicit
+Dim ax, text
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-Response.Write result
+text = "Line 1" & vbCrLf & "Line 2" & vbCrLf & "Line 3"
+Response.Write ax.AxNl2br(text)
+' Output: Line 1<br>Line 2<br>Line 3
 
-Set obj = Nothing
+Set ax = Nothing
+%>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxNl2br`
+- **Arguments**: `str As String`
+- **Returns**: `String` (string with newlines replaced by `<br>`)

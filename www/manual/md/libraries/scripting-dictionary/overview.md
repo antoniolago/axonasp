@@ -1,31 +1,50 @@
-# Use Scripting.Dictionary in AxonASP
+# Use Scripting.Dictionary in G3Pix AxonASP
 
 ## Overview
-Dictionary key-value object.
+Use Scripting.Dictionary to store key-value pairs with ordered keys and fast key lookup.
+
+## Prerequisites
+- Create the object with the primary ProgID Scripting.Dictionary.
+- Use consistent key types when possible to keep lookups predictable.
 
 ## Syntax
 ```asp
-Set obj = Server.CreateObject("Scripting.Dictionary")
-`````
+Set dict = Server.CreateObject("Scripting.Dictionary")
+```
 
 ## Parameters and Arguments
-- ProgID (String, Required): Use one of the supported ProgID forms for this object family.
-- Member access (Optional): Use documented method/property members from the library reference pages.
+- ProgID (String, required): Scripting.Dictionary.
 
-## Return Values
-Returns a native object handle for this object family.
+## Return Value
+`Server.CreateObject("Scripting.Dictionary")` returns an object reference to a new, empty dictionary.
+
+## How It Works
+- Keys are preserved in insertion order for Keys and Items enumeration.
+- CompareMode controls key normalization:
+  - `0` = BinaryCompare (case-sensitive)
+  - `1` = TextCompare (case-insensitive)
+- Reading a missing key through Item creates that key with Empty value.
 
 ## Remarks
 - Member names are case-insensitive.
-- Runtime validation is enforced by object dispatch logic.
-- See the central library methods/properties pages for member-level coverage.
+- The object supports both property and method access patterns used by classic VBScript dictionary code.
 
 ## Code Example
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("Scripting.Dictionary")
-Response.Write TypeName(obj)
+Option Explicit
+
+Dim dict
+Set dict = Server.CreateObject("Scripting.Dictionary")
+
+dict.Add "Name", "AxonASP"
+dict.Item("Version") = "2"
+
+Response.Write "Count=" & dict.Count & "<br>"
+Response.Write "Name=" & dict.Item("Name") & "<br>"
+Response.Write "Version=" & dict.Item("Version")
+
+Set dict = Nothing
 %>
-`````
+```
 

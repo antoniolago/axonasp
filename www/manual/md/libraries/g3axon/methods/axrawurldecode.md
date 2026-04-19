@@ -1,32 +1,54 @@
-# Decode Raw URL String
+# Decode a Raw URL-Encoded String
 
 ## Overview
 
-Decodes a URL-encoded string by treating `+` as spaces before applying RFC 3986 unescaping.
+Decodes a URL-encoded string, treating `+` characters as spaces before applying standard percent-decoding.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
 
-```vbscript
-strDecoded = obj.axrawurldecode(str)
+```asp
+result = ax.AxRawUrlDecode(str)
 ```
 
 ## Parameters
 
-- **str** (String): The raw URL-encoded string to decode.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **str** | String | Yes | The raw URL-encoded string to decode. |
 
 ## Return Value
 
-String. The decoded string.
+- **String**: The decoded string, with `+` characters replaced by spaces and percent-encoded sequences unescaped.
 
 ## Remarks
 
-This format is slightly different from standard query strings, enforcing a specific handling of `+` symbols as spaces.
+- This method first replaces each `+` with a space, then applies RFC 3986 percent-decoding. This matches the behavior of HTML form submissions using `application/x-www-form-urlencoded` encoding.
+- Use `AxUrlDecode` when the input does not use `+` as a space.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
-```vbscript
-Dim obj, strDecode
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
-strDecode = obj.axrawurldecode("Hello+World")
-Response.Write strDecode ' Outputs: Hello World
+```asp
+<%
+Option Explicit
+Dim ax, decoded
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
+
+decoded = ax.AxRawUrlDecode("Hello+World%21")
+Response.Write decoded
+' Output: Hello World!
+
+Set ax = Nothing
+%>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxRawUrlDecode`
+- **Arguments**: `str` (String, required)
+- **Returns**: String — decoded string with `+` converted to spaces

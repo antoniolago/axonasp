@@ -1,39 +1,41 @@
 # XMLElement.SetAttribute Method
 
-## Overview
-Calls the SetAttribute member on the MSXML2 XMLElement compatibility object.
+Creates or replaces an attribute on this element.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-node.SetAttribute "id", "42"
+oElement.SetAttribute name, value
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `name` | String | Yes | The attribute name. |
+| `value` | String | Yes | The value to assign to the attribute. |
+
+## Return Value
+
+Empty. This method does not return a value.
 
 ## Remarks
-- Sets attribute value.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- If an attribute with the same name already exists, its value is replaced.
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-obj.SetAttribute
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
-End If
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oElem
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+Set oElem = oXML.CreateElement("product")
+oElem.SetAttribute "id", "101"
+oElem.SetAttribute "category", "electronics"
+oElem.Text = "Gadget"
+oXML.AppendChild oElem
+Response.Write oXML.XML
+Set oXML = Nothing
 %>
 ```

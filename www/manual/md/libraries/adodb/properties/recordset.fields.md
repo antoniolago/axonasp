@@ -1,39 +1,42 @@
-﻿# Recordset.Fields Property
+# Recordset.Fields Property
 
-## Overview
-
-The Recordset.Fields property is exposed by the ADODB.Connection object in AxonASP.
+Returns the Fields collection for the current recordset schema.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.Fields
-obj.Recordset.Fields = newValue
+Set fieldsCollection = rs.Fields
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Object. Returns an ADODB.Fields collection.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- This property is read-only.
+- Use `Fields.Count` and `Fields.Item` to inspect columns.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.Fields
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs, fieldsCollection
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+Set rs = conn.Execute("SELECT id, name FROM users")
+
+Set fieldsCollection = rs.Fields
+Response.Write CStr(fieldsCollection.Count)
+
+rs.Close
+conn.Close
+Set fieldsCollection = Nothing
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

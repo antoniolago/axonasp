@@ -1,38 +1,51 @@
-# Initialize Method
+# Reset the Internal Hash State
 
 ## Overview
 
-Resets the internal state of the G3Pix AxonASP G3CRYPTO object, clearing any cached hash results and configuration.
+Clears the internal last-hash buffer maintained by the current `G3CRYPTO` object instance.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3CRYPTO")`.
 
 ## Syntax
 
 ```asp
-obj.Initialize()
+result = crypto.Initialize()
 ```
 
 ## Parameters
 
-This method accepts no parameters.
+This method does not accept any parameters.
 
-## Return Values
+## Return Value
 
-Returns an Empty value (VT_EMPTY).
+- **Empty**: Always returns `Empty`.
 
 ## Remarks
 
-- Instantiated via `Server.CreateObject("G3CRYPTO")`.
-- Calling this method clears the `Hash` and `HashSize` properties by removing the reference to the last computed hash.
-- This is useful for ensuring no sensitive data remains in memory between different cryptographic operations using the same object instance.
+- This method clears the value returned by the `Hash` property.
+- This method does not change `BCryptCost`.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
 ```asp
 <%
-Dim crypto
+Option Explicit
+Dim crypto, bytes
 Set crypto = Server.CreateObject("G3CRYPTO")
-crypto.ComputeHash("Some data", "sha256")
-' Clear memory and internal state
+
+bytes = crypto.ComputeHash("Some data", "sha256")
 crypto.Initialize()
+
 Set crypto = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3CRYPTO`
+- **Method**: `Initialize`
+- **Arguments**: None
+- **Returns**: Empty

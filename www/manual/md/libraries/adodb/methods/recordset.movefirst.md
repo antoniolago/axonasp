@@ -1,41 +1,47 @@
-﻿# Recordset.MoveFirst Method
+# Recordset.MoveFirst Method
 
-## Overview
-
-The Recordset.MoveFirst method is exposed by the ADODB.Connection object in AxonASP.
+Moves the cursor to the first row.
 
 ## Syntax
 
 ```asp
-result = obj.Recordset.MoveFirst(...)
+rs.MoveFirst
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+No parameters.
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Empty. The method does not return a value.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- Use this method to reset iteration to row 1.
+- BOF becomes False when positioned on a valid first row.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Recordset.MoveFirst()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.Execute("SELECT id, name FROM users")
+rs.MoveLast
+rs.MoveFirst
+
+If Not rs.EOF Then Response.Write rs.Fields("name").Value
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

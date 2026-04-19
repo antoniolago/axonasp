@@ -1,55 +1,55 @@
-# Prepare Method
+# Prepare a Reusable SQL Statement
 
 ## Overview
 
-The **Prepare** method creates a reusable prepared statement in G3Pix AxonASP.
+Creates a prepared SQL statement object bound to the active connection.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3DB")`.
 
 ## Syntax
 
 ```asp
-Set result = obj.Prepare(sql)
+Set stmt = db.Prepare(sql)
 ```
 
-## Parameters and Arguments
+## Parameters
 
-- **sql** (String, Required): The SQL statement to be prepared, containing `?` placeholders for parameters.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **sql** | String | Yes | SQL statement to prepare. |
 
-## Return Values
+## Return Value
 
-Returns a **G3DBStatement** object. This object represents the prepared statement and can be used to execute queries multiple times with different parameters.
+- **G3DBStatement**: Returned when statement preparation succeeds.
+- **Empty**: Returned when connection is not open, SQL is missing, or prepare fails.
 
 ## Remarks
 
-- Prepared statements are pre-compiled by the database, which can result in better performance for statements executed repeatedly.
-- The method automatically rewrites the `?` placeholders for the current database driver during the preparation phase.
-- The returned **G3DBStatement** object exposes **Query**, **QueryRow**, and **Exec** methods for execution.
-- It is important to call the **Close** method on the **G3DBStatement** object to release the prepared statement resource from the database server.
+- Placeholder rewriting is applied before preparation.
 
-## Code Example
+## Example
 
 ```asp
 <%
-Dim db, stmt, rs, i
+Option Explicit
+Dim db, stmt
 Set db = Server.CreateObject("G3DB")
 
-If db.Open("sqlite", "mydb.db") Then
-    ' Prepare a reusable statement
+If db.Open("sqlite", "data.db") Then
     Set stmt = db.Prepare("SELECT name FROM users WHERE id = ?")
-
-    ' Execute the prepared statement multiple times
-    For i = 1 To 3
-        Set rs = stmt.Query(i)
-        If Not rs.EOF Then
-            Response.Write "User " & i & ": " & rs("name") & "<br>"
-        End If
-        rs.Close
-    Next
-
-    ' Properly close the statement
-    stmt.Close
+    If Not IsEmpty(stmt) Then stmt.Close
     db.Close
 End If
 
 Set db = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3DB`
+- **Method**: `Prepare`
+- **Arguments**: `sql` (String, required)
+- **Returns**: G3DBStatement on success, Empty on failure

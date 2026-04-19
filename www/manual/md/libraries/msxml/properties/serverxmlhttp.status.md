@@ -1,33 +1,37 @@
 # ServerXMLHTTP.Status Property
 
-## Overview
-Reads or writes the Status property on the MSXML2 ServerXMLHTTP compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.ServerXMLHTTP")
-value = obj.Status
-```
+Returns the HTTP status code from the response.
 
 ## Access
-Read Only
 
-## Return Values
-Returns a Variant-compatible value.
+Read-only.
+
+## Type
+
+Integer.
 
 ## Remarks
-- HTTP status code.
-- Property names are case-insensitive.
+
+- Available after `Send` completes (`ReadyState = 4`).
+- Common values: 200 (OK), 404 (Not Found), 500 (Internal Server Error).
+- Returns 0 if no request has been sent or if the connection failed before any response was received.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.ServerXMLHTTP")
-On Error Resume Next
-Response.Write CStr(obj.Status)
-On Error GoTo 0
-Set obj = Nothing
+Dim oHTTP
+Set oHTTP = Server.CreateObject("MSXML2.ServerXMLHTTP")
+oHTTP.Open "GET", "https://example.com/page", False
+oHTTP.Send
+Select Case oHTTP.Status
+    Case 200
+        Response.Write "OK: " & oHTTP.ResponseText
+    Case 404
+        Response.Write "Not found."
+    Case Else
+        Response.Write "HTTP " & oHTTP.Status & ": " & oHTTP.StatusText
+End Select
+Set oHTTP = Nothing
 %>
 ```

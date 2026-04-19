@@ -1,39 +1,35 @@
-﻿# Recordset.MarshalOptions Property
+# Recordset.MarshalOptions Property
 
-## Overview
-
-The Recordset.MarshalOptions property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets marshaling behavior flags for recordset transport.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.MarshalOptions
-obj.Recordset.MarshalOptions = newValue
+value = rs.MarshalOptions
+rs.MarshalOptions = newValue
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns current marshal options flag.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Marshaling behavior can be provider/runtime specific.
+- Set before serialization or transport scenarios.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.MarshalOptions
-Response.Write CStr(value)
-Set obj = Nothing
+Dim rs
+
+Set rs = Server.CreateObject("ADODB.Recordset")
+rs.MarshalOptions = 0
+Response.Write CStr(rs.MarshalOptions)
+
+Set rs = Nothing
 %>
 ```

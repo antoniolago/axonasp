@@ -1,31 +1,53 @@
 # Hash Property
 
 ## Overview
-Returns the raw byte array of the most recently computed cryptographic hash.
+
+Returns the raw byte array from the latest digest operation that updates internal hash state.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3CRYPTO")`.
 
 ## Syntax
+
 ```asp
 byteArray = crypto.Hash
 ```
 
-## Return Values
-Returns an **Array** (VBScript Byte Array) containing the raw binary data of the last hash operation.
+## Return Value
+
+- **Array**: Zero-based VBScript byte array.
+- **Array (empty)**: Returned when no digest bytes are currently stored.
 
 ## Remarks
-This property is useful when you need to store or transmit the hash in binary format rather than a hexadecimal string. It is updated automatically every time a hashing method (like **SHA256**, **MD5**, or **ComputeHash**) is called.
+
+- Updated by digest operations that store internal bytes, including `ComputeHash`, `HmacSha256`, `HmacSha512`, and `Pbkdf2Sha256`.
+- Cleared by `Initialize`.
+- Hex-returning digest methods such as `SHA256` return text and do not update this property.
+
+## API Reference
+
+- **Object**: `G3CRYPTO`
+- **Property**: `Hash`
+- **Access**: Read-only
+- **Type**: Array (byte values)
 
 ## Code Example
+
 ```asp
 <%
+Option Explicit
 Dim crypto, rawHash, i
 Set crypto = Server.CreateObject("G3CRYPTO")
-crypto.SHA256("Binary Output Test")
+
+crypto.ComputeHash "Binary Output Test", "sha256"
 rawHash = crypto.Hash
 
 Response.Write "First 4 bytes: "
 For i = 0 To 3
     Response.Write Hex(rawHash(i)) & " "
 Next
+
 Set crypto = Nothing
 %>
 ```

@@ -2,40 +2,59 @@
 
 ## Overview
 
-The Close method is exposed by the ADODB.Stream object in AxonASP.
+Closes the stream and releases access to its current buffer.
+
+## Prerequisites
+
+- Create the object with `Server.CreateObject("ADODB.Stream")`.
+- Open the stream before calling `Close` when you need deterministic cleanup.
 
 ## Syntax
 
 ```asp
-result = obj.Close(...)
+stm.Close
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+This method does not accept parameters.
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Empty. The method does not return a value.
+
+## How It Works
+
+- Sets `State` to `0` (closed).
+- Keeps object instance valid so you can call `Open` again.
 
 ## Remarks
 
-- Method names are case-insensitive.
-- Use Set for object return values.
+- Method names are case-insensitive in G3Pix AxonASP.
+- Calling `Close` on an already closed stream is safe.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Stream")
-result = obj.Close()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+Dim stm
+
+Set stm = Server.CreateObject("ADODB.Stream")
+stm.Type = 2
+stm.Open
+stm.WriteText "temporary"
+stm.Close
+
+Response.Write "State after close: " & CStr(stm.State)
+
+Set stm = Nothing
 %>
 ```
+
+## API Reference
+
+- Object: ADODB.Stream
+- Method: Close
+- Arguments: none
+- Returns: Empty

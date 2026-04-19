@@ -1,37 +1,56 @@
-# axeffectiveuserid
+# Get the Effective User ID
 
 ## Overview
-Retrieves the effective user ID of the current G3Pix AxonASP process.
+
+Returns the effective user ID (`euid`) of the AxonASP process.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
+
 ```asp
-result = obj.axeffectiveuserid()
+result = obj.AxEffectiveUserId()
 ```
 
-## Parameters and Arguments
-None.
+## Parameters
 
-## Return Values
-Returns an Integer representing the effective user ID (euid). On Windows systems, this method always returns -1.
+This method does not require parameters.
+
+## Return Value
+
+- **Integer**: Returns the numeric effective user ID on Unix-like systems.
+- **Integer**: Returns `-1` on Windows, where the effective user ID concept does not apply.
 
 ## Remarks
-This method is primarily useful on Unix-like systems where it returns the numeric user ID of the effective user.
 
-## Code Example
+- On Unix-like systems, a return value of `0` indicates the process is running as root.
+- Method names are case-insensitive in VBScript dispatch.
+
+## Example
+
 ```asp
 <%
 Option Explicit
-Dim obj, euid
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
+Dim ax
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-euid = obj.axeffectiveuserid()
-
-If euid = -1 Then
-    Response.Write "Effective User ID is not applicable on this system (Windows)."
+If ax.AxEffectiveUserId() = 0 Then
+    Response.Write "Running as root/superuser"
+ElseIf ax.AxEffectiveUserId() = -1 Then
+    Response.Write "Windows: effective UID not applicable"
 Else
-    Response.Write "Effective User ID: " & euid
+    Response.Write "Effective UID: " & ax.AxEffectiveUserId()
 End If
 
-Set obj = Nothing
+Set ax = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxEffectiveUserId`
+- **Arguments**: none
+- **Returns**: `Integer` (euid on Unix, `-1` on Windows)

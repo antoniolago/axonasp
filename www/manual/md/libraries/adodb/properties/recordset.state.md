@@ -1,39 +1,42 @@
-﻿# Recordset.State Property
+# Recordset.State Property
 
-## Overview
-
-The Recordset.State property is exposed by the ADODB.Connection object in AxonASP.
+Returns the open/closed state of the recordset.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.State
-obj.Recordset.State = newValue
+value = rs.State
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns `0` when closed and `1` when open.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- This property is read-only.
+- Check before reading fields or moving the cursor.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.State
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.Execute("SELECT id, name FROM users")
+Response.Write "Open state: " & CStr(rs.State) & "<br>"
+
+rs.Close
+Response.Write "Closed state: " & CStr(rs.State)
+
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

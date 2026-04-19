@@ -1,33 +1,29 @@
 # ParseError.SrcText Property
 
-## Overview
-Reads or writes the SrcText property on the MSXML2 ParseError compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.SrcText
-```
+Returns the source text that was being parsed when the error occurred.
 
 ## Access
-Read Only
 
-## Return Values
-Returns a Variant-compatible value.
+Read-only.
+
+## Type
+
+String.
 
 ## Remarks
-- Source text excerpt for parser error.
-- Property names are case-insensitive.
+
+- Contains the text fragment around the error position.
+- Returns an empty String when there is no error.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.SrcText)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+If Not oXML.LoadXML("<root><item broken") Then
+    Response.Write "Near: " & oXML.ParseError.SrcText
+End If
+Set oXML = Nothing
 %>
 ```

@@ -1,41 +1,48 @@
-﻿# Recordset.Seek Method
+# Recordset.Seek Method
 
-## Overview
-
-The Recordset.Seek method is exposed by the ADODB.Connection object in AxonASP.
+Repositions the cursor using an index key.
 
 ## Syntax
 
 ```asp
-result = obj.Recordset.Seek(...)
+rs.Seek keyOrPosition
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `keyOrPosition` | Variant | Yes | Key or position value used by the provider seek implementation. |
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Empty. The method does not return a value.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- Seek support depends on provider and recordset index configuration.
+- Set `Recordset.Index` before calling Seek when required.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Recordset.Seek()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+Set rs = conn.Execute("SELECT id, name FROM users")
+
+rs.Index = "id"
+rs.Seek 1
+If Not rs.EOF Then Response.Write rs.Fields("name").Value
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

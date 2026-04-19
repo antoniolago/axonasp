@@ -1,39 +1,35 @@
-﻿# Recordset.DataMember Property
+# Recordset.DataMember Property
 
-## Overview
-
-The Recordset.DataMember property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets the named data member associated with the recordset.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.DataMember
-obj.Recordset.DataMember = newValue
+value = rs.DataMember
+rs.DataMember = newValue
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+String. Returns current data member name.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Used mainly in bound-data scenarios.
+- Often empty for direct SQL recordsets.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.DataMember
-Response.Write CStr(value)
-Set obj = Nothing
+Dim rs
+
+Set rs = Server.CreateObject("ADODB.Recordset")
+rs.DataMember = "Users"
+Response.Write rs.DataMember
+
+Set rs = Nothing
 %>
 ```

@@ -1,39 +1,44 @@
-﻿# Field.OriginalValue Property
+# Field.OriginalValue Property
 
-## Overview
-
-The Field.OriginalValue property is exposed by the ADODB.Connection object in AxonASP.
+Returns the original field value before local edits on the current row.
 
 ## Syntax
 
 ```asp
-value = obj.Field.OriginalValue
-obj.Field.OriginalValue = newValue
+value = rs.Fields("columnName").OriginalValue
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Variant. Returns the original value tracked by the runtime for the current row field.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- This property is read-only.
+- In providers without full change tracking, value can match `Field.Value`.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Field.OriginalValue
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.Execute("SELECT * FROM users WHERE id = 1")
+If Not rs.EOF Then
+    Response.Write "Original: " & rs.Fields("name").OriginalValue & "<br>"
+    rs.Fields("name").Value = "Temporary Change"
+    Response.Write "Current: " & rs.Fields("name").Value
+End If
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

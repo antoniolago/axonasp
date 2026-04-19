@@ -2,19 +2,23 @@
 
 ## Overview
 
-This page lists the methods provided by the G3ZLIB library in G3Pix AxonASP.
+This page summarizes every method exposed by `G3ZLIB` in G3Pix AxonASP.
 
-## Method List
-- Clear: Clears the current operation context and resets the library state.
-- Compress: Compresses a string or binary data into a compressed byte array.
-- CompressFile: Compresses a source file to a destination file.
-- CompressMany: Compresses multiple source files into a single bundle file.
-- Decompress: Decompresses a compressed byte array back to its original representation.
-- DecompressFile: Decompresses a compressed file back to its original content.
-- DecompressMany: Decompresses a bundled file to a specified output directory.
-- DecompressText: Decompresses compressed data back to a string.
+## Methods
+
+| Method | Returns | Description |
+|---|---|---|
+| `Compress(input [, level])` | Array or Empty | Compresses text or byte-array input and returns compressed bytes as an array; returns Empty when input is missing or compression fails. |
+| `Decompress(input)` | Array or Empty | Decompresses byte-array input and returns decompressed bytes as an array; returns Empty on missing input or decompression failure. |
+| `DecompressText(input)` | String | Decompresses input and returns UTF-8 text; returns empty string when input is missing or conversion fails. |
+| `CompressMany(items [, level])` | Array | Compresses each item from input array and returns an array of compressed byte arrays; returns empty array when input is missing or any item compression fails. |
+| `DecompressMany(items)` | Array | Decompresses each item from input array and returns an array of decompressed byte arrays. |
+| `CompressFile(sourcePath, destPath [, level])` | Boolean | Compresses one file to destination path. Returns `True` on success; otherwise `False`. |
+| `DecompressFile(sourcePath, destPath)` | Boolean | Decompresses one file to destination path. Returns `True` on success; otherwise `False`. |
+| `Clear()` | Boolean | Clears last error state and returns `True`. |
 
 ## Remarks
 
+- Instantiate the library with `Server.CreateObject("G3ZLIB")`.
 - Method names are case-insensitive.
-- Validate input types and check return values or properties like LastError to handle failures gracefully.
+- Use `LastError` for failure diagnostics.

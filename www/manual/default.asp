@@ -707,6 +707,12 @@ End Function
                             parent.classList.remove("collapsed");
                             parent = parent.parentElement.closest(".folder");
                         }
+                        setTimeout(() => {
+                            link.scrollIntoView({
+                                behavior: "auto",
+                                block: "center",
+                            });
+                        }, 50);
                     }
                 });
             });

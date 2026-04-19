@@ -1,37 +1,51 @@
-# GetBCryptCost Method
+# Get the bcrypt Cost
 
 ## Overview
 
-Retrieves the current bcrypt computational cost used for password hashing using the G3Pix AxonASP G3CRYPTO library.
+Returns the current bcrypt work factor.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3CRYPTO")`.
 
 ## Syntax
 
 ```asp
-cost = obj.GetBCryptCost()
+result = crypto.GetBCryptCost()
 ```
 
 ## Parameters
 
-This method accepts no parameters.
+This method does not accept any parameters.
 
-## Return Values
+## Return Value
 
-Returns an Integer representing the current work factor (cost) used by the bcrypt algorithm.
+- **Integer**: Current bcrypt cost value.
 
 ## Remarks
 
-- Instantiated via `Server.CreateObject("G3CRYPTO")`.
-- The default cost is 10. Higher cost increases the time needed to compute a hash, enhancing security against brute-force attacks.
-- This value can also be accessed and modified via the `BCryptCost` property.
+- Default value is `10`.
+- This value is the same value exposed by the `BCryptCost` property.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
 ```asp
 <%
+Option Explicit
 Dim crypto, cost
 Set crypto = Server.CreateObject("G3CRYPTO")
+
 cost = crypto.GetBCryptCost()
-Response.Write "Current BCrypt cost: " & cost
+Response.Write "Current bcrypt cost: " & cost
+
 Set crypto = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3CRYPTO`
+- **Method**: `GetBCryptCost`
+- **Arguments**: None
+- **Returns**: Integer — current bcrypt work factor

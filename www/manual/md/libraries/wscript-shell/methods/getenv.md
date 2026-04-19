@@ -1,44 +1,51 @@
-# GetEnv Method
+# Read an Environment Variable with GetEnv
 
 ## Overview
-
-The GetEnv method is exposed by the WScript.Shell library object. Use it to execute this library operation from Classic ASP/VBScript with AxonASP runtime behavior.
+Use GetEnv to read one environment variable from the current process environment.
 
 ## Syntax
 
 ```asp
-result = obj.GetEnv(...)
-`````
+value = shell.GetEnv(name)
+```
 
-## Parameters and Arguments
+## Parameters
 
-- Parameters (Variant, Optional): This method accepts arguments according to the runtime dispatch of the WScript.Shell object.
-- Argument validation: invalid count or type raises runtime errors.
+- name (String, required): Environment variable name, such as PATH, TEMP, or USERNAME.
 
-## Return Values
+## Return Value
 
-Returns a Variant result. Depending on the operation, this can be String, Boolean, Number, Array, Dictionary/object handle, or Empty.
+Returns a String containing the variable value when the variable exists.
+
+Returns an empty string when name is missing or when the variable is not defined.
+
+## How It Works
+
+- The method reads directly from the OS process environment seen by AxonASP.
+- Missing variables do not raise an error. The method returns an empty string.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Prefer explicit variable assignment and defensive checks before using returned values.
-- For object values, use Set when assigning the return value.
+- The alias EnvironmentVariables is also accepted.
 
-## Code Example
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("WScript.Shell")
-result = obj.GetEnv()
-If IsObject(result) Then
-    Response.Write "Object returned"
+
+Dim shell, pathValue
+Set shell = Server.CreateObject("WScript.Shell")
+
+pathValue = shell.GetEnv("PATH")
+If pathValue = "" Then
+    Response.Write "PATH is not available"
 Else
-    Response.Write CStr(result)
+    Response.Write "PATH length: " & Len(pathValue)
 End If
-Set obj = Nothing
+
+Set shell = Nothing
 %>
-`````
+```
 

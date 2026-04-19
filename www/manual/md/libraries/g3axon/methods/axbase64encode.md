@@ -1,32 +1,55 @@
-# Encode String to Base64
+# Encode a String to Base64
 
 ## Overview
 
-Encodes a string into Base64 format.
+Encodes a string to Base64 format using the standard RFC 4648 encoding.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
 
-```vbscript
-strEncoded = obj.axbase64encode(str)
+```asp
+result = ax.AxBase64Encode(str)
 ```
 
 ## Parameters
 
-- **str** (String): The string to encode.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **str** | String | Yes | The string to encode. |
 
 ## Return Value
 
-String. The Base64 encoded representation of the input string.
+- **String**: The Base64-encoded representation of the input string.
 
 ## Remarks
 
-Base64 encoding is commonly used to safely transmit binary or text data over text-based protocols.
+- The input string is encoded as UTF-8 before Base64 encoding.
+- Base64 encoding is commonly used to safely transmit or store binary or text data in text-based protocols.
+- To reverse the operation, use `AxBase64Decode`.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
-```vbscript
-Dim obj, strEncode
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
-strEncode = obj.axbase64encode("Hello World")
-Response.Write strEncode ' Outputs: SGVsbG8gV29ybGQ=
+```asp
+<%
+Option Explicit
+Dim ax, encoded
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
+
+encoded = ax.AxBase64Encode("Hello World")
+Response.Write encoded
+' Output: SGVsbG8gV29ybGQ=
+
+Set ax = Nothing
+%>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxBase64Encode`
+- **Arguments**: `str` (String, required)
+- **Returns**: String — Base64-encoded representation of the input

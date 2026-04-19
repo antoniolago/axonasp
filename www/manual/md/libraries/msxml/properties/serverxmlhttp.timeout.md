@@ -1,33 +1,41 @@
 # ServerXMLHTTP.Timeout Property
 
-## Overview
-Reads or writes the Timeout property on the MSXML2 ServerXMLHTTP compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.ServerXMLHTTP")
-value = obj.Timeout
-```
+Gets or sets the maximum number of seconds to wait for a response before the request fails.
 
 ## Access
-Read/Write
 
-## Return Values
-Returns a Variant-compatible value.
+Read/Write.
+
+## Type
+
+Integer.
+
+## Default
+
+30 seconds.
 
 ## Remarks
-- HTTP timeout in milliseconds.
-- Property names are case-insensitive.
+
+- Set this property before calling `Send`.
+- If the server does not respond within the configured time, `Send` returns with an error condition and `Status` is set to 0.
+- Setting `Timeout` to 0 is not recommended as it may cause indefinite blocking.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.ServerXMLHTTP")
+Dim oHTTP
+Set oHTTP = Server.CreateObject("MSXML2.ServerXMLHTTP")
+oHTTP.Timeout = 10
+oHTTP.Open "GET", "https://example.com/slow-endpoint", False
 On Error Resume Next
-Response.Write CStr(obj.Timeout)
-On Error GoTo 0
-Set obj = Nothing
+oHTTP.Send
+If Err.Number <> 0 Then
+    Response.Write "Request timed out."
+    Err.Clear
+Else
+    Response.Write oHTTP.ResponseText
+End If
+Set oHTTP = Nothing
 %>
 ```

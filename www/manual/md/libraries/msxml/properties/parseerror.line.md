@@ -1,33 +1,29 @@
 # ParseError.Line Property
 
-## Overview
-Reads or writes the Line property on the MSXML2 ParseError compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.Line
-```
+Returns the 1-based line number in the source document where the parse error was detected.
 
 ## Access
-Read Only
 
-## Return Values
-Returns a Variant-compatible value.
+Read-only.
+
+## Type
+
+Integer.
 
 ## Remarks
-- Error line number.
-- Property names are case-insensitive.
+
+- Returns 0 when there is no error.
+- Pair with `LinePos` to identify the exact error location.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.Line)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+If Not oXML.LoadXML("<root>" & Chr(10) & "<bad attr") Then
+    Response.Write "Error on line: " & oXML.ParseError.Line
+End If
+Set oXML = Nothing
 %>
 ```

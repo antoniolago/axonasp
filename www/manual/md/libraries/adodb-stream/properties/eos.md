@@ -2,38 +2,49 @@
 
 ## Overview
 
-The EOS property is exposed by the ADODB.Stream object in AxonASP.
+Indicates whether current stream position is at or beyond end-of-stream.
 
 ## Syntax
 
 ```asp
-value = obj.EOS
-obj.EOS = newValue
+value = stm.EOS
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Boolean. Returns `True` when `Position >= Size`; otherwise returns `False`.
 
 ## Remarks
 
-- Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Property names are case-insensitive in G3Pix AxonASP.
+- This property is read-only.
+- Use `EOS` in loops to stop reading safely.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Stream")
-value = obj.EOS
-Response.Write CStr(value)
-Set obj = Nothing
+Dim stm
+
+Set stm = Server.CreateObject("ADODB.Stream")
+stm.Type = 2
+stm.Open
+stm.WriteText "abc"
+stm.Position = 0
+
+Do While Not stm.EOS
+	Response.Write stm.ReadText(1)
+Loop
+
+stm.Close
+Set stm = Nothing
 %>
 ```
+
+## API Reference
+
+- Object: ADODB.Stream
+- Property: EOS
+- Access: Read-only
+- Type: Boolean

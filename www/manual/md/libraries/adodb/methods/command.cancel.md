@@ -1,41 +1,50 @@
-﻿# Command.Cancel Method
+# Command.Cancel Method
 
-## Overview
-
-The Command.Cancel method is exposed by the ADODB.Connection object in AxonASP.
+Cancels the current command execution.
 
 ## Syntax
 
 ```asp
-result = obj.Command.Cancel(...)
+cmd.Cancel
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+No parameters.
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Empty. The method does not return a value.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- In the current G3Pix AxonASP ADODB implementation, this method is a compatibility no-op.
+- Calling Cancel does not interrupt already completed operations.
+- Use this method only for compatibility with scripts that expect the ADODB command surface.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Command.Cancel()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+Dim conn, cmd
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set cmd = Server.CreateObject("ADODB.Command")
+cmd.ActiveConnection = conn
+cmd.CommandText = "SELECT id, name FROM users"
+
+' Compatibility no-op in current runtime.
+cmd.Cancel
+
+Response.Write "Command.Cancel executed"
+
+conn.Close
+Set cmd = Nothing
+Set conn = Nothing
 %>
 ```

@@ -1,40 +1,58 @@
-# SetBCryptCost Method
+# Set the bcrypt Cost
 
 ## Overview
 
-Configures the computational cost (work factor) for the bcrypt password hashing algorithm using the G3Pix AxonASP G3CRYPTO library.
+Sets the bcrypt work factor used by `HashPassword`.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3CRYPTO")`.
 
 ## Syntax
 
 ```asp
-success = obj.SetBCryptCost(cost)
+result = crypto.SetBCryptCost(cost)
 ```
 
 ## Parameters
 
-- **cost** (Integer): The desired work factor. Accepted values are between 4 and 31.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **cost** | Integer | Yes | bcrypt work factor. Valid range is `4` to `31`. |
 
-## Return Values
+## Return Value
 
-Returns a Boolean value indicating whether the new cost was successfully applied. Returns `True` if the cost is within the valid range, and `False` otherwise.
+- **Boolean `True`**: Cost was accepted and applied.
+- **Boolean `False`**: Cost is outside `4..31` or argument is missing.
 
 ## Remarks
 
-- Instantiated via `Server.CreateObject("G3CRYPTO")`.
-- The default cost is 10.
-- Increasing the cost exponentially increases the time required to compute a hash, providing greater resistance against brute-force attacks at the expense of server resources.
+- Default bcrypt cost is `10`.
+- Higher cost increases password hashing time and CPU usage.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
 ```asp
 <%
-Dim crypto, success
+Option Explicit
+Dim crypto, ok
 Set crypto = Server.CreateObject("G3CRYPTO")
-' Increase work factor for higher security
-success = crypto.SetBCryptCost(12)
-If success Then
-    Response.Write "BCrypt cost successfully updated to 12"
+
+ok = crypto.SetBCryptCost(12)
+If ok Then
+    Response.Write "bcrypt cost updated to 12"
+Else
+    Response.Write "Invalid bcrypt cost"
 End If
+
 Set crypto = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3CRYPTO`
+- **Method**: `SetBCryptCost`
+- **Arguments**: `cost` (Integer, required)
+- **Returns**: Boolean — `True` on success, `False` on invalid value

@@ -1,39 +1,46 @@
-﻿# Parameters.Item Property
+# Parameters.Item Property
 
-## Overview
-
-The Parameters.Item property is exposed by the ADODB.Connection object in AxonASP.
+Returns a parameter object from the command Parameters collection.
 
 ## Syntax
 
 ```asp
-value = obj.Parameters.Item
-obj.Parameters.Item = newValue
+Set param = cmd.Parameters.Item(indexOrName)
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Object or Empty. Returns ADODB.Parameter for valid lookups; can return Empty for unresolved access in compatibility paths.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Validate `Parameters.Count` before indexed reads.
+- Name resolution depends on how parameters were created.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Parameters.Item
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, cmd, p, p2
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set cmd = Server.CreateObject("ADODB.Command")
+Set cmd.ActiveConnection = conn
+Set p = cmd.CreateParameter("id", 3, 1, 4, 1)
+cmd.Parameters.Append p
+
+Set p2 = cmd.Parameters.Item(0)
+Response.Write CStr(p2.Value)
+
+conn.Close
+Set p2 = Nothing
+Set p = Nothing
+Set cmd = Nothing
+Set conn = Nothing
 %>
 ```

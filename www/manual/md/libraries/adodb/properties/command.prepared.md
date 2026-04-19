@@ -1,39 +1,45 @@
 ﻿# Command.Prepared Property
 
-## Overview
-
-The Command.Prepared property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets whether the command should be prepared before execution.
 
 ## Syntax
 
 ```asp
-value = obj.Command.Prepared
-obj.Command.Prepared = newValue
+isPrepared = cmd.Prepared
+cmd.Prepared = True
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Boolean. Returns True when prepared mode is enabled; otherwise False.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Prepared mode can improve performance for repeated command execution.
+- Some providers may ignore this hint.
+- Set this property before the first Execute call.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Command.Prepared
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, cmd
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set cmd = Server.CreateObject("ADODB.Command")
+Set cmd.ActiveConnection = conn
+cmd.CommandText = "SELECT id, name FROM users WHERE active = 1"
+cmd.Prepared = True
+
+Response.Write "Prepared: " & CStr(cmd.Prepared)
+
+conn.Close
+Set cmd = Nothing
+Set conn = Nothing
 %>
 ```

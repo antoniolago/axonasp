@@ -1,39 +1,40 @@
 ﻿# Connection.ConnectionTimeout Property
 
-## Overview
-
-The Connection.ConnectionTimeout property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets the timeout for establishing the connection, in seconds.
 
 ## Syntax
 
 ```asp
-value = obj.Connection.ConnectionTimeout
-obj.Connection.ConnectionTimeout = newValue
+seconds = conn.ConnectionTimeout
+conn.ConnectionTimeout = 15
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns the configured connection timeout in seconds.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Set this property before calling `Connection.Open`.
+- Lower values fail faster on unavailable endpoints.
+- Very low values can cause failures on slow networks or startup-heavy providers.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Connection.ConnectionTimeout
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.ConnectionTimeout = 10
+
+Response.Write "Connection timeout: " & CStr(conn.ConnectionTimeout) & " seconds"
+
+conn.Open
+conn.Close
+Set conn = Nothing
 %>
 ```

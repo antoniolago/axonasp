@@ -1,39 +1,47 @@
 ﻿# Field.Value Property
 
-## Overview
-
-The Field.Value property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets the current value of a column in the active row.
 
 ## Syntax
 
 ```asp
-value = obj.Field.Value
-obj.Field.Value = newValue
+value = rs.Fields("columnName").Value
+rs.Fields("columnName").Value = newValue
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Variant. Returns the current field value for the active row. Returns `Null` when the database value is null.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Assigning to `Field.Value` marks the current row as edited.
+- Call `Recordset.Update` to persist assigned values.
+- Type conversion follows provider and ADODB coercion rules.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Field.Value
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.Execute("SELECT * FROM users WHERE id = 1")
+If Not rs.EOF Then
+	Response.Write "Current name: " & rs.Fields("name").Value & "<br>"
+	rs.Fields("name").Value = "Updated Name"
+	rs.Update
+	Response.Write "Name updated"
+End If
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

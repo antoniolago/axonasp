@@ -1,39 +1,45 @@
 ﻿# Command.CommandType Property
 
-## Overview
-
-The Command.CommandType property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets how CommandText should be interpreted.
 
 ## Syntax
 
 ```asp
-value = obj.Command.CommandType
-obj.Command.CommandType = newValue
+kind = cmd.CommandType
+cmd.CommandType = 1
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns the command type flag.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Common values are `1` for text command and `4` for stored procedure.
+- Use `1` for SQL text in most AxonASP ADODB scenarios.
+- Set CommandType before Execute for predictable provider behavior.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Command.CommandType
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, cmd
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set cmd = Server.CreateObject("ADODB.Command")
+Set cmd.ActiveConnection = conn
+cmd.CommandType = 1
+cmd.CommandText = "SELECT COUNT(*) AS total FROM users"
+
+Response.Write "CommandType: " & CStr(cmd.CommandType)
+
+conn.Close
+Set cmd = Nothing
+Set conn = Nothing
 %>
 ```

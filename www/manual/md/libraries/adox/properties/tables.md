@@ -1,41 +1,67 @@
-# Tables Property
+# Get Catalog Tables
 
 ## Overview
+Use Tables to retrieve the catalog table collection for the current ActiveConnection.
 
-The Tables property is exposed by the ADOX.Catalog library object and returns the current state/value associated with this member.
+## Prerequisites
+- Set ActiveConnection before reading Tables.
 
 ## Syntax
 
 ```asp
-value = obj.Tables
-obj.Tables = newValue
-`````
+Set tables = catalog.Tables
+count = tables.Count
+Set oneTable = tables.Item(0)
+```
 
-## Parameters and Arguments
+## Parameters
+- Getter only. This property accepts no arguments.
 
-- Getter: no arguments.
-- Setter (when supported): one Variant value.
+## Return Value
+Returns an object reference to an ADOX tables collection.
 
-## Return Values
+The collection exposes:
+- Count (Integer): number of discovered items.
+- Item(indexOrName) (Object or Empty): returns one table object by zero-based index or case-insensitive table name.
 
-Returns the current property value as Variant. Read-only members reject assignments.
+Each table object exposes:
+- Name (String)
+- Type (String)
+
+## How It Works
+- On first read, the runtime resolves schema metadata from ActiveConnection and builds the collection.
+- The collection is cached until ActiveConnection changes.
 
 ## Remarks
+- Tables is read-only.
+- Use Set when assigning object returns.
 
-- Property names are case-insensitive.
-- Setters are validated by dispatch logic and can raise runtime errors.
-- For object-typed values, assign with Set.
-
-## Code Example
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADOX.Catalog")
-value = obj.Tables
-Response.Write CStr(value)
-Set obj = Nothing
+
+Dim conn, catalog, tables, firstTable
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.Open "Data Source=./temp/sample.db;Version=3;"
+
+Set catalog = Server.CreateObject("ADOX.Catalog")
+Set catalog.ActiveConnection = conn
+Set tables = catalog.Tables
+
+Response.Write "Count=" & tables.Count & "<br>"
+If tables.Count > 0 Then
+	Set firstTable = tables.Item(0)
+	Response.Write "First name=" & firstTable.Name & "<br>"
+	Response.Write "First type=" & firstTable.Type
+	Set firstTable = Nothing
+End If
+
+Set tables = Nothing
+Set catalog = Nothing
+conn.Close
+Set conn = Nothing
 %>
-`````
+```
 

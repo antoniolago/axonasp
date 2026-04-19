@@ -1,37 +1,52 @@
-# Blake2b256 Method
+# Compute a BLAKE2b-256 Digest
 
 ## Overview
 
-Computes a BLAKE2b-256 hash from the provided input string or byte array using the G3Pix AxonASP G3CRYPTO library.
+Computes the BLAKE2b-256 digest of the input and returns the result as a lowercase hexadecimal string.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3CRYPTO")`.
 
 ## Syntax
 
 ```asp
-result = obj.Blake2b256(input)
+result = crypto.Blake2b256(input)
 ```
 
 ## Parameters
 
-- **input** (String or Array): The data to be hashed. Can be a string or a VBScript byte array.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **input** | String or Array | No | Input data as text or a VBScript byte array. When omitted, the method hashes an empty string. |
 
-## Return Values
+## Return Value
 
-Returns a String containing the 256-bit hash result encoded as a lowercase hexadecimal string.
+- **String**: 64-character lowercase hexadecimal BLAKE2b-256 digest.
 
 ## Remarks
 
-- Instantiated via `Server.CreateObject("G3CRYPTO")`.
-- BLAKE2b is a cryptographic hash function that is faster than MD5, SHA-1, SHA-2, and SHA-3, yet is at least as secure as the latest standard SHA-3.
-- The method name is case-insensitive.
+- BLAKE2b is optimized for performance and provides strong cryptographic properties.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
 ```asp
 <%
-Dim crypto, hash
+Option Explicit
+Dim crypto, digest
 Set crypto = Server.CreateObject("G3CRYPTO")
-hash = crypto.Blake2b256("Hello AxonASP")
-Response.Write "BLAKE2b-256 Hash: " & hash
+
+digest = crypto.Blake2b256("Hello AxonASP")
+Response.Write digest
+
 Set crypto = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3CRYPTO`
+- **Method**: `Blake2b256`
+- **Arguments**: `input` (String or Array, optional)
+- **Returns**: String — 64-character lowercase hexadecimal digest

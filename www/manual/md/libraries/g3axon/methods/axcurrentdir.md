@@ -1,32 +1,49 @@
-# axcurrentdir
+# Get the Current Working Directory
 
 ## Overview
-Retrieves the absolute path of the current working directory for the G3Pix AxonASP process.
+
+Returns the absolute path of the current working directory of the AxonASP process.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
+
 ```asp
-result = obj.axcurrentdir()
+result = obj.AxCurrentDir()
 ```
 
-## Parameters and Arguments
-None.
+## Parameters
 
-## Return Values
-Returns a String containing the absolute path of the current working directory.
+This method does not require parameters.
+
+## Return Value
+
+- **String**: Returns the absolute path of the current working directory.
+- **String**: Returns an empty string when an OS error occurs.
 
 ## Remarks
-If an error occurs while retrieving the directory, an empty string is returned.
 
-## Code Example
+- Method names are case-insensitive in VBScript dispatch.
+
+## Example
+
 ```asp
 <%
 Option Explicit
-Dim obj, currentDir
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
+Dim ax
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-currentDir = obj.axcurrentdir()
-Response.Write "The current working directory is: " & currentDir
+Response.Write "Working directory: " & ax.AxCurrentDir()
 
-Set obj = Nothing
+Set ax = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxCurrentDir`
+- **Arguments**: none
+- **Returns**: `String` (absolute path of the current working directory)

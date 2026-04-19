@@ -1,27 +1,66 @@
 # Count Words in a String
 
-Returns the number of words in a string.
+## Overview
+
+Counts the number of words in a string, or optionally returns an array of those words.
 
 ## Prerequisites
-The `G3AXON.FUNCTIONS` object must be instantiated to use this method.
-This feature is available in the G3Pix AxonASP environment.
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
-```vbscript
-Number (Integer) = obj.AxWordCount(input)
+
+```asp
+result = obj.AxWordCount(str [, format])
 ```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| str | String | Yes | The string to analyze. |
+| format | Integer | Optional | Output mode. `0` (default) returns the word count as an Integer. `1` returns a zero-based VBArray of String words. |
 
 ## Return Value
-Returns a Number (Integer).
+
+- **Integer**: Returns the number of whitespace-delimited words when `format` is `0` or omitted.
+- **Array**: Returns a zero-based VBArray of String words when `format` is `1`.
+- **Integer**: Returns `0` when no argument is provided.
+
+## Remarks
+
+- Word boundaries are determined by whitespace (spaces, tabs, newlines).
+- Method names are case-insensitive in VBScript dispatch.
 
 ## Example
-```vbscript
-Dim obj, result
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
 
-result = obj.AxWordCount(input)
+```asp
+<%
+Option Explicit
+Dim ax, wordArr, i
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-Response.Write result
+' Count words
+Response.Write ax.AxWordCount("The quick brown fox")
+' Output: 4
 
-Set obj = Nothing
+' Get word array
+wordArr = ax.AxWordCount("Hello World ASP", 1)
+For i = 0 To UBound(wordArr)
+    Response.Write wordArr(i) & "<br>"
+Next
+' Output:
+' Hello
+' World
+' ASP
+
+Set ax = Nothing
+%>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxWordCount`
+- **Arguments**: `str As String [, format As Integer]`
+- **Returns**: `Integer` (word count) or `Array` (word list when format=1)

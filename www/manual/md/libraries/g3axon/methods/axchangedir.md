@@ -1,37 +1,59 @@
-# axchangedir
+# Change the Current Working Directory
 
 ## Overview
-Changes the current working directory of the process in G3Pix AxonASP.
+
+Changes the current working directory of the AxonASP process to the specified path.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
+
 ```asp
-result = obj.axchangedir(path)
+result = obj.AxChangeDir(path)
 ```
 
-## Parameters and Arguments
-- **path** (String): The absolute or relative path to the new working directory.
+## Parameters
 
-## Return Values
-Returns a Boolean indicating whether the directory change was successful.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| path | String | Yes | The absolute or relative path of the directory to switch to. |
+
+## Return Value
+
+- **Boolean**: Returns `True` when the directory was changed successfully.
+- **Boolean**: Returns `False` when the path is invalid, inaccessible, or no argument is provided.
 
 ## Remarks
-Changing the working directory affects the entire process. In a web server environment, this should be used with caution as it may affect other concurrent requests.
 
-## Code Example
+- Changing the working directory affects the entire process. In a multi-threaded web server environment, use this function with caution because it may interfere with other concurrent requests.
+- Method names are case-insensitive in VBScript dispatch.
+
+## Example
+
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
+Dim ax, ok
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-result = obj.axchangedir("C:\Windows\Temp")
-
-If result Then
-    Response.Write "Successfully changed directory to: " & obj.axcurrentdir()
+ok = ax.AxChangeDir("C:\Windows\Temp")
+If ok Then
+    Response.Write "Directory changed to: " & ax.AxCurrentDir()
 Else
     Response.Write "Failed to change directory."
 End If
 
-Set obj = Nothing
+Set ax = Nothing
+%>
+```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxChangeDir`
+- **Arguments**: `path As String`
+- **Returns**: `Boolean` (`True` on success, `False` on failure)
 %>
 ```

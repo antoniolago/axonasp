@@ -2,42 +2,54 @@
 
 ## Overview
 
-The Test method is exposed by the VBScript.RegExp library object. Use it to execute this library operation from Classic ASP/VBScript with AxonASP runtime behavior.
+Tests whether the compiled regular expression pattern matches anywhere within an input string.
 
 ## Syntax
 
 ```asp
-result = obj.Test(...)
+result = re.Test(string)
 ```
 
-## Parameters and Arguments
+## Parameters
 
-- Parameters (Variant, Optional): This method accepts arguments according to the runtime dispatch of the VBScript.RegExp object.
-- Argument validation: invalid count or type raises runtime errors.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| string | String | Yes | The text to test against the pattern. |
 
-## Return Values
+## Return Value
 
-Returns a Variant result. Depending on the operation, this can be String, Boolean, Number, Array, Dictionary/object handle, or Empty.
+Returns **True** if the pattern matches at least one position in the input string. Returns **False** if there is no match, if no argument is supplied, if `Pattern` is empty, or if the pattern failed to compile.
+
+## How It Works
+
+The runtime calls `MatchString` on the compiled Go `*regexp.Regexp`. If the pattern has not yet been compiled, the runtime attempts to compile it first. If compilation fails, `False` is returned and VBScript error 5017 is raised.
+
+The `Global` property has no effect on `Test`. The method only determines presence of a match, not count.
 
 ## Remarks
 
-- Method names are case-insensitive.
-- Prefer explicit variable assignment and defensive checks before using returned values.
-- For object values, use Set when assigning the return value.
+- `Test` is the fastest way to check for a match when the matched text is not needed. It performs no allocations beyond the initial compile.
+- Unlike `Execute`, `Test` never returns an object. It always returns a Boolean.
+- `IgnoreCase` and `MultiLine` apply to the pattern used by `Test` exactly as they do for `Execute`.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("VBScript.RegExp")
-result = obj.Test()
-If IsObject(result) Then
-    Response.Write "Object returned"
+Dim re
+Set re = Server.CreateObject("VBScript.RegExp")
+re.Pattern = "^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$"
+re.IgnoreCase = True
+
+Dim email
+email = Request.Form("email")
+If re.Test(email) Then
+    Response.Write "Valid email address."
 Else
-    Response.Write CStr(result)
+    Response.Write "Invalid email address."
 End If
-Set obj = Nothing
+
+Set re = Nothing
 %>
 ```

@@ -1,8 +1,15 @@
 # G3HTTP Properties
 
 ## Overview
-The **G3HTTP** library is a method-driven interface and does not expose public properties at this time. All network communication is performed through its core methods.
+
+This page lists properties exposed by `G3HTTP`.
+
+## Properties
+
+| Property | Access | Type | Description |
+|---|---|---|---|
+| `None` | N/A | N/A | `G3HTTP` does not expose public properties. Use `Fetch` and `Request` methods. |
 
 ## Remarks
-- All functionality is accessed via the **Fetch** and **Request** methods.
-- Use the **methods.md** page for a full reference of available functions.
+
+- Instantiate the library with `Server.CreateObject("G3HTTP")`.

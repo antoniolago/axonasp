@@ -1,39 +1,41 @@
 # DOMDocument.Load Method
 
-## Overview
-Calls the Load member on the MSXML2 DOMDocument compatibility object.
+Loads an XML document from a file path or HTTP/HTTPS URL.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-ok = obj.Load(pathOrUrl)
+bSuccess = objXML.Load(url)
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `url` | String | Yes | An HTTP or HTTPS URL, or a relative or absolute file path resolved via `Server.MapPath`. |
+
+## Return Value
+
+Boolean. Returns True if the document was loaded and parsed successfully. Returns False on a network failure, file-not-found error, or invalid XML. `ParseError.ErrorCode` is set to the HTTP status code on HTTP failures, or -1 for file/parse failures.
 
 ## Remarks
-- Loads XML from file path or URL.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- HTTP and HTTPS requests use a 30-second timeout.
+- File paths are resolved using `Server.MapPath` from the currently executing page context.
+- Calling `Load` replaces any previously loaded or built document.
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-obj.Load
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
+Dim oXML
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+If oXML.Load("https://example.com/feed.xml") Then
+    Response.Write "Loaded: " & oXML.DocumentElement.NodeName
+Else
+    Response.Write "Failed: " & oXML.ParseError.Reason
 End If
-On Error GoTo 0
-Set obj = Nothing
+Set oXML = Nothing
 %>
 ```

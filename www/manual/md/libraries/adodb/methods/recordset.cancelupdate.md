@@ -1,41 +1,49 @@
-﻿# Recordset.CancelUpdate Method
+# Recordset.CancelUpdate Method
 
-## Overview
-
-The Recordset.CancelUpdate method is exposed by the ADODB.Connection object in AxonASP.
+Cancels pending edits on the current row before they are persisted.
 
 ## Syntax
 
 ```asp
-result = obj.Recordset.CancelUpdate(...)
+rs.CancelUpdate
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+No parameters.
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Empty. The method does not return a value.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- Use CancelUpdate after modifying fields or calling AddNew when you want to discard changes.
+- CancelUpdate affects only the current pending row change.
+- After CancelUpdate, field values revert to the previously committed state.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Recordset.CancelUpdate()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.Execute("SELECT * FROM users WHERE id = 1")
+If Not rs.EOF Then
+    rs.Fields("name").Value = "Temporary Name"
+    rs.CancelUpdate
+    Response.Write "Update canceled"
 End If
-Set obj = Nothing
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

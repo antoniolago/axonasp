@@ -1,39 +1,44 @@
 ﻿# Connection.Errors Property
 
-## Overview
-
-The Connection.Errors property is exposed by the ADODB.Connection object in AxonASP.
+Returns the Errors collection associated with the connection.
 
 ## Syntax
 
 ```asp
-value = obj.Connection.Errors
-obj.Connection.Errors = newValue
+Set errs = conn.Errors
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Object. Returns an ADODB.Errors collection object.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- This property is read-only.
+- Use `Errors.Count`, `Errors.Item`, and `Errors.Clear` to inspect and manage error entries.
+- The collection is updated after failed connection and command operations.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Connection.Errors
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, errs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+On Error Resume Next
+conn.Execute "SELECT * FROM table_that_does_not_exist"
+On Error GoTo 0
+
+Set errs = conn.Errors
+Response.Write "Errors count: " & CStr(errs.Count)
+
+conn.Close
+Set errs = Nothing
+Set conn = Nothing
 %>
 ```

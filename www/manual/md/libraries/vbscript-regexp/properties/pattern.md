@@ -2,39 +2,44 @@
 
 ## Overview
 
-The Pattern property is exposed by the VBScript.RegExp library object and returns the current state/value associated with this member.
+Gets or sets the regular expression pattern string used for matching, replacement, and testing operations.
 
 ## Syntax
 
 ```asp
-value = obj.Pattern
-obj.Pattern = newValue
+re.Pattern = "expression"
+value = re.Pattern
 ```
 
-## Parameters and Arguments
+## Return Value
 
-- Getter: no arguments.
-- Setter (when supported): one Variant value.
+Returns a **String** containing the current pattern. Returns an empty String when no pattern has been assigned.
 
-## Return Values
+## How It Works
 
-Returns the current property value as Variant. Read-only members reject assignments.
+Assigning a value to `Pattern` immediately compiles the expression against the current `IgnoreCase` and `MultiLine` flags. If the pattern is syntactically invalid, VBScript error 5017 (Regular expression syntax error) is raised and the compiled expression is cleared, causing subsequent `Execute`, `Test`, and `Replace` calls to fail gracefully rather than match unpredictably.
+
+Setting `Pattern` to an empty String clears the compiled expression without raising an error.
 
 ## Remarks
 
-- Property names are case-insensitive.
-- Setters are validated by dispatch logic and can raise runtime errors.
-- For object-typed values, assign with Set.
+- The pattern uses RE2 syntax. Lookahead (`(?=...)`, `(?!...)`), lookbehind (`(?<=...)`, `(?<!...)`), and backreferences (`\\1`) are **not supported** and will raise error 5017 when assigned.
+- Character classes, quantifiers, anchors, and named groups (`(?P<name>...)`) are fully supported.
+- Changing `IgnoreCase` or `MultiLine` after setting `Pattern` recompiles the expression automatically.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("VBScript.RegExp")
-value = obj.Pattern
-Response.Write CStr(value)
-Set obj = Nothing
+Dim re
+Set re = Server.CreateObject("VBScript.RegExp")
+re.Pattern = "\\b[A-Z]{2,}\\b"
+re.Global = True
+
+Response.Write re.Pattern
+' Output: \b[A-Z]{2,}\b
+
+Set re = Nothing
 %>
 ```

@@ -1,48 +1,63 @@
-# axfiltervalidateip
+# Validate an IP Address
 
 ## Overview
 
-The `axfiltervalidateip` method validates whether a given string is a valid IPv4 or IPv6 address.
+Determines whether a string is a valid IPv4 or IPv6 address.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
 
 ```asp
-result = obj.axfiltervalidateip(ipAddress)
+result = ax.AxFilterValidateIp(ipAddress)
 ```
 
-## Parameters and Arguments
+## Parameters
 
-- **ipAddress** (String): The string to validate as an IP address.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **ipAddress** | String | Yes | The string to validate as an IP address. |
 
-## Return Values
+## Return Value
 
-Returns a Boolean indicating whether the string is a valid IP address. Returns `True` if valid, otherwise `False`.
+- **Boolean `True`**: The string is a valid IPv4 or IPv6 address.
+- **Boolean `False`**: The string is not a valid IP address, or no argument was supplied.
 
 ## Remarks
 
-- This method is part of the G3Pix AxonASP library.
-- It supports both IPv4 and IPv6 formats.
-- Method names in G3Pix AxonASP are case-insensitive.
+- Validation uses Go's `net.ParseIP`, which accepts both IPv4 (e.g., `192.168.1.1`) and IPv6 (e.g., `::1`) addresses.
+- This method does not perform DNS resolution or reachability checks.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim ax, ip1, ip2
+Dim ax
 Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-ip1 = "192.168.1.1"
-ip2 = "not-an-ip"
-
-If ax.axfiltervalidateip(ip1) Then
-    Response.Write ip1 & " is valid.<br>"
+If ax.AxFilterValidateIp("192.168.1.1") Then
+    Response.Write "192.168.1.1 is valid.<br>"
 End If
 
-If Not ax.axfiltervalidateip(ip2) Then
-    Response.Write ip2 & " is invalid.<br>"
+If ax.AxFilterValidateIp("::1") Then
+    Response.Write "::1 is a valid IPv6 address.<br>"
+End If
+
+If Not ax.AxFilterValidateIp("not-an-ip") Then
+    Response.Write "not-an-ip is invalid.<br>"
 End If
 
 Set ax = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxFilterValidateIp`
+- **Arguments**: `ipAddress` (String, required)
+- **Returns**: Boolean — `True` if valid IPv4 or IPv6; `False` otherwise

@@ -1,41 +1,48 @@
-﻿# Errors.Clear Method
+# Errors.Clear Method
 
-## Overview
-
-The Errors.Clear method is exposed by the ADODB.Connection object in AxonASP.
+Clears all error entries from the connection Errors collection.
 
 ## Syntax
 
 ```asp
-result = obj.Errors.Clear(...)
+conn.Errors.Clear
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+No parameters.
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Empty. The method does not return a value.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- Use Clear after handling errors to reset the collection state.
+- Clear does not fix the source problem; it only removes stored error entries.
+- The Errors collection belongs to the current Connection object.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Errors.Clear()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+Dim conn
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+On Error Resume Next
+conn.Execute "SELECT * FROM table_that_does_not_exist"
+On Error GoTo 0
+
+Response.Write "Before clear: " & CStr(conn.Errors.Count) & "<br>"
+conn.Errors.Clear
+Response.Write "After clear: " & CStr(conn.Errors.Count)
+
+conn.Close
+Set conn = Nothing
 %>
 ```

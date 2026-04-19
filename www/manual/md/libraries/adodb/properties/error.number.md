@@ -1,39 +1,46 @@
 ﻿# Error.Number Property
 
-## Overview
-
-The Error.Number property is exposed by the ADODB.Connection object in AxonASP.
+Returns the numeric error code for an ADODB error entry.
 
 ## Syntax
 
 ```asp
-value = obj.Error.Number
-obj.Error.Number = newValue
+code = errObj.Number
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns the provider or runtime-specific error number.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- This property is read-only.
+- Use Number together with Description for diagnostics.
+- Values are typically aligned with provider HRESULT-style errors.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Error.Number
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, errObj
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+On Error Resume Next
+conn.Execute "SELECT * FROM table_that_does_not_exist"
+On Error GoTo 0
+
+If conn.Errors.Count > 0 Then
+	Set errObj = conn.Errors.Item(0)
+	Response.Write "Error number: " & CStr(errObj.Number)
+End If
+
+conn.Close
+Set errObj = Nothing
+Set conn = Nothing
 %>
 ```

@@ -1,32 +1,60 @@
-# Decode Base64 String
+# Decode a Base64 String
 
 ## Overview
 
-Decodes a Base64 encoded string back to its original value.
+Decodes a Base64-encoded string back to its original representation.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
 
-```vbscript
-strDecoded = obj.axbase64decode(str)
+```asp
+result = ax.AxBase64Decode(str)
 ```
 
 ## Parameters
 
-- **str** (String): The Base64 string to decode.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **str** | String | Yes | The Base64-encoded string to decode. |
 
 ## Return Value
 
-String. The decoded original string.
+- **String**: The decoded original string.
+- **String (empty)**: Returned when the input is not valid Base64.
 
 ## Remarks
 
-If the input string is not a valid Base64 string, an empty string is returned.
+- The decoded bytes are interpreted as a UTF-8 string.
+- Padding characters (`=`) are handled automatically.
+- To encode a string, use `AxBase64Encode`.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
-```vbscript
-Dim obj, strDecode
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
-strDecode = obj.axbase64decode("SGVsbG8gV29ybGQ=")
-Response.Write strDecode ' Outputs: Hello World
+```asp
+<%
+Option Explicit
+Dim ax, decoded
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
+
+decoded = ax.AxBase64Decode("SGVsbG8gV29ybGQ=")
+Response.Write decoded
+' Output: Hello World
+
+decoded = ax.AxBase64Decode("!!!invalid!!!")
+Response.Write "<br>" & Len(decoded)
+' Output: 0 (empty string returned for invalid input)
+
+Set ax = Nothing
+%>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxBase64Decode`
+- **Arguments**: `str` (String, required)
+- **Returns**: String — decoded original string, or empty string on invalid Base64 input

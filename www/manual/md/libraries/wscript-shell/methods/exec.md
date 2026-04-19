@@ -1,44 +1,54 @@
-# Exec Method
+# Run a Command with Exec
 
 ## Overview
-
-The Exec method is exposed by the WScript.Shell library object. Use it to execute this library operation from Classic ASP/VBScript with AxonASP runtime behavior.
+Use Exec to start a process and interact with it through a process object that exposes output streams and status information.
 
 ## Syntax
 
 ```asp
-result = obj.Exec(...)
-`````
+Set execObj = shell.Exec(command)
+```
 
-## Parameters and Arguments
+## Parameters
 
-- Parameters (Variant, Optional): This method accepts arguments according to the runtime dispatch of the WScript.Shell object.
-- Argument validation: invalid count or type raises runtime errors.
+- command (String, required): Command line to execute.
 
-## Return Values
+## Return Value
 
-Returns a Variant result. Depending on the operation, this can be String, Boolean, Number, Array, Dictionary/object handle, or Empty.
+Returns an object reference that represents the running process when process startup succeeds.
+
+Returns Empty when command is missing, blank, or process startup fails.
+
+## How It Works
+
+- On Windows, AxonASP runs the command through cmd.exe /c.
+- The returned process object exposes members such as StdOut, StdErr, Status, ExitCode, and ProcessID.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Prefer explicit variable assignment and defensive checks before using returned values.
-- For object values, use Set when assigning the return value.
+- Use Set when assigning the returned process object.
+- Exec starts asynchronously. Use process state members to track completion.
 
-## Code Example
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("WScript.Shell")
-result = obj.Exec()
-If IsObject(result) Then
-    Response.Write "Object returned"
+
+Dim shell, execObj
+Set shell = Server.CreateObject("WScript.Shell")
+Set execObj = shell.Exec("echo AxonASP")
+
+If IsObject(execObj) Then
+    execObj.WaitUntilDone 5000
+    Response.Write "ExitCode=" & execObj.ExitCode
 Else
-    Response.Write CStr(result)
+    Response.Write "Exec failed"
 End If
-Set obj = Nothing
+
+Set execObj = Nothing
+Set shell = Nothing
 %>
-`````
+```
 

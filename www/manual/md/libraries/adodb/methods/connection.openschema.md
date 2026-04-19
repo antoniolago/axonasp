@@ -1,41 +1,49 @@
-﻿# Connection.OpenSchema Method
+# Connection.OpenSchema Method
 
-## Overview
-
-The Connection.OpenSchema method is exposed by the ADODB.Connection object in AxonASP.
+Returns schema metadata as a Recordset.
 
 ## Syntax
 
 ```asp
-result = obj.Connection.OpenSchema(...)
+Set rs = conn.OpenSchema(schemaId[, restrictions])
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `schemaId` | Integer | No | Schema type selector. |
+| `restrictions` | Variant | No | Restriction array or provider-specific filter values. |
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Recordset. Returns an ADODB.Recordset containing schema rows for the requested schema type.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- Supported schema sets depend on provider capabilities.
+- Validate field availability in returned schema recordset.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Connection.OpenSchema()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.OpenSchema(20)
+If Not rs.EOF Then
+    Response.Write "Schema row available"
 End If
-Set obj = Nothing
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

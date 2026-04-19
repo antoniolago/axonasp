@@ -1,39 +1,40 @@
 # DOMDocument.SelectSingleNode Method
 
-## Overview
-Calls the SelectSingleNode member on the MSXML2 DOMDocument compatibility object.
+Evaluates an XPath expression against the document and returns the first matching node.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-Set n = obj.SelectSingleNode("//item")
+Set oNode = objXML.SelectSingleNode(xpath)
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `xpath` | String | Yes | An XPath 1.0 expression to evaluate against the document. |
+
+## Return Value
+
+XMLElement. The first node that satisfies the XPath expression. Returns Null if no node matches or the expression is empty.
 
 ## Remarks
-- Returns first matching node.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- XPath is evaluated from the document root.
+- The `//` axis, attribute predicates (`@attr`), positional predicates, `contains()`, `starts-with()`, `not()`, and namespace-qualified expressions (when `SelectionNamespaces` is set) are all supported.
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-obj.SelectSingleNode
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
+Dim oXML, oNode
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<users><user id='1'>Alice</user><user id='2'>Bob</user></users>"
+Set oNode = oXML.SelectSingleNode("//user[@id='2']")
+If Not IsNull(oNode) Then
+    Response.Write oNode.Text
 End If
-On Error GoTo 0
-Set obj = Nothing
+Set oXML = Nothing
 %>
 ```

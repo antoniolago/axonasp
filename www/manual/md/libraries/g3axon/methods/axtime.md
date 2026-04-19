@@ -1,30 +1,34 @@
-# axtime
+# Get the Current Unix Timestamp
 
 ## Overview
 
-The `axtime` method returns the current Unix timestamp, which is the number of seconds that have elapsed since January 1, 1970 (UTC).
+Returns the number of seconds elapsed since 1970-01-01 00:00:00 UTC (Unix epoch).
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
 
 ```asp
-result = obj.axtime()
+result = ax.AxTime()
 ```
 
-## Parameters and Arguments
+## Parameters
 
 This method does not accept any parameters.
 
-## Return Values
+## Return Value
 
-Returns an Integer representing the current Unix timestamp in seconds.
+- **Integer**: The current Unix timestamp in seconds.
 
 ## Remarks
 
-- This method is part of the G3Pix AxonASP library.
-- The returned value is based on the system's current time and configured time zone.
-- Method names in G3Pix AxonASP are case-insensitive.
+- The returned value reflects the server's clock in UTC, adjusted for the configured time zone.
+- Pass the return value to `AxDate` to format it as a readable date/time string.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
 ```asp
 <%
@@ -32,10 +36,17 @@ Option Explicit
 Dim ax, ts
 Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-ts = ax.axtime()
-
-Response.Write "Current Unix Timestamp: " & ts
+ts = ax.AxTime()
+Response.Write "Unix timestamp: " & ts & "<br>"
+Response.Write "Formatted: " & ax.AxDate("Y-m-d H:i:s", ts)
 
 Set ax = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxTime`
+- **Arguments**: None
+- **Returns**: Integer — current Unix timestamp in seconds

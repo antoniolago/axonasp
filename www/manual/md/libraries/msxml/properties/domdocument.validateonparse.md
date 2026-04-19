@@ -1,33 +1,31 @@
 # DOMDocument.ValidateOnParse Property
 
-## Overview
-Reads or writes the ValidateOnParse property on the MSXML2 DOMDocument compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.ValidateOnParse
-```
+Gets or sets whether the document is validated against its DTD or schema during parsing.
 
 ## Access
-Read/Write
 
-## Return Values
-Returns a Variant-compatible value.
+Read/Write.
+
+## Type
+
+Boolean.
+
+## Default
+
+False.
 
 ## Remarks
-- Compatibility validate-on-parse flag.
-- Property names are case-insensitive.
+
+- Accepted for compatibility with existing code. Set this property before calling `Load` or `LoadXML`.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.ValidateOnParse)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.ValidateOnParse = False
+oXML.LoadXML "<root/>"
+Set oXML = Nothing
 %>
 ```

@@ -1,57 +1,53 @@
-# Begin Method
+# Begin a Transaction
 
 ## Overview
 
-The **Begin** method starts a new database transaction in G3Pix AxonASP.
+Starts a database transaction using default options.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3DB")`.
 
 ## Syntax
 
 ```asp
-Set result = obj.Begin()
+Set tx = db.Begin()
 ```
 
-## Parameters and Arguments
+## Parameters
 
-None. This method is also accessible through the aliases **BeginTrans** and **BeginTransaction**.
+None.
 
-## Return Values
+## Return Value
 
-Returns a **G3DBTransaction** object. This object represents the active database transaction and provides methods to commit or roll back the changes.
+- **G3DBTransaction**: Returned when transaction start succeeds.
+- **Empty**: Returned when connection is not open or transaction creation fails.
 
 ## Remarks
 
-- Transactions are essential for ensuring data integrity when performing multiple related database operations.
-- All operations performed through the returned **G3DBTransaction** object are isolated until an explicit **Commit** is called.
-- If the transaction is not committed by the time the script finishes execution, G3Pix AxonASP will automatically roll it back to prevent resource leaks and incomplete data updates.
-- Use the **Rollback** method of the transaction object to explicitly cancel all pending changes.
+- Aliases `BeginTrans` and `BeginTransaction` call the same runtime path.
 
-## Code Example
+## Example
 
 ```asp
 <%
+Option Explicit
 Dim db, tx
 Set db = Server.CreateObject("G3DB")
 
-If db.Open("mysql", "user:pass@tcp(localhost)/dbname") Then
-    ' Start a transaction
+If db.Open("mysql", "user:pass@tcp(localhost)/db") Then
     Set tx = db.Begin()
-
-    On Error Resume Next
-    tx.Exec "UPDATE accounts SET balance = balance - 100 WHERE id = 1"
-    tx.Exec "UPDATE accounts SET balance = balance + 100 WHERE id = 2"
-
-    If Err.Number = 0 Then
-        tx.Commit
-        Response.Write "Transaction completed successfully."
-    Else
-        tx.Rollback
-        Response.Write "Transaction failed and was rolled back: " & Err.Description
-    End If
-    On Error GoTo 0
-
+    If Not IsEmpty(tx) Then tx.Rollback
     db.Close
 End If
 
 Set db = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3DB`
+- **Method**: `Begin`
+- **Arguments**: none
+- **Returns**: G3DBTransaction on success, Empty on failure

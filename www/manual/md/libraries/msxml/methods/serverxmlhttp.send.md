@@ -1,39 +1,46 @@
 # ServerXMLHTTP.Send Method
 
-## Overview
-Calls the Send member on the MSXML2 ServerXMLHTTP compatibility object.
+Executes the HTTP request configured by `Open`. Blocks until the response is received or the timeout expires.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.ServerXMLHTTP")
-obj.Send [body]
+objHTTP.Send [body]
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `body` | String or Byte Array | No | The request body to send. For `POST`/`PUT` requests, supply the payload here. String values are encoded as UTF-8. Byte arrays are sent as-is. |
+
+## Return Value
+
+Empty. This method does not return a value. Read `ResponseText`, `ResponseBody`, or `Status` after `Send` completes.
 
 ## Remarks
-- Sends request and receives response.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- If no `Content-Type` header is set and a String body is provided, `application/x-www-form-urlencoded` is used automatically.
+- If no `Content-Type` header is set and a byte array body is provided, `application/octet-stream` is used automatically.
+- A default `User-Agent` header is added automatically if none is set.
+- The request timeout defaults to 30 seconds and can be changed via the `Timeout` property before calling `Send`.
+- On completion, `ReadyState` is set to 4.
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.ServerXMLHTTP")
-On Error Resume Next
-obj.Send
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
+Dim oHTTP
+Set oHTTP = Server.CreateObject("MSXML2.ServerXMLHTTP")
+oHTTP.Open "POST", "https://example.com/api/submit", False
+oHTTP.SetRequestHeader "Content-Type", "application/json"
+oHTTP.Send "{\"key\":\"value\"}"
+If oHTTP.Status = 200 Then
+    Response.Write oHTTP.ResponseText
+Else
+    Response.Write "Error: " & oHTTP.Status & " " & oHTTP.StatusText
 End If
-On Error GoTo 0
-Set obj = Nothing
+Set oHTTP = Nothing
 %>
 ```

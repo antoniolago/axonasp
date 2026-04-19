@@ -1,39 +1,41 @@
-﻿# Recordset.PageCount Property
+# Recordset.PageCount Property
 
-## Overview
-
-The Recordset.PageCount property is exposed by the ADODB.Connection object in AxonASP.
+Returns the total number of pages based on row count and page size.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.PageCount
-obj.Recordset.PageCount = newValue
+value = rs.PageCount
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns computed total pages.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- This property is read-only.
+- Depends on `PageSize` and row materialization state.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.PageCount
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+Set rs = conn.Execute("SELECT id, name FROM users")
+
+rs.PageSize = 10
+Response.Write CStr(rs.PageCount)
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

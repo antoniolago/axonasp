@@ -1,39 +1,35 @@
-﻿# Recordset.PageSize Property
+# Recordset.PageSize Property
 
-## Overview
-
-The Recordset.PageSize property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets the number of rows per logical page.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.PageSize
-obj.Recordset.PageSize = newValue
+value = rs.PageSize
+rs.PageSize = newValue
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns configured page size.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Set this value before page-based navigation.
+- A value less than 1 is invalid for page calculations.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.PageSize
-Response.Write CStr(value)
-Set obj = Nothing
+Dim rs
+
+Set rs = Server.CreateObject("ADODB.Recordset")
+rs.PageSize = 25
+Response.Write CStr(rs.PageSize)
+
+Set rs = Nothing
 %>
 ```

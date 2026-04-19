@@ -1,41 +1,61 @@
-# ActiveConnection Property
+# Set Catalog ActiveConnection
 
 ## Overview
-
-The ActiveConnection property is exposed by the ADOX.Catalog library object and returns the current state/value associated with this member.
+Use ActiveConnection to define the connection source used by ADOX.Catalog for schema discovery.
 
 ## Syntax
 
 ```asp
-value = obj.ActiveConnection
-obj.ActiveConnection = newValue
-`````
+Set catalog.ActiveConnection = connectionObject
+catalog.ActiveConnection = connectionString
+value = catalog.ActiveConnection
+```
 
-## Parameters and Arguments
+## Parameters
+- Setter value (required for assignment):
+	- ADODB connection object, or
+	- connection string.
 
-- Getter: no arguments.
-- Setter (when supported): one Variant value.
+## Return Value
+Getter returns the value currently stored in ActiveConnection:
+- Object when set with an ADODB connection object.
+- String when set with a connection string.
+- Empty when never assigned.
 
-## Return Values
+Setter returns no value.
 
-Returns the current property value as Variant. Read-only members reject assignments.
+## How It Works
+- Assigning ActiveConnection updates the connection source used by Tables.
+- Each assignment invalidates previously cached Tables metadata.
 
 ## Remarks
-
 - Property names are case-insensitive.
-- Setters are validated by dispatch logic and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Use Set when assigning an object value.
 
-## Code Example
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADOX.Catalog")
-value = obj.ActiveConnection
-Response.Write CStr(value)
-Set obj = Nothing
+
+Dim conn, catalog, current
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.Open "Data Source=./temp/sample.db;Version=3;"
+
+Set catalog = Server.CreateObject("ADOX.Catalog")
+Set catalog.ActiveConnection = conn
+
+Set current = catalog.ActiveConnection
+If IsObject(current) Then
+		Response.Write "ActiveConnection is an object"
+Else
+		Response.Write "ActiveConnection is not an object"
+End If
+
+Set current = Nothing
+Set catalog = Nothing
+conn.Close
+Set conn = Nothing
 %>
-`````
+```
 

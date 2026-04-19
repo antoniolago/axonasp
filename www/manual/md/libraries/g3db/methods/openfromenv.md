@@ -1,47 +1,56 @@
-# OpenFromEnv Method
+# Open a Connection from Configuration
 
 ## Overview
 
-The **OpenFromEnv** method establishes a connection to a database using settings from the G3Pix AxonASP configuration file (`axonasp.toml`) or environment variables.
+Opens a database connection using AxonASP configuration and environment overrides.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3DB")`.
 
 ## Syntax
 
 ```asp
-result = obj.OpenFromEnv([driver])
+ok = db.OpenFromEnv([driver])
 ```
 
-## Parameters and Arguments
+## Parameters
 
-- **driver** (String, Optional): The name of the database driver to use. Defaults to "mysql" if not provided. Supported drivers include "mysql", "postgres", "mssql", "sqlite", and "oracle".
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **driver** | String | No | Driver name. Default is `mysql`. |
 
-## Return Values
+## Return Value
 
-Returns a **Boolean** value. It returns **True** if the connection was established successfully, and **False** if the connection failed or if the required configuration settings are missing.
+- **Boolean `True`**: Configuration was resolved and connection opened successfully.
+- **Boolean `False`**: Driver is unsupported, configuration is missing, or open failed.
 
 ## Remarks
 
-- Connection parameters such as host, port, user, password, and database name are read from the `[g3db]` section of the `axonasp.toml` configuration file.
-- If environment variable support is enabled, these settings can be overridden by their corresponding environment variables.
-- This method is useful for maintaining security and flexibility by separating connection details from the code.
-- Like the **Open** method, it performs a ping to verify connectivity before returning.
+- Uses the same connection path as `Open` after DSN resolution.
 
-## Code Example
+## Example
 
 ```asp
 <%
-Dim db, isConnected
+Option Explicit
+Dim db, ok
 Set db = Server.CreateObject("G3DB")
 
-' Attempt to open a connection using "mysql" settings from axonasp.toml
-isConnected = db.OpenFromEnv("mysql")
-
-If isConnected Then
-    Response.Write "Database connected using environment configuration."
+ok = db.OpenFromEnv("postgres")
+If ok Then
     db.Close
 Else
-    Response.Write "Failed to connect: " & db.LastError
+    Response.Write db.LastError
 End If
 
 Set db = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3DB`
+- **Method**: `OpenFromEnv`
+- **Arguments**: `driver` (String, optional)
+- **Returns**: Boolean — `True` on success, `False` on failure

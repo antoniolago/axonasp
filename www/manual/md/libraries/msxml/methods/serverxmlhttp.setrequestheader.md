@@ -1,39 +1,41 @@
 # ServerXMLHTTP.SetRequestHeader Method
 
-## Overview
-Calls the SetRequestHeader member on the MSXML2 ServerXMLHTTP compatibility object.
+Adds or replaces a request header that will be sent with the next `Send` call.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.ServerXMLHTTP")
-obj.SetRequestHeader "Accept", "application/xml"
+objHTTP.SetRequestHeader header, value
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `header` | String | Yes | The name of the HTTP header (e.g., `"Content-Type"`, `"Accept"`). |
+| `value` | String | Yes | The value to assign to the header. |
+
+## Return Value
+
+Empty. This method does not return a value.
 
 ## Remarks
-- Adds or replaces request header value.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- If a header with the same name is already set, its value is replaced.
+- Headers are stored until `Open` is called on a new request or the object is released.
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.ServerXMLHTTP")
-On Error Resume Next
-obj.SetRequestHeader
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
-End If
-On Error GoTo 0
-Set obj = Nothing
+Dim oHTTP
+Set oHTTP = Server.CreateObject("MSXML2.ServerXMLHTTP")
+oHTTP.Open "GET", "https://example.com/data.xml", False
+oHTTP.SetRequestHeader "Accept", "application/xml"
+oHTTP.SetRequestHeader "Authorization", "Bearer mytoken"
+oHTTP.Send
+Response.Write oHTTP.ResponseText
+Set oHTTP = Nothing
 %>
 ```

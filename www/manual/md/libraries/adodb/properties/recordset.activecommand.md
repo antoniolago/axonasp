@@ -1,39 +1,48 @@
-﻿# Recordset.ActiveCommand Property
+# Recordset.ActiveCommand Property
 
-## Overview
-
-The Recordset.ActiveCommand property is exposed by the ADODB.Connection object in AxonASP.
+Returns or sets the command object associated with the recordset.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.ActiveCommand
-obj.Recordset.ActiveCommand = newValue
+Set cmdRef = rs.ActiveCommand
+Set rs.ActiveCommand = cmd
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Object. Returns an ADODB.Command reference when available.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Use `Set` for assignment and retrieval.
+- This association is useful for introspection of command-driven recordsets.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.ActiveCommand
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, cmd, rs, cmdRef
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set cmd = Server.CreateObject("ADODB.Command")
+Set cmd.ActiveConnection = conn
+cmd.CommandText = "SELECT id, name FROM users"
+Set rs = cmd.Execute
+Set cmdRef = rs.ActiveCommand
+
+If IsObject(cmdRef) Then Response.Write "ActiveCommand available"
+
+rs.Close
+conn.Close
+Set cmdRef = Nothing
+Set rs = Nothing
+Set cmd = Nothing
+Set conn = Nothing
 %>
 ```

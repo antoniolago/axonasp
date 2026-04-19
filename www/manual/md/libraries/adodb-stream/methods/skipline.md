@@ -2,40 +2,64 @@
 
 ## Overview
 
-The SkipLine method is exposed by the ADODB.Stream object in AxonASP.
+Moves the stream position to the beginning of the next text line.
+
+## Prerequisites
+
+- Create the object with `Server.CreateObject("ADODB.Stream")`.
+- Use text mode (`Type = 2`) and open the stream.
 
 ## Syntax
 
 ```asp
-result = obj.SkipLine(...)
+stm.SkipLine
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+This method does not accept parameters.
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Empty. The method does not return a value.
+
+## How It Works
+
+- Scans from current `Position` until it finds line separator bytes.
+- Sets `Position` to the first character after the separator.
 
 ## Remarks
 
-- Method names are case-insensitive.
-- Use Set for object return values.
+- Method names are case-insensitive in G3Pix AxonASP.
+- In binary mode, line-based navigation is not meaningful.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Stream")
-result = obj.SkipLine()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+Dim stm
+
+Set stm = Server.CreateObject("ADODB.Stream")
+stm.Type = 2
+stm.Charset = "utf-8"
+stm.LineSeparator = 10
+stm.Open
+stm.WriteText "first", 1
+stm.WriteText "second", 1
+stm.Position = 0
+stm.SkipLine
+
+Response.Write stm.ReadText(6)
+
+stm.Close
+Set stm = Nothing
 %>
 ```
+
+## API Reference
+
+- Object: ADODB.Stream
+- Method: SkipLine
+- Arguments: none
+- Returns: Empty

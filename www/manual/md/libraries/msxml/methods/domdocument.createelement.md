@@ -1,39 +1,39 @@
 # DOMDocument.CreateElement Method
 
-## Overview
-Calls the CreateElement member on the MSXML2 DOMDocument compatibility object.
+Creates a new, unattached element node with the given tag name.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-Set n = obj.CreateElement("item")
+Set oElement = objXML.CreateElement(tagName)
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `tagName` | String | Yes | The tag name for the new element. |
+
+## Return Value
+
+XMLElement. A new element node that is not yet attached to any document tree. Call `AppendChild` to attach it.
 
 ## Remarks
-- Creates element node.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-obj.CreateElement
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
-End If
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oRoot, oChild
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+Set oRoot = oXML.CreateElement("root")
+Set oChild = oXML.CreateElement("item")
+oChild.Text = "Hello"
+oRoot.AppendChild oChild
+oXML.AppendChild oRoot
+Response.Write oXML.XML
+Set oXML = Nothing
 %>
 ```

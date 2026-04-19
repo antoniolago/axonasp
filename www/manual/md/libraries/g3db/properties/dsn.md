@@ -1,28 +1,39 @@
 # DSN Property
 
 ## Overview
-Returns the Data Source Name (connection string) used to open the current database connection.
+Gets or sets the connection string value stored in the G3DB object.
+
+## Prerequisites
+```asp
+Set db = Server.CreateObject("G3DB")
+```
 
 ## Syntax
 ```asp
-dsnString = db.DSN
+db.DSN = "user:pass@tcp(localhost:3306)/app"
+currentDsn = db.DSN
 ```
 
-## Return Values
-Returns a **String** containing the active DSN. If the connection is not open, it returns an empty string.
+## Return Value
+Returns a **String** with the current DSN value.
 
 ## Remarks
-The DSN contains the driver-specific parameters such as host, port, and database name. For security reasons, sensitive information like passwords may be masked depending on the underlying database driver's implementation.
+- This property is read/write.
+- `Open(driver, dsn)` also updates this property when open succeeds.
 
-## Code Example
+## Example
 ```asp
 <%
 Dim db
 Set db = Server.CreateObject("G3DB")
-If db.Open("sqlite", "data.db") Then
-    Response.Write "Active DSN: " & db.DSN
-    db.Close
-End If
+
+db.DSN = "data.db"
+Response.Write db.DSN
+
 Set db = Nothing
 %>
 ```
+
+## API Reference
+- **Type:** String
+- **Access:** Read/write

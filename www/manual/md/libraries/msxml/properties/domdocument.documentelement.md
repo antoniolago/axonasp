@@ -1,33 +1,31 @@
 # DOMDocument.DocumentElement Property
 
-## Overview
-Reads or writes the DocumentElement property on the MSXML2 DOMDocument compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.DocumentElement
-```
+Returns the root element of the parsed document.
 
 ## Access
-Read Only
 
-## Return Values
-Returns a Variant-compatible value.
+Read-only.
+
+## Type
+
+XMLElement or Null.
 
 ## Remarks
-- Root element node.
-- Property names are case-insensitive.
+
+- Returns Null if the document has not been loaded, or if `LoadXML` or `Load` failed.
+- The returned XMLElement is the top-level element of the document tree.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.DocumentElement)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oRoot
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<catalog><item>First</item></catalog>"
+Set oRoot = oXML.DocumentElement
+If Not IsNull(oRoot) Then
+    Response.Write "Root element: " & oRoot.NodeName
+End If
+Set oXML = Nothing
 %>
 ```

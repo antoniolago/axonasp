@@ -1,33 +1,29 @@
 # XMLElement.Length Property
 
-## Overview
-Reads or writes the Length property on the MSXML2 XMLElement compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.Length
-```
+Returns the number of direct child nodes of this element.
 
 ## Access
-Read Only
 
-## Return Values
-Returns a Variant-compatible value.
+Read-only.
+
+## Type
+
+Integer.
 
 ## Remarks
-- Child node count.
-- Property names are case-insensitive.
+
+- Equivalent to `ChildNodes.Length`.
+- Returns 0 if the element has no children.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.Length)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oRoot
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<root><a/><b/><c/></root>"
+Set oRoot = oXML.DocumentElement
+Response.Write "Children: " & oRoot.Length
+Set oXML = Nothing
 %>
 ```

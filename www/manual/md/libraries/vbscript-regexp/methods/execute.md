@@ -2,42 +2,66 @@
 
 ## Overview
 
-The Execute method is exposed by the VBScript.RegExp library object. Use it to execute this library operation from Classic ASP/VBScript with AxonASP runtime behavior.
+Applies the compiled regular expression pattern to an input string and returns a MatchesCollection object containing all matches found.
 
 ## Syntax
 
 ```asp
-result = obj.Execute(...)
+Set matches = re.Execute(string)
 ```
 
-## Parameters and Arguments
+## Parameters
 
-- Parameters (Variant, Optional): This method accepts arguments according to the runtime dispatch of the VBScript.RegExp object.
-- Argument validation: invalid count or type raises runtime errors.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| string | String | Yes | The text to search for pattern matches. |
 
-## Return Values
+## Return Value
 
-Returns a Variant result. Depending on the operation, this can be String, Boolean, Number, Array, Dictionary/object handle, or Empty.
+Returns a **MatchesCollection** object. Use `Set` for assignment. When no matches are found, the returned collection is empty (`Count` equals 0). Never returns Empty or Nothing.
+
+- When `Global` is **False** (default), the collection contains at most one Match object for the first match found.
+- When `Global` is **True**, the collection contains one Match object per non-overlapping match, in order of occurrence.
+
+Each Match object in the collection exposes:
+- **Value** (String) — the matched text
+- **FirstIndex** (Integer) — the 0-based start position in the input string
+- **Length** (Integer) — the character count of the matched text
+- **SubMatches** (SubMatches) — a collection of captured group strings
+
+## How It Works
+
+The runtime calls `FindStringSubmatchIndex` (first-only mode) or `FindAllStringSubmatchIndex` (global mode) on the compiled Go `*regexp.Regexp`. If the pattern has not yet been compiled (because `Pattern` was never set or was set to an empty string), the method recompiles before executing. If the pattern is still absent, an empty MatchesCollection is returned immediately.
+
+Submatches are extracted from the index pairs starting at position 2 in the index slice. If a capturing group did not participate in the match, its SubMatches slot contains an empty String.
 
 ## Remarks
 
-- Method names are case-insensitive.
-- Prefer explicit variable assignment and defensive checks before using returned values.
-- For object values, use Set when assigning the return value.
+- If `Pattern` is empty, the method returns an empty MatchesCollection without raising an error.
+- If `Pattern` is syntactically invalid, VBScript error 5017 is raised and an empty MatchesCollection is returned.
+- Accessing a MatchesCollection or Match object requires `Set` for assignment.
+- `matches.Item(0)` and `matches(0)` are equivalent; `Item` is the default dispatch member.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("VBScript.RegExp")
-result = obj.Execute()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+Dim re, matches, m, i
+Set re = Server.CreateObject("VBScript.RegExp")
+re.Pattern = "([A-Za-z]+)@([A-Za-z]+\\.com)"
+re.Global = True
+re.IgnoreCase = True
+
+Set matches = re.Execute("Contact us at info@example.com or sales@company.com")
+For i = 0 To matches.Count - 1
+    Set m = matches.Item(i)
+    Response.Write "Email: " & m.Value & "<br>"
+    Response.Write "User: " & m.SubMatches(0) & "<br>"
+    Response.Write "Domain: " & m.SubMatches(1) & "<br>"
+    Set m = Nothing
+Next
+Set matches = Nothing
+Set re = Nothing
 %>
 ```

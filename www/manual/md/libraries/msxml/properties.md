@@ -1,57 +1,63 @@
-# Properties
+# MSXML2 Properties
 
-## Overview
-This page lists property members exposed by MSXML2 compatibility objects in AxonASP.
+## ServerXMLHTTP Properties
 
-## Property List by Object
+| Property | Access | Type | Description |
+|---|---|---|---|
+| `ResponseText` | Read | String | The response body decoded as a text string. |
+| `ResponseXML` | Read | DOMDocument | The response body parsed as an XML document. Returns a String if the response is not valid XML. |
+| `ResponseBody` | Read | Byte Array | The raw response body as a byte array. |
+| `Status` | Read | Integer | The HTTP status code (e.g., 200, 404). Returns 0 on a connection error. |
+| `StatusText` | Read | String | The full HTTP status line (e.g., `200 OK`). |
+| `ReadyState` | Read | Integer | The request lifecycle state: 0 = Uninitialized, 1 = Open, 2 = Sent, 3 = Receiving, 4 = Complete. |
+| `Timeout` | Read/Write | Integer | Request timeout in seconds. Default is 30. |
 
-### ServerXMLHTTP
-- [ResponseText](properties/serverxmlhttp.responsetext.md)
-- [ResponseXML](properties/serverxmlhttp.responsexml.md)
-- [ResponseBody](properties/serverxmlhttp.responsebody.md)
-- [Status](properties/serverxmlhttp.status.md)
-- [StatusText](properties/serverxmlhttp.statustext.md)
-- [ReadyState](properties/serverxmlhttp.readystate.md)
-- [Timeout](properties/serverxmlhttp.timeout.md)
+## DOMDocument Properties
 
-### DOMDocument
-- [DocumentElement](properties/domdocument.documentelement.md)
-- [XML](properties/domdocument.xml.md)
-- [ParseError](properties/domdocument.parseerror.md)
-- [Async](properties/domdocument.async.md)
-- [ServerHTTPRequest](properties/domdocument.serverhttprequest.md)
-- [ResolveExternals](properties/domdocument.resolveexternals.md)
-- [ValidateOnParse](properties/domdocument.validateonparse.md)
-- [PreserveWhiteSpace](properties/domdocument.preservewhitespace.md)
-- [SelectionLanguage](properties/domdocument.selectionlanguage.md)
-- [SelectionNamespaces](properties/domdocument.selectionnamespaces.md)
+| Property | Access | Type | Description |
+|---|---|---|---|
+| `DocumentElement` | Read | XMLElement | The root element of the parsed document, or Null if the document is empty. |
+| `XML` | Read | String | The stored XML source or serialized document tree. |
+| `ParseError` | Read | ParseError | The ParseError object from the last load or parse. Check `ErrorCode = 0` for success. |
+| `Async` | Read/Write | Boolean | Accepted for compatibility; the implementation always behaves synchronously. Default is False. |
+| `ServerHTTPRequest` | Read/Write | Boolean | Controls whether HTTP requests use the server HTTP stack. |
+| `ResolveExternals` | Read/Write | Boolean | Controls resolution of external entity references. |
+| `ValidateOnParse` | Read/Write | Boolean | Controls DTD validation during parsing. |
+| `PreserveWhiteSpace` | Read/Write | Boolean | Controls whether insignificant whitespace is preserved in the DOM tree. |
+| `SelectionLanguage` | Read/Write | String | The query language used by `SelectSingleNode` and `SelectNodes`. Default is `XPath`. |
+| `SelectionNamespaces` | Read/Write | String | Namespace prefix bindings for XPath queries. Format: `xmlns:prefix='uri'`. |
 
-### XMLNodeList
-- [Length](properties/xmlnodelist.length.md)
-- [Count](properties/xmlnodelist.count.md)
+## XMLNodeList Properties
 
-### ParseError
-- [ErrorCode](properties/parseerror.errorcode.md)
-- [Reason](properties/parseerror.reason.md)
-- [FilePos](properties/parseerror.filepos.md)
-- [Line](properties/parseerror.line.md)
-- [LinePos](properties/parseerror.linepos.md)
-- [SrcText](properties/parseerror.srctext.md)
-- [URL](properties/parseerror.url.md)
+| Property | Access | Type | Description |
+|---|---|---|---|
+| `Length` | Read | Integer | The number of nodes in the list. |
+| `Count` | Read | Integer | Alias for `Length`. |
 
-### XMLElement
-- [NodeName](properties/xmlelement.nodename.md)
-- [NodeValue](properties/xmlelement.nodevalue.md)
-- [Text](properties/xmlelement.text.md)
-- [XML](properties/xmlelement.xml.md)
-- [Attributes](properties/xmlelement.attributes.md)
-- [ChildNodes](properties/xmlelement.childnodes.md)
-- [FirstChild](properties/xmlelement.firstchild.md)
-- [LastChild](properties/xmlelement.lastchild.md)
-- [ParentNode](properties/xmlelement.parentnode.md)
-- [Length](properties/xmlelement.length.md)
-- [Children](properties/xmlelement.children.md)
+## ParseError Properties
 
-## Remarks
-- Property names are case-insensitive.
-- Read-only properties return compatibility values and reject write attempts.
+| Property | Access | Type | Description |
+|---|---|---|---|
+| `ErrorCode` | Read | Integer | 0 = no error. Negative values or HTTP status codes indicate parse or load failures. |
+| `Reason` | Read | String | A human-readable description of the parse error. |
+| `FilePos` | Read | Integer | The byte offset in the source where the error was detected. |
+| `Line` | Read | Integer | The 1-based line number in the source where the error was detected. |
+| `LinePos` | Read | Integer | The 1-based column position within the error line. |
+| `SrcText` | Read | String | The source text that was being parsed when the error occurred. |
+| `URL` | Read | String | The URL or file path that was being loaded when the error occurred. |
+
+## XMLElement Properties
+
+| Property | Access | Type | Description |
+|---|---|---|---|
+| `NodeName` | Read | String | The element tag name or `#text` for text nodes. |
+| `NodeValue` | Read/Write | String | The text value of the node. Settable for text and attribute nodes. |
+| `Text` | Read/Write | String | The concatenated text content of the element and all its descendants. |
+| `XML` | Read | String | The serialized XML markup of this node and its subtree. |
+| `Attributes` | Read | Collection | A collection of attribute name/value pairs. |
+| `ChildNodes` | Read | XMLNodeList | A list of all direct child nodes. |
+| `Children` | Read | XMLNodeList | Alias for `ChildNodes`. |
+| `FirstChild` | Read | XMLElement | The first direct child node, or Null if there are no children. |
+| `LastChild` | Read | XMLElement | The last direct child node, or Null if there are no children. |
+| `ParentNode` | Read | XMLElement | The parent element, or Null if this is the root. |
+| `Length` | Read | Integer | The number of direct child nodes. |

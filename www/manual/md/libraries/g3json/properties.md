@@ -1,8 +1,16 @@
 # G3JSON Properties
 
 ## Overview
-The **G3JSON** library is primarily method-driven and does not expose specific public properties at this time. All operations are performed using its core methods.
+
+This page lists properties exposed by `G3JSON`.
+
+## Properties
+
+| Property | Access | Type | Description |
+|---|---|---|---|
+| `None` | N/A | N/A | `G3JSON` does not expose public properties. Use methods for all operations. |
 
 ## Remarks
-- All functionality is accessed via methods like **Parse** and **Stringify**.
-- Use the **methods.md** page for a full reference of available functions.
+
+- Instantiate the library with `Server.CreateObject("G3JSON")`.
+- Use `methods.md` for callable members.

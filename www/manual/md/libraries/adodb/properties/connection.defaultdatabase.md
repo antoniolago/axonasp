@@ -1,39 +1,36 @@
 ﻿# Connection.DefaultDatabase Property
 
-## Overview
-
-The Connection.DefaultDatabase property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets the default database or catalog used by the connection.
 
 ## Syntax
 
 ```asp
-value = obj.Connection.DefaultDatabase
-obj.Connection.DefaultDatabase = newValue
+name = conn.DefaultDatabase
+conn.DefaultDatabase = "main"
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+String. Returns the default database name.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Use this property to control unqualified table resolution.
+- Effective behavior depends on the underlying provider.
+- Set before running queries that rely on default catalog context.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Connection.DefaultDatabase
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.DefaultDatabase = "main"
+Response.Write "DefaultDatabase: " & conn.DefaultDatabase
+
+Set conn = Nothing
 %>
 ```

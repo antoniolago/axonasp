@@ -1,32 +1,51 @@
-# axcurrentuser
+# Get the Current Process User Name
 
 ## Overview
-Retrieves the username of the user currently running the G3Pix AxonASP process.
+
+Returns the username of the operating system user running the current AxonASP process.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
+
 ```asp
-result = obj.axcurrentuser()
+result = obj.AxCurrentUser()
 ```
 
-## Parameters and Arguments
-None.
+## Parameters
 
-## Return Values
-Returns a String containing the username of the user who owns the current process.
+This method does not require parameters.
+
+## Return Value
+
+- **String**: Returns the username of the process owner.
+- **String**: Returns an empty string when the username cannot be determined.
 
 ## Remarks
-On Windows, it first attempts to retrieve the current user's name using system APIs, falling back to the "USERNAME" environment variable if necessary. On Unix systems, it retrieves the name associated with the process owner.
 
-## Code Example
+- On Windows, falls back to the `USERNAME` environment variable if the system API call fails.
+- On Unix-like systems, falls back to the `USER` environment variable if the system API call fails.
+- Method names are case-insensitive in VBScript dispatch.
+
+## Example
+
 ```asp
 <%
 Option Explicit
-Dim obj, userName
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
+Dim ax
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-userName = obj.axcurrentuser()
-Response.Write "Process current user: " & userName
+Response.Write "Process user: " & ax.AxCurrentUser()
 
-Set obj = Nothing
+Set ax = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxCurrentUser`
+- **Arguments**: none
+- **Returns**: `String` (username of the process owner, or empty string)

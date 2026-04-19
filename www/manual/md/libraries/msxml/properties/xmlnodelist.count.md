@@ -1,33 +1,29 @@
 # XMLNodeList.Count Property
 
-## Overview
-Reads or writes the Count property on the MSXML2 XMLNodeList compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.Count
-```
+Returns the number of nodes in the list. This is an alias for `Length`.
 
 ## Access
-Read Only
 
-## Return Values
-Returns a Variant-compatible value.
+Read-only.
+
+## Type
+
+Integer.
 
 ## Remarks
-- Alias for list length.
-- Property names are case-insensitive.
+
+- Identical in behaviour to `Length`. Either property can be used interchangeably.
+- Returns 0 for an empty list.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.Count)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oList
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<r><a/><b/></r>"
+Set oList = oXML.DocumentElement.ChildNodes
+Response.Write "Count: " & oList.Count
+Set oXML = Nothing
 %>
 ```

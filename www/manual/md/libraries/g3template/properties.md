@@ -1,8 +1,15 @@
 # G3TEMPLATE Properties
 
 ## Overview
-The **G3TEMPLATE** library is method-driven and does not expose specific public properties at this time. All operations are performed through its core methods.
+
+This page lists properties exposed by `G3TEMPLATE`.
+
+## Properties
+
+| Property | Access | Type | Description |
+|---|---|---|---|
+| `None` | N/A | N/A | `G3TEMPLATE` does not expose public properties. Use methods for all operations. |
 
 ## Remarks
-- All functionality is accessed via the **Render** method.
-- Use the **methods.md** page for a full reference of available functions.
+
+- Instantiate the library with `Server.CreateObject("G3TEMPLATE")`.

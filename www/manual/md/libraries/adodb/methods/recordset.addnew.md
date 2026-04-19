@@ -1,41 +1,48 @@
-﻿# Recordset.AddNew Method
+# Recordset.AddNew Method
 
-## Overview
-
-The Recordset.AddNew method is exposed by the ADODB.Connection object in AxonASP.
+Creates a new pending row in the current recordset.
 
 ## Syntax
 
 ```asp
-result = obj.Recordset.AddNew(...)
+rs.AddNew
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+No parameters.
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Empty. The method does not return a value.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- Set field values after AddNew and call `Update` to persist.
+- Use `CancelUpdate` to discard pending row changes.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Recordset.AddNew()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.Execute("SELECT * FROM users")
+rs.AddNew
+rs.Fields("name").Value = "New User"
+rs.Update
+
+Response.Write "Row added"
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

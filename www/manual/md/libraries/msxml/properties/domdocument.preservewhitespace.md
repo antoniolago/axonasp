@@ -1,33 +1,33 @@
 # DOMDocument.PreserveWhiteSpace Property
 
-## Overview
-Reads or writes the PreserveWhiteSpace property on the MSXML2 DOMDocument compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.PreserveWhiteSpace
-```
+Gets or sets whether insignificant whitespace text nodes are preserved in the document tree.
 
 ## Access
-Read/Write
 
-## Return Values
-Returns a Variant-compatible value.
+Read/Write.
+
+## Type
+
+Boolean.
+
+## Default
+
+False.
 
 ## Remarks
-- Controls whitespace preservation behavior.
-- Property names are case-insensitive.
+
+- When False, whitespace-only text nodes between elements are discarded during parsing.
+- Set this property before calling `Load` or `LoadXML`.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.PreserveWhiteSpace)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.PreserveWhiteSpace = False
+oXML.LoadXML "<root>  <item>A</item>  </root>"
+Response.Write oXML.DocumentElement.ChildNodes.Length
+Set oXML = Nothing
 %>
 ```

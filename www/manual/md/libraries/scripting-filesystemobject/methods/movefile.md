@@ -2,43 +2,51 @@
 
 ## Overview
 
-The MoveFile method is exposed by the Scripting.FileSystemObject library object. Use it to execute this library operation from Classic ASP/VBScript with AxonASP runtime behavior.
+Moves a file from a source path to a destination path.
 
 ## Syntax
 
 ```asp
-result = obj.MoveFile(...)
-`````
+fso.MoveFile source, destination
+```
 
-## Parameters and Arguments
+## Parameters
 
-- Parameters (Variant, Optional): This method accepts arguments according to the runtime dispatch of the Scripting.FileSystemObject object.
-- Argument validation: invalid count or type raises runtime errors.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| source | String | Yes | The full path of the file to move. |
+| destination | String | Yes | The full destination path, including the file name. |
 
-## Return Values
+## Return Value
 
-Returns a Variant result. Depending on the operation, this can be String, Boolean, Number, Array, Dictionary/object handle, or Empty.
+Returns **Empty**. The method does not return a value.
+
+## How It Works
+
+Both paths are resolved against the web root. The runtime first attempts `os.Rename` for an atomic move. If the rename fails (for example, across different volumes), the runtime falls back to a copy-then-delete sequence. If the destination already exists, it is replaced. Parent directories of the destination are created automatically during the fallback path.
 
 ## Remarks
 
-- Method names are case-insensitive.
-- Prefer explicit variable assignment and defensive checks before using returned values.
-- For object values, use Set when assigning the return value.
+- If either path cannot be resolved, the operation is silently skipped.
+- To move an entire directory, use `MoveFolder` instead.
+- Use `On Error Resume Next` to handle errors gracefully at runtime.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("Scripting.FileSystemObject")
-result = obj.MoveFile()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
+Dim fso
+Set fso = Server.CreateObject("Scripting.FileSystemObject")
+
+On Error Resume Next
+fso.MoveFile Server.MapPath("inbox/order.xml"), Server.MapPath("processed/order.xml")
+If Err.Number <> 0 Then
+    Response.Write "Move failed: " & Err.Description
 End If
-Set obj = Nothing
+On Error GoTo 0
+
+Set fso = Nothing
 %>
-`````
+```
 

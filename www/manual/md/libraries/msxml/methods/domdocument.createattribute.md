@@ -1,39 +1,37 @@
 # DOMDocument.CreateAttribute Method
 
-## Overview
-Calls the CreateAttribute member on the MSXML2 DOMDocument compatibility object.
+Creates a new, unattached attribute node with the given name.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-Set a = obj.CreateAttribute("id")
+Set oAttr = objXML.CreateAttribute(name)
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `name` | String | Yes | The name of the attribute. |
+
+## Return Value
+
+XMLElement. A new attribute node not yet attached to any element. Set its `NodeValue` property to assign the attribute value, then use `SetAttribute` on the target element.
 
 ## Remarks
-- Creates attribute node.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-obj.CreateAttribute
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
-End If
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oElem
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+Set oElem = oXML.CreateElement("item")
+oElem.SetAttribute "id", "42"
+oXML.AppendChild oElem
+Response.Write oXML.XML
+Set oXML = Nothing
 %>
 ```

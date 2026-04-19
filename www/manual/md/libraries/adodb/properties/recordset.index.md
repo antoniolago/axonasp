@@ -1,39 +1,42 @@
-﻿# Recordset.Index Property
+# Recordset.Index Property
 
-## Overview
-
-The Recordset.Index property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets the active index name used by seek operations.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.Index
-obj.Recordset.Index = newValue
+value = rs.Index
+rs.Index = newIndex
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+String. Returns the current index name.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Set this before calling `Recordset.Seek` when index-based navigation is needed.
+- Provider support for named indexes can vary.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.Index
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+Set rs = conn.Execute("SELECT id, name FROM users")
+
+rs.Index = "id"
+Response.Write rs.Index
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

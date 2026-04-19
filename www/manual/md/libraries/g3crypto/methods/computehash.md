@@ -1,38 +1,57 @@
-# ComputeHash Method
+# Compute a Hash as a Byte Array
 
 ## Overview
 
-Computes a cryptographic hash using the configured or specified algorithm and returns the result as a byte array using the G3Pix AxonASP G3CRYPTO library.
+Computes a hash digest and returns the raw digest bytes as a VBScript array.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3CRYPTO")`.
 
 ## Syntax
 
 ```asp
-result = obj.ComputeHash(input, [algorithm])
+result = crypto.ComputeHash(input [, algorithm])
 ```
 
 ## Parameters
 
-- **input** (String or Array): The data to be hashed.
-- **algorithm** (String, Optional): The hash algorithm to use (e.g., "sha256", "md5"). If omitted, the default algorithm configured during initialization or "sha256" is used.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **input** | String or Array | No | Input data as text or a VBScript byte array. When omitted, an empty string is hashed. |
+| **algorithm** | String | No | Hash algorithm name. If omitted on a standard `G3CRYPTO` instance, `sha256` is used. |
 
-## Return Values
+Supported algorithm names: `md5`, `sha1`, `sha256`, `sha384`, `sha512`, `sha3_256`, `sha3_512`, `blake2b256`, `blake2b512`.
 
-Returns a VBScript Array of Byte values (VT_ARRAY | VT_UI1) containing the calculated hash.
+## Return Value
+
+- **Array**: Zero-based VBScript byte array containing the digest.
+- **Array (empty)**: Returned when the algorithm name is not recognized.
 
 ## Remarks
 
-- Instantiated via `Server.CreateObject("G3CRYPTO")`.
-- The result of the last hash calculation is also stored in the `Hash` property.
-- Supported algorithms include md5, sha1, sha256, sha384, sha512, sha3_256, sha3_512, blake2b256, and blake2b512.
+- This method updates the `Hash` property with the same bytes when a valid algorithm is used.
+- When the algorithm is invalid, `Hash` is not updated.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
 ```asp
 <%
-Dim crypto, hashArray
+Option Explicit
+Dim crypto, hashBytes
 Set crypto = Server.CreateObject("G3CRYPTO")
-hashArray = crypto.ComputeHash("Hello World", "sha256")
-Response.Write "Hash size: " & UBound(hashArray) + 1 & " bytes"
+
+hashBytes = crypto.ComputeHash("Hello World", "sha256")
+Response.Write "Digest bytes: " & (UBound(hashBytes) + 1)
+
 Set crypto = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3CRYPTO`
+- **Method**: `ComputeHash`
+- **Arguments**: `input` (String or Array, optional), `algorithm` (String, optional)
+- **Returns**: Array — digest bytes, or empty array for unsupported algorithm

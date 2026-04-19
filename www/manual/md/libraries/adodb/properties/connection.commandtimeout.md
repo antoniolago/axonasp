@@ -1,39 +1,40 @@
 ﻿# Connection.CommandTimeout Property
 
-## Overview
-
-The Connection.CommandTimeout property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets the default timeout for commands executed through the connection.
 
 ## Syntax
 
 ```asp
-value = obj.Connection.CommandTimeout
-obj.Connection.CommandTimeout = newValue
+seconds = conn.CommandTimeout
+conn.CommandTimeout = 30
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns the command timeout in seconds.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Applies to commands executed via `Connection.Execute`.
+- Set this property before running long or uncertain queries.
+- Individual `Command.CommandTimeout` values can override this default.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Connection.CommandTimeout
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+conn.CommandTimeout = 20
+
+Response.Write "Command timeout: " & CStr(conn.CommandTimeout) & " seconds"
+
+conn.Close
+Set conn = Nothing
 %>
 ```

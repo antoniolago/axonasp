@@ -39,11 +39,7 @@
     * [ASP Dictionary](md/asp/dictionary.md)
 * Libraries
     * [Object Overview](md/libraries/overview.md)
-    * [Methods Reference](md/libraries/methods.md)
-    * [Properties Reference](md/libraries/properties.md)
-    * [ADODB and ADODB.Stream](md/libraries/adodb-family.md)
-    * [MSXML2 Family](md/libraries/msxml-family.md)
-    * G3Axon Functions
+    * G3AXON Functions
         * [Overview](md/libraries/g3axon/overview.md)
         * [Methods](md/libraries/g3axon/methods.md)
         * [Properties](md/libraries/g3axon/properties.md)
@@ -445,7 +441,7 @@
             * [Debugmode](md/libraries/g3fileuploader/properties/debugmode.md)
             * [Maxfilesize](md/libraries/g3fileuploader/properties/maxfilesize.md)
             * [Preserveoriginalname](md/libraries/g3fileuploader/properties/preserveoriginalname.md)
-    * WScript.Shell
+    * WSCRIPT.SHELL
         * [Overview](md/libraries/wscript-shell/overview.md)
         * [Methods](md/libraries/wscript-shell/methods.md)
         * [Properties](md/libraries/wscript-shell/properties.md)
@@ -455,7 +451,7 @@
             * [Expandenvironmentstrings](md/libraries/wscript-shell/methods/expandenvironmentstrings.md)
             * [Getenv](md/libraries/wscript-shell/methods/getenv.md)
             * [Run](md/libraries/wscript-shell/methods/run.md)
-    * ADOX.Catalog
+    * ADOX.CATALOG
         * [Overview](md/libraries/adox/overview.md)
         * [Methods](md/libraries/adox/methods.md)
         * [Properties](md/libraries/adox/properties.md)
@@ -630,7 +626,7 @@
             * [Fields.Item](md/libraries/adodb/properties/fields.item.md)
             * [Parameters.Count](md/libraries/adodb/properties/parameters.count.md)
             * [Parameters.Item](md/libraries/adodb/properties/parameters.item.md)
-    * ADODB.Stream
+    * ADODB.STREAM
         * [Overview](md/libraries/adodb-stream/overview.md)
         * [Methods](md/libraries/adodb-stream/methods.md)
         * [Properties](md/libraries/adodb-stream/properties.md)
@@ -693,7 +689,7 @@
             * [Movefile](md/libraries/scripting-filesystemobject/methods/movefile.md)
             * [Movefolder](md/libraries/scripting-filesystemobject/methods/movefolder.md)
             * [Opentextfile](md/libraries/scripting-filesystemobject/methods/opentextfile.md)
-    * VBScript.RegExp
+    * VBSCRIPT.REGEXP
         * [Overview](md/libraries/vbscript-regexp/overview.md)
         * [Methods](md/libraries/vbscript-regexp/methods.md)
         * [Properties](md/libraries/vbscript-regexp/properties.md)

@@ -1,52 +1,56 @@
-# Exec Method
+# Execute a Non-Query SQL Statement
 
 ## Overview
 
-The **Exec** method executes a SQL statement that does not return data rows, such as INSERT, UPDATE, or DELETE, in G3Pix AxonASP.
+Executes a SQL statement that does not return a row cursor.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3DB")`.
 
 ## Syntax
 
 ```asp
-Set result = obj.Exec(sql [, params...])
+Set result = db.Exec(sql[, params...])
 ```
 
-## Parameters and Arguments
+## Parameters
 
-- **sql** (String, Required): The SQL statement to be executed.
-- **params** (Variant, Optional): One or more values to be used as parameters in the SQL statement, replacing the `?` placeholders.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **sql** | String | Yes | SQL statement to execute. |
+| **params** | Any | No | Positional values for statement placeholders. |
 
-## Return Values
+## Return Value
 
-Returns a **G3DBResult** object. This object contains metadata about the operation, such as the number of rows affected and any last inserted ID.
+- **G3DBResult**: Returned when execution succeeds.
+- **Empty**: Returned when connection is not open, SQL is missing, or execution fails.
 
 ## Remarks
 
-- This method is designed for data modification operations where a record set is not expected.
-- It automatically rewrites the `?` placeholders into the format required by the current database driver.
-- The returned **G3DBResult** object provides **LastInsertId** and **RowsAffected** properties or methods.
-- If the operation fails, the method returns an **Empty** value, and the error can be retrieved using the **LastError** property.
+- Placeholder rewriting is applied for the active driver when required.
 
-## Code Example
+## Example
 
 ```asp
 <%
-Dim db, res
+Option Explicit
+Dim db, result
 Set db = Server.CreateObject("G3DB")
 
-If db.Open("mysql", "user:pass@tcp(localhost)/dbname") Then
-    ' Execute an INSERT statement
-    Set res = db.Exec("INSERT INTO users (username, status) VALUES (?, ?)", "john_doe", "active")
-
-    If Not IsEmpty(res) Then
-        Response.Write "Inserted ID: " & res.LastInsertId & "<br>"
-        Response.Write "Rows affected: " & res.RowsAffected
-    Else
-        Response.Write "Error executing query: " & db.LastError
-    End If
-
+If db.Open("mysql", "user:pass@tcp(localhost)/db") Then
+    Set result = db.Exec("UPDATE users SET active = ? WHERE id = ?", 1, 42)
+    If IsEmpty(result) Then Response.Write db.LastError
     db.Close
 End If
 
 Set db = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3DB`
+- **Method**: `Exec`
+- **Arguments**: `sql` (String, required), `params...` (Any, optional)
+- **Returns**: G3DBResult on success, Empty on failure

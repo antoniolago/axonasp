@@ -1,34 +1,59 @@
-# Stringify Method
+# Serialize Data to JSON Text
 
 ## Overview
-Serializes an AxonASP data structure into a JSON-formatted string.
+
+Serializes a native G3Pix AxonASP value into JSON text.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3JSON")`.
 
 ## Syntax
+
 ```asp
-jsonStr = json.Stringify(data)
+jsonText = json.Stringify(value)
 ```
 
-## Parameters and Arguments
-- **data** (Variant, Required): The data to be serialized. This can be a **Scripting.Dictionary**, an **Array**, or a primitive value (String, Number, Boolean, Date, Null).
+## Parameters
 
-## Return Values
-Returns a **String** containing the serialized JSON data. If the input cannot be serialized, it returns an empty string or the JSON representation of an empty object.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **value** | Any | Yes | Dictionary, array, scalar value, Null, or Empty. |
+
+## Return Value
+
+- **String**: Serialized JSON text when serialization succeeds.
+- **String**: Empty string when the argument is missing.
+- **String**: Empty string when serialization fails.
 
 ## Remarks
-The **Stringify** method is essential for sending data from the server to web clients or external APIs. It correctly handles complex nested dictionaries and arrays.
 
-## Code Example
+- Dictionary keys become JSON object properties.
+- Array values preserve source order.
+
+## Example
+
 ```asp
 <%
-Dim json, dict, jsonStr
+Option Explicit
+Dim json, obj, payload
 Set json = Server.CreateObject("G3JSON")
-Set dict = Server.CreateObject("Scripting.Dictionary")
-dict.Add "status", "success"
-dict.Add "code", 200
 
-jsonStr = json.Stringify(dict)
-Response.Write "Serialized JSON: " & jsonStr
+Set obj = json.NewObject()
+obj.Add "name", "G3Pix AxonASP"
+obj.Add "ok", True
 
+payload = json.Stringify(obj)
+Response.Write payload
+
+Set obj = Nothing
 Set json = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3JSON`
+- **Method**: `Stringify`
+- **Arguments**: `value` (Any, required)
+- **Returns**: String — serialized JSON, or empty string on failure

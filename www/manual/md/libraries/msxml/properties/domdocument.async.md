@@ -1,33 +1,33 @@
 # DOMDocument.Async Property
 
-## Overview
-Reads or writes the Async property on the MSXML2 DOMDocument compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.Async
-```
+Gets or sets whether the document loads asynchronously.
 
 ## Access
-Read/Write
 
-## Return Values
-Returns a Variant-compatible value.
+Read/Write.
+
+## Type
+
+Boolean.
+
+## Default
+
+False.
 
 ## Remarks
-- Compatibility async flag.
-- Property names are case-insensitive.
+
+- This property is accepted for compatibility with existing code. The current AxonASP implementation always loads documents synchronously regardless of this setting.
+- Set to False before calling `Load` or `LoadXML` to follow the Classic ASP convention.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.Async)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.Async = False
+oXML.LoadXML "<data/>"
+Response.Write oXML.DocumentElement.NodeName
+Set oXML = Nothing
 %>
 ```

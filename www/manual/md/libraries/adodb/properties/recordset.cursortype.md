@@ -1,39 +1,35 @@
-﻿# Recordset.CursorType Property
+# Recordset.CursorType Property
 
-## Overview
-
-The Recordset.CursorType property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets the cursor type used by the recordset.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.CursorType
-obj.Recordset.CursorType = newValue
+value = rs.CursorType
+rs.CursorType = newValue
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns cursor type flag.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Set this value before opening the recordset.
+- Cursor type affects movement and feature availability.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.CursorType
-Response.Write CStr(value)
-Set obj = Nothing
+Dim rs
+
+Set rs = Server.CreateObject("ADODB.Recordset")
+rs.CursorType = 3
+Response.Write CStr(rs.CursorType)
+
+Set rs = Nothing
 %>
 ```

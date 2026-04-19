@@ -1,45 +1,57 @@
-# axisfloat
+# Check If a Value Is a Floating-Point Number
 
 ## Overview
 
-The `axisfloat` method checks if the internal Virtual Machine (VM) type of a value is a Double (floating-point number).
+Determines whether the VM internal type of a value is `VTDouble` (Double precision floating-point).
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
 
 ```asp
-result = obj.axisfloat(value)
+result = ax.AxIsFloat(value)
 ```
 
-## Parameters and Arguments
+## Parameters
 
-- **value** (Variant): The value to check.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **value** | Variant | Yes | The value to inspect. |
 
-## Return Values
+## Return Value
 
-Returns a Boolean indicating whether the internal VM type of the value is `VTDouble`. Returns `True` if it is a floating-point number, otherwise `False`.
+- **Boolean `True`**: The value's VM internal type is `VTDouble`.
+- **Boolean `False`**: The value is not a `VTDouble`, or no argument was supplied.
 
 ## Remarks
 
-- This method is part of the G3Pix AxonASP library.
-- It checks the native VM type, which corresponds to the Double precision floating-point type.
-- Method names in G3Pix AxonASP are case-insensitive.
+- This method checks the VM's internal type tag, not the VBScript `VarType`.
+- Use `AxIsInt` to check for Integer values.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim ax, val
+Dim ax, a, b
 Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-val = 123.45
+a = 3.14
+b = 3
 
-If ax.axisfloat(val) Then
-    Response.Write "Value is a Float (Double)."
-Else
-    Response.Write "Value is not a Float (Double)."
-End If
+Response.Write ax.AxIsFloat(a) & "<br>"  ' True
+Response.Write ax.AxIsFloat(b) & "<br>"  ' False
 
 Set ax = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxIsFloat`
+- **Arguments**: `value` (Variant, required)
+- **Returns**: Boolean — `True` if VM type is `VTDouble`; `False` otherwise

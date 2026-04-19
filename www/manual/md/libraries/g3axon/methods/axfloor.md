@@ -1,27 +1,53 @@
-# Round Down a Number
+# Round a Number Down
 
-Rounds a number down to the next lowest integer.
+## Overview
+
+Returns the largest integer value less than or equal to the specified number (floor).
 
 ## Prerequisites
-The `G3AXON.FUNCTIONS` object must be instantiated to use this method.
-This feature is available in the G3Pix AxonASP environment.
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
-```vbscript
-Number (Double) = obj.AxFloor(value)
+
+```asp
+result = obj.AxFloor(number)
 ```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| number | Double | Yes | The numeric value to round down. Coerced to Double before processing. |
 
 ## Return Value
-Returns a Number (Double).
+
+- **Double**: Returns the largest integer value that is less than or equal to `number`.
+- **Integer**: Returns `0` when no argument is provided.
+
+## Remarks
+
+- Method names are case-insensitive in VBScript dispatch.
 
 ## Example
-```vbscript
-Dim obj, result
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
 
-result = obj.AxFloor(value)
+```asp
+<%
+Option Explicit
+Dim ax
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-Response.Write result
+Response.Write ax.AxFloor(4.9)  ' Output: 4
+Response.Write ax.AxFloor(4.1)  ' Output: 4
+Response.Write ax.AxFloor(-4.1) ' Output: -5
 
-Set obj = Nothing
+Set ax = Nothing
+%>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxFloor`
+- **Arguments**: `number As Double`
+- **Returns**: `Double` (floor of input)

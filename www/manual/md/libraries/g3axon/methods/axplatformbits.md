@@ -1,32 +1,49 @@
-# axplatformbits
+# Get the Platform Architecture Bit Width
 
 ## Overview
-Retrieves the platform architecture bits for the G3Pix AxonASP runtime.
+
+Returns the native integer bit size of the current platform (typically 32 or 64).
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
+
 ```asp
-result = obj.axplatformbits()
+result = obj.AxPlatformBits()
 ```
 
-## Parameters and Arguments
-None.
+## Parameters
 
-## Return Values
-Returns an Integer representing the platform architecture (32 or 64).
+This method does not require parameters.
+
+## Return Value
+
+- **Integer**: Returns `32` on 32-bit systems and `64` on 64-bit systems.
 
 ## Remarks
-This indicates the word size of the current operating system and process architecture.
 
-## Code Example
+- Method names are case-insensitive in VBScript dispatch.
+
+## Example
+
 ```asp
 <%
 Option Explicit
-Dim obj, bits
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
+Dim ax
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-bits = obj.axplatformbits()
-Response.Write "Platform architecture: " & bits & "-bit"
+Response.Write ax.AxPlatformBits() & "-bit"
+' Output: 64-bit
 
-Set obj = Nothing
+Set ax = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxPlatformBits`
+- **Arguments**: none
+- **Returns**: `Integer` (32 or 64)

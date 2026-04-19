@@ -1,31 +1,56 @@
-# Use ADOX.Catalog in AxonASP
+# Use ADOX.Catalog in G3Pix AxonASP
 
 ## Overview
-ADOX schema object.
+Use ADOX.Catalog to inspect database table metadata through the catalog surface implemented by G3Pix AxonASP.
+
+## Prerequisites
+- A valid ADO connection object or connection string.
+- A database provider supported by the current runtime path.
 
 ## Syntax
 ```asp
-Set obj = Server.CreateObject("ADOX.Catalog")
-`````
+Set catalog = Server.CreateObject("ADOX.Catalog")
+catalog.ActiveConnection = connectionObject
+Set tables = catalog.Tables
+```
 
 ## Parameters and Arguments
-- ProgID (String, Required): Use one of the supported ProgID forms for this object family.
-- Member access (Optional): Use documented method/property members from the library reference pages.
+- ProgID (String, required): Use ADOX.Catalog.
+- ActiveConnection assignment value (required before reading schema):
+	- ADODB connection object, or
+	- connection string.
 
-## Return Values
-Returns a native object handle for this object family.
+## Return Value
+`Server.CreateObject("ADOX.Catalog")` returns an object reference to the catalog instance.
+
+## How It Works
+- The catalog stores ActiveConnection and resolves table metadata when Tables is read.
+- On Windows, the runtime first attempts OLE schema discovery.
+- When OLE is not available, the runtime uses native schema queries supported by the current connection backend.
 
 ## Remarks
 - Member names are case-insensitive.
-- Runtime validation is enforced by object dispatch logic.
-- See the central library methods/properties pages for member-level coverage.
+- Tables is evaluated lazily and cached until ActiveConnection is changed.
 
-## Code Example
+## Example
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("ADOX.Catalog")
-Response.Write TypeName(obj)
+Option Explicit
+
+Dim conn, catalog, tables
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.Open "Data Source=./temp/sample.db;Version=3;"
+
+Set catalog = Server.CreateObject("ADOX.Catalog")
+Set catalog.ActiveConnection = conn
+Set tables = catalog.Tables
+
+Response.Write "Table count: " & tables.Count
+
+Set tables = Nothing
+Set catalog = Nothing
+conn.Close
+Set conn = Nothing
 %>
-`````
+```
 

@@ -1,41 +1,44 @@
-# Count Property
+# Get Dictionary Entry Count
 
 ## Overview
-
-The Count property is exposed by the Scripting.Dictionary library object and returns the current state/value associated with this member.
+Use Count to retrieve the current number of entries in a Scripting.Dictionary instance.
 
 ## Syntax
 
 ```asp
-value = obj.Count
-obj.Count = newValue
-`````
+countValue = dict.Count
+countValue = dict.Count()
+```
 
-## Parameters and Arguments
+## Parameters
+- Getter only. This member accepts no arguments.
 
-- Getter: no arguments.
-- Setter (when supported): one Variant value.
+## Return Value
+Returns an Integer equal to the number of entries currently stored.
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+## How It Works
+- Count reflects the number of keys in the dictionary.
+- The value updates immediately after Add, Remove, RemoveAll, and Item assignment that creates new keys.
 
 ## Remarks
+- Count is exposed both as property-style and method-style access.
+- Member names are case-insensitive.
 
-- Property names are case-insensitive.
-- Setters are validated by dispatch logic and can raise runtime errors.
-- For object-typed values, assign with Set.
-
-## Code Example
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("Scripting.Dictionary")
-value = obj.Count
-Response.Write CStr(value)
-Set obj = Nothing
+
+Dim dict
+Set dict = Server.CreateObject("Scripting.Dictionary")
+
+dict.Add "A", 10
+dict.Add "B", 20
+
+Response.Write "Count=" & dict.Count
+
+Set dict = Nothing
 %>
-`````
+```
 

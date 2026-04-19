@@ -1,68 +1,79 @@
-# Use AxonASP Library Objects
+# Use G3Pix AxonASP Library Objects
 
 ## Overview
-This page lists custom and compatibility objects exposed through Server.CreateObject in AxonASP.
+Use this page as a quick reference for object creation through `Server.CreateObject` in G3Pix AxonASP. It summarizes supported primary ProgIDs and common compatibility aliases.
+
+## Prerequisites
+
+- Run code inside a Classic ASP page hosted by G3Pix AxonASP.
+- Use `Server.CreateObject("ProgID")` with a supported ProgID string.
 
 ## Syntax
+
 ```asp
 Set obj = Server.CreateObject("ProgID")
-`````
+```
 
-## Parameters and Arguments
-- G3MD
-- G3CRYPTO and algorithm aliases resolved by runtime
-- G3AXON and G3Axon.Functions
-- G3JSON
-- G3DB
-- G3HTTP and G3HTTP.Functions
-- G3Mail and compatibility aliases (CDONTS.NewMail, CDO.Message, Persits.MailSender)
-- G3Image
-- G3FILES
-- G3Template
-- G3Zip
-- G3ZLIB
-- G3TAR
-- G3ZSTD
-- G3FC
-- WScript.Shell
-- ADOX.Catalog
-- MSWC.AdRotator
-- MSWC.BrowserType
-- MSWC.NextLink
-- MSWC.ContentRotator
-- MSWC.Counters
-- MSWC.PageCounter
-- MSWC.Tools
-- MSWC.MyInfo
-- MSWC.PermissionChecker
-- MSXML2.ServerXMLHTTP, MSXML2.XMLHTTP, Microsoft.XMLHTTP
-- MSXML2.DOMDocument, Microsoft.XMLDOM
-- G3PDF
-- G3FileUploader and upload compatibility aliases
-- Scripting.FileSystemObject
-- Scripting.Dictionary
-- ADODB.Stream
-- ADODB.Connection
-- ADODBOLE.Connection
-- ADODB.Recordset
-- ADODB.Command
-- VBScript.RegExp and RegExp
+## Object Creation Summary
 
-## Return Values
-Server.CreateObject returns a native object value handled by the AxonASP VM dispatch layer.
+| Category | Primary ProgID | Compatibility Aliases |
+|---|---|---|
+| Core functions | `G3AXON.FUNCTIONS` | `G3AXON` |
+| Markdown | `G3MD` | None |
+| Crypto | `G3CRYPTO` | None |
+| JSON | `G3JSON` | None |
+| Database helper | `G3DB` | None |
+| HTTP helper | `G3HTTP` | None |
+| Mail | `G3MAIL` | `CDONTS.NewMail`, `CDO.Message`, `Persits.MailSender` |
+| Image | `G3IMAGE` | None |
+| File helper | `G3FILES` | None |
+| Template | `G3TEMPLATE` | None |
+| Archive and compression | `G3ZIP`, `G3ZLIB`, `G3TAR`, `G3ZSTD`, `G3FC` | None |
+| PDF | `G3PDF` | None |
+| Upload | `G3FILEUPLOADER` | None |
+| Shell | `WSCRIPT.SHELL` | `Shell` |
+| ADOX | `ADOX.CATALOG` | None |
+| ADODB | `ADODB.CONNECTION`, `ADODB.RECORDSET`, `ADODB.COMMAND`, `ADODB.STREAM`, `ADODBOLE.CONNECTION` | None |
+| Scripting runtime | `SCRIPTING.FILESYSTEMOBJECT`, `SCRIPTING.DICTIONARY` | None |
+| XML HTTP | `MSXML2.SERVERXMLHTTP` | `MSXML2.XMLHTTP`, `MICROSOFT.XMLHTTP` |
+| XML DOM | `MSXML2.DOMDOCUMENT` | `MICROSOFT.XMLDOM` |
+| MSWC compatibility | `MSWC.ADROTATOR`, `MSWC.BROWSERTYPE`, `MSWC.NEXTLINK`, `MSWC.CONTENTROTATOR`, `MSWC.COUNTERS`, `MSWC.PAGECOUNTER`, `MSWC.TOOLS`, `MSWC.MYINFO`, `MSWC.PERMISSIONCHECKER` | None |
+| RegExp | `VBSCRIPT.REGEXP` | `REGEXP` |
+
+## Return Value
+
+`Server.CreateObject` returns an object handle bound to the native G3Pix AxonASP implementation for the resolved ProgID.
 
 ## Remarks
-- Object creation is case-insensitive for supported ProgIDs.
-- Unsupported ProgIDs fall through to host-level CreateObject handling.
-- Compatibility aliases are mapped to native AxonASP implementations where available.
+
+- **Object creation is case-insensitive for supported ProgIDs.**
+- **Unsupported ProgIDs fall through to host-level CreateObject handling.**
+- **Compatibility aliases are mapped to native AxonASP implementations where available.**
 
 ## Code Example
+
 ```asp
 <%
-Dim db, json, fso
-Set db = Server.CreateObject("G3DB")
-Set json = Server.CreateObject("G3JSON")
-Set fso = Server.CreateObject("Scripting.FileSystemObject")
-Response.Write TypeName(db)
+Option Explicit
+Dim ax, db, stm, xmlHttp
+
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
+Set db = Server.CreateObject("ADODB.Connection")
+Set stm = Server.CreateObject("ADODB.Stream")
+Set xmlHttp = Server.CreateObject("MSXML2.ServerXMLHTTP")
+
+Response.Write TypeName(ax)
+
+Set xmlHttp = Nothing
+Set stm = Nothing
+Set db = Nothing
+Set ax = Nothing
 %>
-`````
+```
+
+## API Reference
+
+- Entry point: `Server.CreateObject`
+- Input: ProgID string
+- Resolution: native AxonASP ProgID map, then compatibility alias map, then host-level fallback
+- Output: object handle for the resolved implementation

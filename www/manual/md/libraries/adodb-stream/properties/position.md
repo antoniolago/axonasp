@@ -2,38 +2,48 @@
 
 ## Overview
 
-The Position property is exposed by the ADODB.Stream object in AxonASP.
+Gets or sets the current cursor position in the stream buffer.
 
 ## Syntax
 
 ```asp
-value = obj.Position
-obj.Position = newValue
+value = stm.Position
+stm.Position = newValue
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns the current byte offset from the start of the stream.
 
 ## Remarks
 
-- Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Property names are case-insensitive in G3Pix AxonASP.
+- Valid range is `0` to `Size`.
+- Assignments below `0` clamp to `0`; assignments above `Size` clamp to `Size`.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Stream")
-value = obj.Position
-Response.Write CStr(value)
-Set obj = Nothing
+Dim stm
+
+Set stm = Server.CreateObject("ADODB.Stream")
+stm.Type = 2
+stm.Open
+stm.WriteText "abcdef"
+stm.Position = 2
+
+Response.Write "Current position: " & CStr(stm.Position)
+
+stm.Close
+Set stm = Nothing
 %>
 ```
+
+## API Reference
+
+- Object: ADODB.Stream
+- Property: Position
+- Access: Read/Write
+- Type: Integer

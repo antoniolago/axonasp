@@ -1,41 +1,52 @@
-﻿# Recordset.Move Method
+# Recordset.Move Method
 
-## Overview
-
-The Recordset.Move method is exposed by the ADODB.Connection object in AxonASP.
+Moves the current cursor position by a relative row offset.
 
 ## Syntax
 
 ```asp
-result = obj.Recordset.Move(...)
+rs.Move offset
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `offset` | Integer | Yes | Positive to move forward, negative to move backward. |
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Empty. The method does not return a value.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- Cursor movement beyond bounds sets BOF or EOF accordingly.
+- Move supports flexible navigation without repeated MoveNext or MovePrevious calls.
+- Use with cursor types that support requested direction.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Recordset.Move()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.Execute("SELECT id, name FROM users")
+rs.MoveFirst
+rs.Move 2
+
+If Not rs.EOF Then
+    Response.Write "Current row after Move 2: " & rs.Fields("name").Value
 End If
-Set obj = Nothing
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

@@ -1,37 +1,54 @@
-# HashPassword Method
+# Hash a Password with bcrypt
 
 ## Overview
 
-Hashes a password string using the bcrypt algorithm and the configured computational cost with the G3Pix AxonASP G3CRYPTO library.
+Generates a bcrypt hash string for a plain-text password using the current bcrypt cost configuration.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3CRYPTO")`.
 
 ## Syntax
 
 ```asp
-hashedPassword = obj.HashPassword(password)
+result = crypto.HashPassword(password)
 ```
 
 ## Parameters
 
-- **password** (String): The plain-text password to be hashed.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **password** | String | No | Plain-text password to hash. When omitted, an empty string is hashed. |
 
-## Return Values
+## Return Value
 
-Returns a String containing the bcrypt-hashed password (including the algorithm identifier, cost, and salt).
+- **String**: bcrypt hash string in the `$2a$<cost>$...` format.
+- **String (empty)**: Returned when bcrypt hashing fails.
 
 ## Remarks
 
-- Instantiated via `Server.CreateObject("G3CRYPTO")`.
-- The `BCryptCost` property determines the computational difficulty of the hash.
-- Use the `VerifyPassword` method to check a plain-text password against a hashed value.
+- The current `BCryptCost` value controls the bcrypt work factor.
+- Use `VerifyPassword` to validate user input against a stored bcrypt hash.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
 ```asp
 <%
-Dim crypto, hashedPassword
+Option Explicit
+Dim crypto, hashed
 Set crypto = Server.CreateObject("G3CRYPTO")
-hashedPassword = crypto.HashPassword("mySecretPassword")
-Response.Write "Secure password hash: " & hashedPassword
+
+hashed = crypto.HashPassword("mySecretPassword")
+Response.Write hashed
+
 Set crypto = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3CRYPTO`
+- **Method**: `HashPassword`
+- **Arguments**: `password` (String, optional)
+- **Returns**: String — bcrypt hash string, or empty string on failure

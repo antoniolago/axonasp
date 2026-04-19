@@ -1,32 +1,58 @@
-# Decode URL String
+# Decode a URL-Encoded String
 
 ## Overview
 
-Decodes a URL-encoded string, standardizing query string formats.
+Decodes a percent-encoded URL string produced by standard form submission or query string encoding.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
 
-```vbscript
-strDecoded = obj.axurldecode(str)
+```asp
+result = ax.AxUrlDecode(str)
 ```
 
 ## Parameters
 
-- **str** (String): The URL-encoded string to decode.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **str** | String | Yes | The URL-encoded string to decode. |
 
 ## Return Value
 
-String. The decoded string.
+- **String**: The decoded string.
+- **String (original input)**: Returned unchanged when the input contains malformed percent-encoding sequences.
 
 ## Remarks
 
-Conversely to raw URL decoding, this function handles standard query string encoded inputs properly.
+- This method uses standard RFC 3986 percent-decoding. It does **not** convert `+` to a space. Use `AxRawUrlDecode` if the input uses `+` as a space character.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
-```vbscript
-Dim obj, strDecode
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
-strDecode = obj.axurldecode("Hello%20World")
-Response.Write strDecode ' Outputs: Hello World
+```asp
+<%
+Option Explicit
+Dim ax, decoded
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
+
+decoded = ax.AxUrlDecode("Hello%20World%21")
+Response.Write decoded
+' Output: Hello World!
+
+decoded = ax.AxUrlDecode("Hello+World")
+Response.Write "<br>" & decoded
+' Output: Hello+World (+ is not converted — use AxRawUrlDecode for that)
+
+Set ax = Nothing
+%>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxUrlDecode`
+- **Arguments**: `str` (String, required)
+- **Returns**: String — decoded string, or original input on malformed encoding

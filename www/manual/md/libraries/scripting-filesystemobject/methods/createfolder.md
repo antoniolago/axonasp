@@ -2,43 +2,49 @@
 
 ## Overview
 
-The CreateFolder method is exposed by the Scripting.FileSystemObject library object. Use it to execute this library operation from Classic ASP/VBScript with AxonASP runtime behavior.
+Creates the specified folder on disk and returns a Folder object for the newly created directory.
 
 ## Syntax
 
 ```asp
-result = obj.CreateFolder(...)
-`````
+Set folder = fso.CreateFolder(folderspec)
+```
 
-## Parameters and Arguments
+## Parameters
 
-- Parameters (Variant, Optional): This method accepts arguments according to the runtime dispatch of the Scripting.FileSystemObject object.
-- Argument validation: invalid count or type raises runtime errors.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| folderspec | String | Yes | The path of the folder to create. |
 
-## Return Values
+## Return Value
 
-Returns a Variant result. Depending on the operation, this can be String, Boolean, Number, Array, Dictionary/object handle, or Empty.
+Returns a **Folder** object representing the newly created directory. Returns **Empty** if the path cannot be resolved or if `os.MkdirAll` fails.
+
+## How It Works
+
+The path is resolved against the web root. The runtime calls `os.MkdirAll`, which creates all missing intermediate directories in the hierarchy. If the folder already exists, the call succeeds and returns a Folder object for that existing directory. Use `Set` to capture the returned Folder object.
 
 ## Remarks
 
-- Method names are case-insensitive.
-- Prefer explicit variable assignment and defensive checks before using returned values.
-- For object values, use Set when assigning the return value.
+- All intermediate parent directories are created automatically.
+- If the resolved path is empty or cannot be determined, the method returns Empty without raising an error.
+- Use `FolderExists` first if you need to distinguish between creating a new folder and receiving an existing one.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("Scripting.FileSystemObject")
-result = obj.CreateFolder()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
+Dim fso, fldr
+Set fso = Server.CreateObject("Scripting.FileSystemObject")
+
+If Not fso.FolderExists(Server.MapPath("uploads/2025")) Then
+    Set fldr = fso.CreateFolder(Server.MapPath("uploads/2025"))
+    Response.Write "Created: " & fldr.Path
+    Set fldr = Nothing
 End If
-Set obj = Nothing
+
+Set fso = Nothing
 %>
-`````
+```
 

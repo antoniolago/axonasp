@@ -1,13 +1,13 @@
-﻿# Properties for G3FC
+﻿# G3FC Properties
 
 ## Overview
+This page summarizes properties for the G3FC archive library in G3Pix AxonASP.
 
-This page lists properties exposed by the G3FC library in AxonASP.
+## Properties Reference
 
-## Property List
-
-The G3FC object does not expose any properties. It only exposes methods.
+| Property | Access | Type | Description |
+|---|---|---|---|
+| None | Not applicable | Not applicable | G3FC does not expose dedicated properties. Property-style access is routed to method dispatch. |
 
 ## Remarks
-
-- Read-only properties reject assignment and raise runtime errors when not writable.
+- Use the methods listed on the methods page for all operations.

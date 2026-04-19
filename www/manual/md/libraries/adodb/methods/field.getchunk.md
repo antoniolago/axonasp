@@ -1,41 +1,50 @@
-﻿# Field.GetChunk Method
+# Field.GetChunk Method
 
-## Overview
-
-The Field.GetChunk method is exposed by the ADODB.Connection object in AxonASP.
+Reads a chunk of data from the current field value.
 
 ## Syntax
 
 ```asp
-result = obj.Field.GetChunk(...)
+chunk = fieldObj.GetChunk(length)
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `length` | Integer | No | Number of bytes or characters to read. If omitted, reads remaining data. |
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+String. Returns the chunk data read from the field.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- Use GetChunk to read long text or binary content in segments.
+- Repeated calls return subsequent portions of the field data.
+- Reset reading position by reloading the row.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Field.GetChunk()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
+Dim conn, rs, part
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.Execute("SELECT notes FROM users WHERE id = 1")
+If Not rs.EOF Then
+    part = rs.Fields("notes").GetChunk(20)
+    Response.Write "Chunk: " & part
 End If
-Set obj = Nothing
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

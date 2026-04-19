@@ -1,33 +1,30 @@
 # XMLElement.XML Property
 
-## Overview
-Reads or writes the XML property on the MSXML2 XMLElement compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.XML
-```
+Returns the serialized XML markup of this node and its entire subtree.
 
 ## Access
-Read Only
 
-## Return Values
-Returns a Variant-compatible value.
+Read-only.
+
+## Type
+
+String.
 
 ## Remarks
-- Serialized XML for node subtree.
-- Property names are case-insensitive.
+
+- The returned string includes the element's opening tag, all child nodes serialized recursively, and the closing tag.
+- Attributes on the element are included in the opening tag.
+- Use `DOMDocument.XML` to serialize the complete document.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.XML)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oNode
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<root><child id='1'>Content</child></root>"
+Set oNode = oXML.SelectSingleNode("//child")
+Response.Write oNode.XML
+Set oXML = Nothing
 %>
 ```

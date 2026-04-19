@@ -1,39 +1,38 @@
 # XMLElement.RemoveAttribute Method
 
-## Overview
-Calls the RemoveAttribute member on the MSXML2 XMLElement compatibility object.
+Removes the named attribute from this element.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-node.RemoveAttribute "id"
+oElement.RemoveAttribute name
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `name` | String | Yes | The name of the attribute to remove. |
+
+## Return Value
+
+Empty. This method does not return a value.
 
 ## Remarks
-- Removes named attribute.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- If the attribute does not exist, the call is silently ignored.
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-obj.RemoveAttribute
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
-End If
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oNode
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<item id='1' temp='yes'/>"
+Set oNode = oXML.DocumentElement
+oNode.RemoveAttribute "temp"
+Response.Write oXML.XML
+Set oXML = Nothing
 %>
 ```

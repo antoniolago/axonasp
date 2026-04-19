@@ -2,11 +2,14 @@
 
 ## Overview
 
-This page lists the properties available in the G3ZLIB library.
+This page lists the properties exposed by `G3ZLIB`.
 
-## Property List
-- LastError
+## Properties
+
+| Property | Access | Type | Description |
+|---|---|---|---|
+| `LastError` | Read-only | String | Latest error text recorded by compression/decompression operations. |
 
 ## Remarks
 
-Read-only properties do not accept assignment and raise runtime errors when you attempt to write to them.
+- Instantiate the library with `Server.CreateObject("G3ZLIB")`.

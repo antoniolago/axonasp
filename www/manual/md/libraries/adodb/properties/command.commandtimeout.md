@@ -1,39 +1,45 @@
 ﻿# Command.CommandTimeout Property
 
-## Overview
-
-The Command.CommandTimeout property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets the maximum execution time for the command, in seconds.
 
 ## Syntax
 
 ```asp
-value = obj.Command.CommandTimeout
-obj.Command.CommandTimeout = newValue
+seconds = cmd.CommandTimeout
+cmd.CommandTimeout = 30
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns the configured timeout value in seconds.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Use this property to prevent long-running commands from blocking request execution.
+- Set before calling Execute.
+- Provider behavior can vary when timeout is `0` (infinite or provider default).
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Command.CommandTimeout
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, cmd
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set cmd = Server.CreateObject("ADODB.Command")
+Set cmd.ActiveConnection = conn
+cmd.CommandText = "SELECT id FROM users"
+cmd.CommandTimeout = 15
+
+Response.Write "Timeout: " & CStr(cmd.CommandTimeout) & " seconds"
+
+conn.Close
+Set cmd = Nothing
+Set conn = Nothing
 %>
 ```

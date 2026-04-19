@@ -1,39 +1,40 @@
-﻿# Field.UnderlyingValue Property
+# Field.UnderlyingValue Property
 
-## Overview
-
-The Field.UnderlyingValue property is exposed by the ADODB.Connection object in AxonASP.
+Returns the underlying provider value for the current field.
 
 ## Syntax
 
 ```asp
-value = obj.Field.UnderlyingValue
-obj.Field.UnderlyingValue = newValue
+value = rs.Fields("columnName").UnderlyingValue
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Variant. Returns the provider-level underlying value for the current row field.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- This property is read-only.
+- For providers without separate change-tracking layers, value can match `Field.Value`.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Field.UnderlyingValue
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+Set rs = conn.Execute("SELECT name FROM users WHERE id = 1")
+
+If Not rs.EOF Then Response.Write rs.Fields("name").UnderlyingValue
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

@@ -1,27 +1,49 @@
-# Get Maximum Integer Values
+# Get the Maximum Platform Integer Value
 
-Returns the maximum integer value supported by the system.
+## Overview
+
+Returns the maximum value that a signed 64-bit integer can hold on the current platform.
 
 ## Prerequisites
-The `G3AXON.FUNCTIONS` object must be instantiated to use this method.
-This feature is available in the G3Pix AxonASP environment.
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
-```vbscript
-Number (Long) = obj.AxIntegerMax()
+
+```asp
+result = obj.AxIntegerMax()
 ```
+
+## Parameters
+
+This method does not require parameters.
 
 ## Return Value
-Returns a Number (Long).
+
+- **Integer**: Returns `9,223,372,036,854,775,807` on 64-bit systems.
+
+## Remarks
+
+- Method names are case-insensitive in VBScript dispatch.
 
 ## Example
-```vbscript
-Dim obj, result
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
 
-result = obj.AxIntegerMax()
+```asp
+<%
+Option Explicit
+Dim ax
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-Response.Write result
+Response.Write ax.AxIntegerMax()
+' Output: 9223372036854775807
 
-Set obj = Nothing
+Set ax = Nothing
+%>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxIntegerMax`
+- **Arguments**: none
+- **Returns**: `Integer` (maximum signed 64-bit integer value)

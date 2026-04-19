@@ -1,41 +1,49 @@
-﻿# Fields.Count Method
+# Fields.Count Method
 
-## Overview
-
-The Fields.Count method is exposed by the ADODB.Connection object in AxonASP.
+Returns the number of columns in the Fields collection.
 
 ## Syntax
 
 ```asp
-result = obj.Fields.Count(...)
+count = rs.Fields.Count
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+No parameters.
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Integer. Returns the number of Field objects in the current Recordset schema.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- Count reflects the selected columns in the current query.
+- The value is available after the Recordset is opened.
+- Use Count to iterate safely over the fields collection.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Fields.Count()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+Dim conn, rs, i
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.Execute("SELECT id, name, email FROM users")
+Response.Write "Field count: " & CStr(rs.Fields.Count) & "<br>"
+
+For i = 0 To rs.Fields.Count - 1
+    Response.Write "Column " & CStr(i) & ": " & rs.Fields.Item(i).Name & "<br>"
+Next
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

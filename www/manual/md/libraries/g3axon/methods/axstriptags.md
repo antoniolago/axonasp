@@ -1,43 +1,57 @@
-# axstriptags
+# Strip HTML and XML Tags from a String
 
 ## Overview
 
-The `axstriptags` method removes all HTML and XML tags from a provided string using regular expressions. This is useful for sanitizing input or preparing text for plain-text display.
+Removes all HTML and XML tags from a string, returning only the plain text content.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
 
 ```asp
-result = obj.axstriptags(inputString)
+result = ax.AxStripTags(str)
 ```
 
-## Parameters and Arguments
+## Parameters
 
-- **inputString** (String): The source string containing HTML or XML tags to be removed.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **str** | String | Yes | The string from which to remove HTML and XML tags. |
 
-## Return Values
+## Return Value
 
-Returns a String containing the text with all tags removed. If the input is empty or no tags are found, it returns the original string.
+- **String**: The input string with all content between `<` and `>` removed.
+- **String (empty)**: Returned when no argument is supplied.
 
 ## Remarks
 
-- This method is part of the G3Pix AxonASP library.
-- It uses a regular expression to identify and remove anything within `<` and `>`.
-- Method names in G3Pix AxonASP are case-insensitive.
+- Tags are identified and removed using a regular expression that matches any sequence from `<` to `>`.
+- Comments (`<!-- ... -->`) and processing instructions (`<? ... ?>`) are also removed.
+- This method does not decode HTML entities. Use `AxHtmlSpecialChars` to escape output, not sanitize HTML.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim ax, html, plainText
+Dim ax, html, plain
 Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
 html = "<p>Hello <b>AxonASP</b>!</p><!-- comment -->"
-plainText = ax.axstriptags(html)
-
+plain = ax.AxStripTags(html)
+Response.Write plain
 ' Output: Hello AxonASP!
-Response.Write plainText
 
 Set ax = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxStripTags`
+- **Arguments**: `str` (String, required)
+- **Returns**: String — input with all HTML/XML tags removed

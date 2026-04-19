@@ -1,33 +1,31 @@
 # XMLElement.NodeValue Property
 
-## Overview
-Reads or writes the NodeValue property on the MSXML2 XMLElement compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.NodeValue
-```
+Gets or sets the value of the node.
 
 ## Access
-Read/Write
 
-## Return Values
-Returns a Variant-compatible value.
+Read/Write.
+
+## Type
+
+String.
 
 ## Remarks
-- Node value field.
-- Property names are case-insensitive.
+
+- For text nodes (`NodeName = "#text"`), this property holds the text content.
+- For attribute nodes, this holds the attribute value.
+- For element nodes, this property is typically empty; use the `Text` property to get concatenated text content.
+- Setting `NodeValue` replaces the node's current value.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.NodeValue)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oNode
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<msg>Hello</msg>"
+Set oNode = oXML.DocumentElement.FirstChild
+Response.Write "NodeValue: " & oNode.NodeValue
+Set oXML = Nothing
 %>
 ```

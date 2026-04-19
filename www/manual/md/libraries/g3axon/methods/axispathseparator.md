@@ -1,33 +1,53 @@
-# Axispathseparator
+# Check If a Character Is a Path Separator
 
 ## Overview
 
-Checks whether a single-character input is a valid path separator on the current platform.
+Returns `True` when the provided single character is a valid path separator for the current platform.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
 
 ```asp
-result = obj.Axispathseparator(character)
+result = obj.AxIsPathSeparator(character)
 ```
 
 ## Parameters
 
-- character (String): Single character to validate.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| character | String | Yes | A single character to test. Multi-character strings or empty strings always return `False`. |
 
-## Return Values
+## Return Value
 
-- Returns a Boolean.
+- **Boolean**: Returns `True` when `character` is a valid path separator on the current operating system.
+- **Boolean**: Returns `False` when `character` is not a path separator, is empty, is multi-character, or no argument is provided.
 
+## Remarks
 
-## Code Example
+- On Windows, both `\` and `/` may be valid path separators.
+- Method names are case-insensitive in VBScript dispatch.
+
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim obj
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
-Response.Write CStr(obj.Axispathseparator("/")) & "<br>"
-Response.Write CStr(obj.Axispathseparator("a"))
-Set obj = Nothing
+Dim ax
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
+
+Response.Write CStr(ax.AxIsPathSeparator("/")) & "<br>" ' True on Unix, possibly True on Windows
+Response.Write CStr(ax.AxIsPathSeparator("a")) & "<br>" ' False
+
+Set ax = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxIsPathSeparator`
+- **Arguments**: `character As String`
+- **Returns**: `Boolean` (`True` if the character is a valid path separator)

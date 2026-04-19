@@ -1,44 +1,45 @@
-# Key Method
+# Rename a Dictionary Key
 
 ## Overview
-
-The Key method is exposed by the Scripting.Dictionary library object. Use it to execute this library operation from Classic ASP/VBScript with AxonASP runtime behavior.
+Use Key to rename an existing dictionary key without changing its associated value.
 
 ## Syntax
 
 ```asp
-result = obj.Key(...)
-`````
+dict.Key(oldKey) = newKey
+```
 
-## Parameters and Arguments
+## Parameters
+- oldKey (Variant, required): Existing key to rename.
+- newKey (Variant, required): New key name.
 
-- Parameters (Variant, Optional): This method accepts arguments according to the runtime dispatch of the Scripting.Dictionary object.
-- Argument validation: invalid count or type raises runtime errors.
+## Return Value
+Returns Empty.
 
-## Return Values
-
-Returns a Variant result. Depending on the operation, this can be String, Boolean, Number, Array, Dictionary/object handle, or Empty.
+## How It Works
+- The key position is preserved in insertion order.
+- Renaming fails when oldKey does not exist.
+- Renaming fails when newKey already exists.
 
 ## Remarks
+- Runtime assignment syntax is the recommended form.
+- Member names are case-insensitive.
 
-- Method names are case-insensitive.
-- Prefer explicit variable assignment and defensive checks before using returned values.
-- For object values, use Set when assigning the return value.
-
-## Code Example
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("Scripting.Dictionary")
-result = obj.Key()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+
+Dim dict
+Set dict = Server.CreateObject("Scripting.Dictionary")
+
+dict.Add "OldName", "Value"
+dict.Key("OldName") = "NewName"
+
+Response.Write dict.Item("NewName")
+
+Set dict = Nothing
 %>
-`````
+```
 

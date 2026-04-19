@@ -2,43 +2,56 @@
 
 ## Overview
 
-The GetFile method is exposed by the Scripting.FileSystemObject library object. Use it to execute this library operation from Classic ASP/VBScript with AxonASP runtime behavior.
+Returns a File object for an existing file at the specified path.
 
 ## Syntax
 
 ```asp
-result = obj.GetFile(...)
-`````
+Set f = fso.GetFile(filespec)
+```
 
-## Parameters and Arguments
+## Parameters
 
-- Parameters (Variant, Optional): This method accepts arguments according to the runtime dispatch of the Scripting.FileSystemObject object.
-- Argument validation: invalid count or type raises runtime errors.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| filespec | String | Yes | The full path to the file. |
 
-## Return Values
+## Return Value
 
-Returns a Variant result. Depending on the operation, this can be String, Boolean, Number, Array, Dictionary/object handle, or Empty.
+Returns a **File** object representing the file at the resolved path. Use `Set` for assignment. Raises a VBScript error if the file does not exist or cannot be accessed.
+
+## Error Conditions
+
+| Condition | VBScript Error |
+|---|---|
+| File does not exist | 53 — File not found |
+| Path resolves to a directory | 53 — File not found |
+| Access denied by the OS | 70 — Permission denied |
+
+## How It Works
+
+The path is resolved against the web root. The runtime calls `os.Stat` to confirm that the path exists and is a file. On success, it stores a native `fsoKindFile` object internally and returns the handle. The File object exposes properties such as `Name`, `Size`, `Path`, `DateLastModified`, and methods including `Copy`, `Move`, `Delete`, and `OpenAsTextStream`.
 
 ## Remarks
 
-- Method names are case-insensitive.
-- Prefer explicit variable assignment and defensive checks before using returned values.
-- For object values, use Set when assigning the return value.
+- Always use `Set` to capture the returned File object.
+- Call `Set f = Nothing` when the File object is no longer needed.
+- To check existence before calling `GetFile`, use `FileExists`.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("Scripting.FileSystemObject")
-result = obj.GetFile()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+Dim fso, f
+Set fso = Server.CreateObject("Scripting.FileSystemObject")
+
+Set f = fso.GetFile(Server.MapPath("data/report.csv"))
+Response.Write f.Name & " — " & f.Size & " bytes" & "<br>"
+Response.Write "Modified: " & f.DateLastModified
+Set f = Nothing
+
+Set fso = Nothing
 %>
-`````
+```
 

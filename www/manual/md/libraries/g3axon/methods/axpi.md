@@ -1,27 +1,51 @@
-# Get the Value of Pi
+# Return the Constant Pi
 
-Returns the mathematical constant Pi.
+## Overview
+
+Returns the mathematical constant Pi (π = 3.141592653589793...).
 
 ## Prerequisites
-The `G3AXON.FUNCTIONS` object must be instantiated to use this method.
-This feature is available in the G3Pix AxonASP environment.
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
-```vbscript
-Number (Double) = obj.AxPi()
+
+```asp
+result = obj.AxPi()
 ```
+
+## Parameters
+
+This method does not require parameters.
 
 ## Return Value
-Returns a Number (Double).
+
+- **Double**: Returns `3.141592653589793` (the IEEE-754 double-precision representation of Pi).
+
+## Remarks
+
+- Method names are case-insensitive in VBScript dispatch.
 
 ## Example
-```vbscript
-Dim obj, result
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
 
-result = obj.AxPi()
+```asp
+<%
+Option Explicit
+Dim ax, area, radius
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-Response.Write result
+radius = 5
+area = ax.AxPi() * radius * radius
+Response.Write "Circle area: " & area
+' Output: Circle area: 78.5398163397448
 
-Set obj = Nothing
+Set ax = Nothing
+%>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxPi`
+- **Arguments**: none
+- **Returns**: `Double` (3.141592653589793)

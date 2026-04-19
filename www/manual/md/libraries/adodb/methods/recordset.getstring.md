@@ -1,41 +1,46 @@
-﻿# Recordset.GetString Method
+# Recordset.GetString Method
 
-## Overview
-
-The Recordset.GetString method is exposed by the ADODB.Connection object in AxonASP.
+Returns recordset rows as a single formatted string.
 
 ## Syntax
 
 ```asp
-result = obj.Recordset.GetString(...)
+text = rs.GetString
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+No parameters.
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+String. Returns row data with tab-delimited columns and newline-delimited rows. Returns an empty string when no rows are available.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- Output is useful for export, debug logs, or plain-text rendering.
+- Large datasets may produce large memory allocations.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Recordset.GetString()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+Dim conn, rs, text
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.Execute("SELECT id, name FROM users")
+text = rs.GetString
+
+Response.Write "<pre>" & text & "</pre>"
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

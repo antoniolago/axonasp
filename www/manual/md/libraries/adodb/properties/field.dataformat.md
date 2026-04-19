@@ -1,39 +1,43 @@
-﻿# Field.DataFormat Property
+# Field.DataFormat Property
 
-## Overview
-
-The Field.DataFormat property is exposed by the ADODB.Connection object in AxonASP.
+Returns the data format object associated with the field.
 
 ## Syntax
 
 ```asp
-value = obj.Field.DataFormat
-obj.Field.DataFormat = newValue
+fmt = rs.Fields("columnName").DataFormat
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Empty. In the current G3Pix AxonASP ADODB runtime, this property returns Empty.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- This property is exposed for compatibility.
+- Assignments are not supported in the current implementation.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Field.DataFormat
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs, fmt
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.Execute("SELECT name FROM users")
+If Not rs.EOF Then
+    fmt = rs.Fields("name").DataFormat
+    Response.Write "IsEmpty(DataFormat): " & CStr(IsEmpty(fmt))
+End If
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

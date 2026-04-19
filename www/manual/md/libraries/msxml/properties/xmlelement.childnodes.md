@@ -1,33 +1,33 @@
 # XMLElement.ChildNodes Property
 
-## Overview
-Reads or writes the ChildNodes property on the MSXML2 XMLElement compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.ChildNodes
-```
+Returns a list of all direct child nodes of this element.
 
 ## Access
-Read Only
 
-## Return Values
-Returns a Variant-compatible value.
+Read-only.
+
+## Type
+
+XMLNodeList.
 
 ## Remarks
-- Child node collection.
-- Property names are case-insensitive.
+
+- The list contains only direct children, not descendants at deeper levels.
+- Returns an empty XMLNodeList if the element has no children.
+- Use `Children` for an identical result.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.ChildNodes)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oRoot, oList, i
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<root><a/><b/><c/></root>"
+Set oRoot = oXML.DocumentElement
+Set oList = oRoot.ChildNodes
+For i = 0 To oList.Length - 1
+    Response.Write oList.Item(i).NodeName & "<br>"
+Next
+Set oXML = Nothing
 %>
 ```

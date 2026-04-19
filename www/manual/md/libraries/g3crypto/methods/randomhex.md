@@ -1,38 +1,54 @@
-# RandomHex Method
+# Generate a Secure Random Hex String
 
 ## Overview
 
-Generates cryptographically secure random bytes and returns them as a hexadecimal string using the G3Pix AxonASP G3CRYPTO library.
+Generates cryptographically secure random bytes and returns them as a lowercase hexadecimal string.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3CRYPTO")`.
 
 ## Syntax
 
 ```asp
-result = obj.RandomHex(size)
+result = crypto.RandomHex([size])
 ```
 
 ## Parameters
 
-- **size** (Integer, Optional): The number of random bytes to generate. Defaults to 32.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **size** | Integer | No | Number of random bytes to generate. Default is `32`. Negative values are normalized to `0`. |
 
-## Return Values
+## Return Value
 
-Returns a String containing the random bytes encoded as a lowercase hexadecimal string.
+- **String**: Lowercase hexadecimal string with `size * 2` characters after normalization.
+- **String (empty)**: Returned when `size` is `0` or random generation fails.
 
 ## Remarks
 
-- Instantiated via `Server.CreateObject("G3CRYPTO")`.
-- A 32-byte hexadecimal string will be 64 characters long because each byte is represented by two hex digits.
-- Useful for generating API tokens or session identifiers.
+- This method is useful for token generation where hex encoding is preferred.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
 ```asp
 <%
-Dim crypto, randStr
+Option Explicit
+Dim crypto, token
 Set crypto = Server.CreateObject("G3CRYPTO")
-' Generate 16 bytes encoded as hex (32 characters)
-randStr = crypto.RandomHex(16)
-Response.Write "Secure Random Hex: " & randStr
+
+token = crypto.RandomHex(16)
+Response.Write token
+' 32 hex characters
+
 Set crypto = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3CRYPTO`
+- **Method**: `RandomHex`
+- **Arguments**: `size` (Integer, optional)
+- **Returns**: String — lowercase hex output, or empty string on failure/zero length

@@ -1,41 +1,55 @@
-﻿# Recordset.Clone Method
+# Recordset.Clone Method
 
-## Overview
-
-The Recordset.Clone method is exposed by the ADODB.Connection object in AxonASP.
+Creates a new Recordset object that references the same rowset data.
 
 ## Syntax
 
 ```asp
-result = obj.Recordset.Clone(...)
+Set rsClone = rs.Clone
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+No parameters.
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Recordset. Returns a new ADODB.Recordset object clone.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- The clone has independent cursor position.
+- Changes to shared underlying data can be visible in both recordsets, depending on lock and cursor behavior.
+- Close and release cloned recordsets separately.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Recordset.Clone()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
+Dim conn, rs, rsClone
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.Execute("SELECT id, name FROM users")
+Set rsClone = rs.Clone
+
+If Not rs.EOF Then
+    Response.Write "Original current row: " & rs.Fields("name").Value & "<br>"
 End If
-Set obj = Nothing
+
+If Not rsClone.EOF Then
+    Response.Write "Clone current row: " & rsClone.Fields("name").Value
+End If
+
+rsClone.Close
+rs.Close
+conn.Close
+Set rsClone = Nothing
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

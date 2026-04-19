@@ -58,26 +58,32 @@ We didn't just update Classic ASP. We completely reimagined it for the modern we
 
 This manual is organized to help you understand AxonASP from the ground up:
 
-### Early Chapters
-Start with foundational concepts: how the platform works, how to deploy it, and how to understand the configuration model that powers every aspect of the engine.
-
 ### Section: Runtime
-Detailed documentation on deployment modes, configuration, web.config support, global.asa lifecycle, caching strategies, FastCGI setup, Linux service configuration, and MCP integration.
+Covers deployment modes, internal architecture, script caching, locale support, global.asa lifecycle, web.config directives, FastCGI setup, reverse proxy configuration, running as a Linux service, the service wrapper, system and error pages, and MCP Server integration with VS Code.
+
+### Section: Configuration
+Documents the `axonasp.toml` configuration file: all available keys, default values, and explanations for each setting that controls the engine, server, sessions, caching, and logging.
+
+### Section: ASP Foundations
+A complete reference for Classic ASP and VBScript fundamentals: the `#include` directive, variables, procedures, conditionals, looping, syntax overview, quick reference, forms, cookies, and the five intrinsic ASP objects (Request, Response, Server, Session, Application), plus ASPError and Scripting.Dictionary.
 
 ### Section: Libraries
-Complete API references for every built-in native library: G3JSON, G3DB, G3HTTP, G3Mail, G3Image, G3Crypto, G3ZIP, G3Template, and all others.
+Full API reference for every built-in native library and compatibility object:
 
-### Section: Built-in Functions
-Comprehensive reference for VBScript functions, array manipulation, string operations, date/time handling, and AxonASP-specific enhancements.
+**Native AxonASP Libraries**
+G3AXON Functions, G3CRYPTO, G3JSON, G3DB, G3HTTP, G3MAIL, G3IMAGE, G3FILES, G3TESTSUITE, G3TEMPLATE, G3ZIP, G3ZLIB, G3TAR, G3ZSTD, G3FC, G3MD, G3PDF, G3FILEUPLOADER.
 
-### Section: System Objects
-Documentation for classic ASP intrinsic objects (Request, Response, Server, Session, Application) and compatibility objects (ADODB, MSXML, FileSystemObject, Dictionary, WScript.Shell).
-
-### Section: Test Suite
-Learn how to write automated tests for your ASP applications and integrate them into CI/CD pipelines.
+**Compatibility Objects**
+WScript.Shell, ADOX.Catalog, MSWC Components (AdRotator, NextLink, ContentRotator, Counters, Tools, PageCounter, BrowserType, PermissionChecker, MyInfo), ADODB Family (Connection, Recordset, Command, Fields, Parameters, Errors), ADODB.Stream, Scripting.Dictionary, Scripting.FileSystemObject, VBScript.RegExp, MSXML2 Family (ServerXMLHTTP, DOMDocument, XMLNodeList, XMLElement).
 
 ### Section: Examples
-Working code examples demonstrating architectural patterns, library usage, and best practices.
+Working code demonstrating architectural patterns, library usage, and best practices for Classic ASP applications built on AxonASP.
+
+### Section: Tools
+Documentation for the built-in database migration tool, which converts legacy Access databases to modern formats including SQLite, MySQL, PostgreSQL, and MSSQL.
+
+### Section: Authoring
+Guidelines for writing manual pages and for programming Classic ASP with LLMs. Read these before contributing documentation.
 
 ---
 

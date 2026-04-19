@@ -2,43 +2,52 @@
 
 ## Overview
 
-The CopyFile method is exposed by the Scripting.FileSystemObject library object. Use it to execute this library operation from Classic ASP/VBScript with AxonASP runtime behavior.
+Copies one file from a source path to a destination path.
 
 ## Syntax
 
 ```asp
-result = obj.CopyFile(...)
-`````
+fso.CopyFile source, destination [, overwrite]
+```
 
-## Parameters and Arguments
+## Parameters
 
-- Parameters (Variant, Optional): This method accepts arguments according to the runtime dispatch of the Scripting.FileSystemObject object.
-- Argument validation: invalid count or type raises runtime errors.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| source | String | Yes | The full path to the file to copy. |
+| destination | String | Yes | The full path or target directory for the copied file. |
+| overwrite | Boolean | No | Set to True (default) to overwrite an existing destination file. Set to False to skip if the destination already exists. |
 
-## Return Values
+## Return Value
 
-Returns a Variant result. Depending on the operation, this can be String, Boolean, Number, Array, Dictionary/object handle, or Empty.
+Returns **Empty**. The method does not return a value.
+
+## How It Works
+
+Both `source` and `destination` are resolved against the web root. If either path cannot be resolved, the copy operation is silently skipped. When `overwrite` is True, the destination file is replaced if it already exists. Parent directories of the destination are not created automatically.
 
 ## Remarks
 
-- Method names are case-insensitive.
-- Prefer explicit variable assignment and defensive checks before using returned values.
-- For object values, use Set when assigning the return value.
+- The `overwrite` parameter defaults to `True`.
+- Use `On Error Resume Next` to catch permission or path errors at runtime.
+- To copy an entire directory tree, use `CopyFolder` instead.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("Scripting.FileSystemObject")
-result = obj.CopyFile()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
+Dim fso
+Set fso = Server.CreateObject("Scripting.FileSystemObject")
+
+On Error Resume Next
+fso.CopyFile Server.MapPath("source.txt"), Server.MapPath("backup/source.txt"), True
+If Err.Number <> 0 Then
+    Response.Write "Copy failed: " & Err.Description
 End If
-Set obj = Nothing
+On Error GoTo 0
+
+Set fso = Nothing
 %>
-`````
+```
 

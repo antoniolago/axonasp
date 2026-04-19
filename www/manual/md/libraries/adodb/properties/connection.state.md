@@ -1,39 +1,40 @@
-﻿# Connection.State Property
+# Connection.State Property
 
-## Overview
-
-The Connection.State property is exposed by the ADODB.Connection object in AxonASP.
+Returns the current open/closed state of the connection.
 
 ## Syntax
 
 ```asp
-value = obj.Connection.State
-obj.Connection.State = newValue
+state = conn.State
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns `0` when closed and `1` when open.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- This property is read-only.
+- Check this value before operations that require an open connection.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Connection.State
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn
+
+Set conn = Server.CreateObject("ADODB.Connection")
+Response.Write "Before open: " & CStr(conn.State) & "<br>"
+
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+Response.Write "After open: " & CStr(conn.State) & "<br>"
+
+conn.Close
+Response.Write "After close: " & CStr(conn.State)
+
+Set conn = Nothing
 %>
 ```

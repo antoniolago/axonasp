@@ -1,39 +1,42 @@
-﻿# Recordset.AbsolutePosition Property
+# Recordset.AbsolutePosition Property
 
-## Overview
-
-The Recordset.AbsolutePosition property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets the current row position in the recordset.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.AbsolutePosition
-obj.Recordset.AbsolutePosition = newValue
+pos = rs.AbsolutePosition
+rs.AbsolutePosition = newPos
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns the current one-based row position.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Position support depends on cursor type/provider behavior.
+- Assigning out-of-range values can move cursor to BOF/EOF boundaries.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.AbsolutePosition
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+Set rs = conn.Execute("SELECT id, name FROM users")
+
+rs.MoveFirst
+Response.Write "Position: " & CStr(rs.AbsolutePosition)
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

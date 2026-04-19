@@ -1,7 +1,7 @@
-# Use MSWC Components in AxonASP
+# Use MSWC Components in G3Pix AxonASP
 
 ## Overview
-AxonASP supports a compatibility family for classic MSWC components. Members are dispatched case-insensitively and exposed through native object wrappers.
+G3Pix AxonASP provides a compatibility surface for legacy MSWC-style components. Each component is exposed through native object dispatch with case-insensitive member names.
 
 ## Supported ProgIDs
 - MSWC.AdRotator
@@ -14,17 +14,29 @@ AxonASP supports a compatibility family for classic MSWC components. Members are
 - MSWC.PageCounter
 - MSWC.PermissionChecker
 
-## Documentation Map
-- Methods index: [Methods](methods.md)
-- Properties index: [Properties](properties.md)
-- Member details: methods and properties subfolders.
+## Prerequisites
+- Instantiate components with Server.CreateObject using the exact ProgID.
+- Ensure referenced files exist when using file-based components such as AdRotator, NextLink, and ContentRotator.
+- Enable MSWC page counter configuration before using MSWC.PageCounter.
+
+## How It Works
+- Each component has its own method and property surface.
+- Unsupported members return Empty.
+- Some components read request or server context to produce results.
 
 ## Code Example
 ```asp
 <%
-Dim bt, canCookies
-Set bt = Server.CreateObject("MSWC.BrowserType")
-canCookies = bt.Cookies
-Response.Write "Browser=" & bt.Browser & " Cookies=" & CStr(canCookies)
+Option Explicit
+
+Dim browserType, browserName, canUseCookies
+Set browserType = Server.CreateObject("MSWC.BrowserType")
+
+browserName = browserType.Browser
+canUseCookies = browserType.Cookies
+
+Response.Write "Browser=" & browserName & " Cookies=" & CStr(canUseCookies)
+
+Set browserType = Nothing
 %>
 ```

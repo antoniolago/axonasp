@@ -1,39 +1,42 @@
-﻿# Recordset.CacheSize Property
+# Recordset.CacheSize Property
 
-## Overview
-
-The Recordset.CacheSize property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets the number of rows cached locally for cursor operations.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.CacheSize
-obj.Recordset.CacheSize = newValue
+value = rs.CacheSize
+rs.CacheSize = newValue
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns configured cache size.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Set before heavy navigation workloads.
+- Effective behavior can depend on provider cursor implementation.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.CacheSize
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+Set rs = conn.Execute("SELECT id, name FROM users")
+
+rs.CacheSize = 25
+Response.Write CStr(rs.CacheSize)
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

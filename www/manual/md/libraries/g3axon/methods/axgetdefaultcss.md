@@ -1,30 +1,42 @@
-# axgetdefaultcss
+# Get the Default CSS Stylesheet Content
 
 ## Overview
 
-The `axgetdefaultcss` method retrieves the text content of the CSS file specified in the `axfunctions.ax_default_css_path` configuration setting of the `axonasp.toml` file.
+Returns the text content of the CSS file configured in the `axfunctions.ax_default_css_path` setting of `config/axonasp.toml`.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
+
+Set the CSS file path in `config/axonasp.toml`:
+
+```toml
+[axfunctions]
+ax_default_css_path = "./www/css/axonasp.css"
+```
 
 ## Syntax
 
 ```asp
-result = obj.axgetdefaultcss()
+result = ax.AxGetDefaultCss()
 ```
 
-## Parameters and Arguments
+## Parameters
 
 This method does not accept any parameters.
 
-## Return Values
+## Return Value
 
-Returns a String containing the raw CSS content from the configured file. Returns an empty string if no path is configured or if the file cannot be read.
+- **String**: The raw CSS text from the configured file.
+- **String (empty)**: Returned when `ax_default_css_path` is not configured or the file cannot be read.
 
 ## Remarks
 
-- This method is part of the G3Pix AxonASP library.
-- It allows ASP pages to dynamically include or inline the default system stylesheet without hardcoding file paths.
-- Method names in G3Pix AxonASP are case-insensitive.
+- The file path is resolved relative to the AxonASP executable directory.
+- This method allows ASP pages to inline the system stylesheet without hardcoding file paths.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
 ```asp
 <%
@@ -32,7 +44,7 @@ Option Explicit
 Dim ax, css
 Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-css = ax.axgetdefaultcss()
+css = ax.AxGetDefaultCss()
 
 If css <> "" Then
     Response.Write "<style>" & vbCrLf & css & vbCrLf & "</style>"
@@ -41,3 +53,10 @@ End If
 Set ax = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxGetDefaultCss`
+- **Arguments**: None
+- **Returns**: String — CSS file content, or empty string if not configured or unreadable

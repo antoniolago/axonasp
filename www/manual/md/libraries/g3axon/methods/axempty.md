@@ -1,53 +1,60 @@
-# axempty
+# Check If a Value Is Empty
 
 ## Overview
 
-The `axempty` method checks if a value is considered "empty" according to extended criteria. This includes traditional `Empty` and `Null` values, as well as zero-like values and empty strings.
+Determines whether a value is considered empty under extended criteria that covers uninitialized variables, null values, zero-like values, and empty strings.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
 
 ```asp
-result = obj.axempty(value)
+result = ax.AxEmpty(value)
 ```
 
-## Parameters and Arguments
+## Parameters
 
-- **value** (Variant): The value to check for emptiness.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **value** | Variant | Yes | The value to test for emptiness. |
 
-## Return Values
+## Return Value
 
-Returns a Boolean indicating whether the value is considered empty. Returns `True` if the value is:
-- `Empty` or `Null`.
-- An empty string (`""`).
-- The integer `0`.
-- The double `0.0`.
-- The boolean `False`.
-
-Otherwise, it returns `False`.
+- **Boolean `True`**: The value is `Empty`, `Null`, an empty string (`""`), Integer `0`, Double `0.0`, or Boolean `False`.
+- **Boolean `False`**: The value is any other non-empty, non-zero value.
 
 ## Remarks
 
-- This method is part of the G3Pix AxonASP library.
-- It provides a convenient way to check for various "no-value" states in a single call.
-- Method names in G3Pix AxonASP are case-insensitive.
+- This method provides a single call to replace multiple `IsEmpty`, `IsNull`, and zero-comparison checks.
+- Use `AxIsSet` for the inverse check (value is initialized and not null).
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim ax, val1, val2
+Dim ax
 Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-val1 = ""
-val2 = 123
+Response.Write ax.AxEmpty("") & "<br>"         ' True
+Response.Write ax.AxEmpty(0) & "<br>"          ' True
+Response.Write ax.AxEmpty(False) & "<br>"      ' True
+Response.Write ax.AxEmpty("hello") & "<br>"    ' False
+Response.Write ax.AxEmpty(1) & "<br>"          ' False
 
-If ax.axempty(val1) Then
-    Response.Write "val1 is empty.<br>"
-End If
+Set ax = Nothing
+%>
+```
 
-If Not ax.axempty(val2) Then
-    Response.Write "val2 is not empty.<br>"
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxEmpty`
+- **Arguments**: `value` (Variant, required)
+- **Returns**: Boolean — `True` if empty/null/zero-like; `False` otherwise
 End If
 
 Set ax = Nothing

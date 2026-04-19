@@ -1,44 +1,47 @@
-# ExpandEnvironmentStrings Method
+# Expand Environment Variables in Text
 
 ## Overview
-
-The ExpandEnvironmentStrings method is exposed by the WScript.Shell library object. Use it to execute this library operation from Classic ASP/VBScript with AxonASP runtime behavior.
+Use ExpandEnvironmentStrings to replace tokens in the format %NAME% with values from the current process environment.
 
 ## Syntax
 
 ```asp
-result = obj.ExpandEnvironmentStrings(...)
-`````
+expanded = shell.ExpandEnvironmentStrings(inputText)
+```
 
-## Parameters and Arguments
+## Parameters
 
-- Parameters (Variant, Optional): This method accepts arguments according to the runtime dispatch of the WScript.Shell object.
-- Argument validation: invalid count or type raises runtime errors.
+- inputText (String, required): Text that may contain one or more %NAME% placeholders.
 
-## Return Values
+## Return Value
 
-Returns a Variant result. Depending on the operation, this can be String, Boolean, Number, Array, Dictionary/object handle, or Empty.
+Returns a String containing the expanded text.
+
+Returns an empty string when inputText is missing.
+
+## How It Works
+
+- Each %NAME% token is resolved using the current environment.
+- Unknown variables are preserved as written, for example %UNKNOWN_VAR% remains unchanged.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Prefer explicit variable assignment and defensive checks before using returned values.
-- For object values, use Set when assigning the return value.
+- Expansion follows percent-delimited placeholder format only.
 
-## Code Example
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("WScript.Shell")
-result = obj.ExpandEnvironmentStrings()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+
+Dim shell, expanded
+Set shell = Server.CreateObject("WScript.Shell")
+
+expanded = shell.ExpandEnvironmentStrings("PATH=%PATH%")
+Response.Write expanded
+
+Set shell = Nothing
 %>
-`````
+```
 

@@ -1,34 +1,38 @@
 # G3CRYPTO Methods
 
 ## Overview
-This page provides a summary of the methods available in the **G3CRYPTO** library. Each method is designed for high-performance cryptographic operations within the AxonASP environment.
 
-## Method List
+This page summarizes every method exposed by `G3CRYPTO`.
 
-- **Blake2b256**: Computes a 256-bit BLAKE2b hash for high-speed data integrity.
-- **Blake2b512**: Computes a 512-bit BLAKE2b hash for high-speed data integrity.
-- **ComputeHash**: Computes a hash using a specified algorithm name.
-- **GetBCryptCost**: Returns the current work factor for bcrypt hashing.
-- **HashPassword**: Generates a secure bcrypt hash for password storage.
-- **HmacSHA256**: Computes an HMAC using SHA-256 for message authentication.
-- **HmacSHA512**: Computes an HMAC using SHA-512 for message authentication.
-- **Initialize**: Resets the object state and clears the internal hash buffers.
-- **MD5**: Computes a 128-bit MD5 message digest.
-- **PBKDF2SHA256**: Derives a cryptographic key using the PBKDF2-HMAC-SHA256 algorithm.
-- **RandomBase64**: Generates cryptographically secure random bytes in Base64 format.
-- **RandomBytes**: Generates cryptographically secure random bytes as a VBScript array.
-- **RandomHex**: Generates cryptographically secure random bytes in hexadecimal format.
-- **SetBCryptCost**: Configures the work factor for the bcrypt hashing algorithm.
-- **SHA1**: Computes a 160-bit SHA-1 message digest.
-- **SHA256**: Computes a 256-bit SHA-256 message digest.
-- **SHA3_256**: Computes a 256-bit SHA-3 (Keccak) message digest.
-- **SHA3_512**: Computes a 512-bit SHA-3 (Keccak) message digest.
-- **SHA384**: Computes a 384-bit SHA-2 message digest.
-- **SHA512**: Computes a 512-bit SHA-2 message digest.
-- **UUID**: Generates a version 4 Universally Unique Identifier.
-- **VerifyPassword**: Validates a password against a previously generated bcrypt hash.
+## Methods
+
+| Method | Returns | Description |
+|---|---|---|
+| `Blake2b256(input)` | String | 64-character lowercase hexadecimal BLAKE2b-256 digest. |
+| `Blake2b512(input)` | String | 128-character lowercase hexadecimal BLAKE2b-512 digest. |
+| `ComputeHash(input [, algorithm])` | Array | Raw digest bytes as a zero-based VBScript byte array. |
+| `GetBCryptCost()` | Integer | Current bcrypt work factor. |
+| `HashPassword(password)` | String | bcrypt hash string, or empty string on failure. |
+| `HmacSha256(data, key)` | String | 64-character lowercase hexadecimal HMAC-SHA256 digest. |
+| `HmacSha512(data, key)` | String | 128-character lowercase hexadecimal HMAC-SHA512 digest. |
+| `Initialize()` | Empty | Clears internal last-hash state. |
+| `MD5(input)` | String | 32-character lowercase hexadecimal MD5 digest. |
+| `Pbkdf2Sha256(password, salt [, iterations] [, keyLength])` | String | Lowercase hexadecimal derived key. |
+| `RandomBase64([size])` | String | Base64-encoded cryptographically secure random bytes. |
+| `RandomBytes([size])` | Array | Raw cryptographically secure random bytes as a VBScript byte array. |
+| `RandomHex([size])` | String | Lowercase hexadecimal cryptographically secure random bytes. |
+| `SetBCryptCost(cost)` | Boolean | `True` when cost is in range `4..31`; otherwise `False`. |
+| `SHA1(input)` | String | 40-character lowercase hexadecimal SHA-1 digest. |
+| `SHA256(input)` | String | 64-character lowercase hexadecimal SHA-256 digest. |
+| `SHA3_256(input)` | String | 64-character lowercase hexadecimal SHA3-256 digest. |
+| `SHA3_512(input)` | String | 128-character lowercase hexadecimal SHA3-512 digest. |
+| `SHA384(input)` | String | 96-character lowercase hexadecimal SHA-384 digest. |
+| `SHA512(input)` | String | 128-character lowercase hexadecimal SHA-512 digest. |
+| `UUID()` | String | UUID v4 string, or empty string on random-source failure. |
+| `VerifyPassword(password, hash)` | Boolean | `True` on bcrypt match; otherwise `False`. |
 
 ## Remarks
+
 - Method names are case-insensitive.
-- All hashing methods update the internal **Hash** and **HashSize** properties.
-- Password-related methods (HashPassword/VerifyPassword) use the industry-standard bcrypt algorithm.
+- Digest methods return lowercase hexadecimal text unless documented otherwise.
+- `ComputeHash` returns raw bytes and updates `Hash` when the algorithm is valid.

@@ -1,33 +1,31 @@
 # DOMDocument.ResolveExternals Property
 
-## Overview
-Reads or writes the ResolveExternals property on the MSXML2 DOMDocument compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.ResolveExternals
-```
+Gets or sets whether external entities and document type definitions are resolved during parsing.
 
 ## Access
-Read/Write
 
-## Return Values
-Returns a Variant-compatible value.
+Read/Write.
+
+## Type
+
+Boolean.
+
+## Default
+
+False.
 
 ## Remarks
-- Compatibility resolve externals flag.
-- Property names are case-insensitive.
+
+- Accepted for compatibility with existing code. Set this property before calling `Load` or `LoadXML`.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.ResolveExternals)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.ResolveExternals = False
+oXML.LoadXML "<root/>"
+Set oXML = Nothing
 %>
 ```

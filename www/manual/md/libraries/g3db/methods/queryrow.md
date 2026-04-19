@@ -1,54 +1,60 @@
-# QueryRow Method
+# Execute a Query and Return One Row
 
 ## Overview
 
-The **QueryRow** method executes a SQL query that is expected to return a single row in G3Pix AxonASP.
+Executes a SQL query and returns a G3DBRow object for single-row scanning.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3DB")`.
 
 ## Syntax
 
 ```asp
-Set result = obj.QueryRow(sql [, params...])
+Set row = db.QueryRow(sql[, params...])
 ```
 
-## Parameters and Arguments
+## Parameters
 
-- **sql** (String, Required): The SQL query statement to be executed.
-- **params** (Variant, Optional): One or more values to be used as parameters in the SQL statement, replacing the `?` placeholders.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **sql** | String | Yes | SQL query text. |
+| **params** | Any | No | Positional values for query placeholders. |
 
-## Return Values
+## Return Value
 
-Returns a **G3DBRow** object. This object represents the single row returned by the query and provides methods to retrieve its data.
+- **G3DBRow**: Returned when query dispatch succeeds.
+- **Empty**: Returned when connection is not open or SQL is missing.
 
 ## Remarks
 
-- This method is designed for efficiency when you expect exactly one row, such as fetching a record by its primary key.
-- If the query returns multiple rows, only the first row will be available through the **G3DBRow** object.
-- If no row is found, the **Scan** method of the returned **G3DBRow** will return an **Empty** value.
-- Parameterized queries with `?` are supported and are automatically rewritten for the current database driver.
+- Use `Scan` or `ScanMap` on the returned row object.
+- If no row is found, scan methods return Empty.
 
-## Code Example
+## Example
 
 ```asp
 <%
-Dim db, row, userName
+Option Explicit
+Dim db, row, value
 Set db = Server.CreateObject("G3DB")
 
-If db.Open("postgres", "host=localhost user=myuser dbname=mydb") Then
-    ' Fetch a single user's name
+If db.Open("postgres", "host=localhost user=u dbname=app") Then
     Set row = db.QueryRow("SELECT name FROM users WHERE id = ?", 1)
-
-    ' Retrieve the name using Scan
-    userName = row.Scan()
-
-    If Not IsEmpty(userName) Then
-        Response.Write "User Name: " & userName
-    Else
-        Response.Write "User not found."
+    If Not IsEmpty(row) Then
+        value = row.Scan()
+        If Not IsEmpty(value) Then Response.Write value
     End If
-
     db.Close
 End If
 
 Set db = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3DB`
+- **Method**: `QueryRow`
+- **Arguments**: `sql` (String, required), `params...` (Any, optional)
+- **Returns**: G3DBRow on dispatch success, Empty on connection/argument failure

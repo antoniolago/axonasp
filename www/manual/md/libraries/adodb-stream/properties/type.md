@@ -2,38 +2,46 @@
 
 ## Overview
 
-The Type property is exposed by the ADODB.Stream object in AxonASP.
+Gets or sets the stream content mode.
 
 ## Syntax
 
 ```asp
-value = obj.Type
-obj.Type = newValue
+value = stm.Type
+stm.Type = newValue
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns `1` for binary mode or `2` for text mode.
 
 ## Remarks
 
-- Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Property names are case-insensitive in G3Pix AxonASP.
+- Set `Type = 1` before binary `Read` and `Write` operations.
+- Set `Type = 2` before `ReadText` and `WriteText` operations.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Stream")
-value = obj.Type
-Response.Write CStr(value)
-Set obj = Nothing
+Dim stm
+
+Set stm = Server.CreateObject("ADODB.Stream")
+stm.Type = 2
+stm.Open
+stm.WriteText "text payload"
+Response.Write "Type: " & CStr(stm.Type)
+
+stm.Close
+Set stm = Nothing
 %>
 ```
+
+## API Reference
+
+- Object: ADODB.Stream
+- Property: Type
+- Access: Read/Write
+- Type: Integer (`1` binary, `2` text)

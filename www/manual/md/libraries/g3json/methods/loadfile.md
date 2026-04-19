@@ -1,33 +1,58 @@
-# LoadFile Method
+# Load JSON from File
 
 ## Overview
-Reads a JSON file from the disk and parses it into a native AxonASP object or array.
+
+Reads a JSON file and parses it into a native G3Pix AxonASP value.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3JSON")`.
 
 ## Syntax
+
 ```asp
 result = json.LoadFile(path)
 ```
 
-## Parameters and Arguments
-- **path** (String, Required): The file path to the JSON file. This can be a relative virtual path or a physical path. Virtual paths are automatically resolved via `Server.MapPath`.
+## Parameters
 
-## Return Values
-Returns a **Variant** containing the parsed data. It returns a **Scripting.Dictionary** object if the root JSON element is an object, or an **Array** if the root element is a JSON array. If the file cannot be read or contains invalid JSON, it returns **Empty**.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **path** | String | Yes | Virtual or physical path to a JSON file. |
+
+## Return Value
+
+- **Scripting.Dictionary**: Returned when the JSON root is an object.
+- **Array**: Returned when the JSON root is an array.
+- **String / Integer / Double / Boolean / Null**: Returned when the JSON root is a primitive.
+- **Empty**: Returned when `path` is missing, file read fails, or JSON parsing fails.
 
 ## Remarks
-This method is the most efficient way to load configuration files or static JSON datasets into your application. It leverages high-performance I/O and the built-in Go JSON unmarshaller.
 
-## Code Example
+- Virtual paths are mapped through the server host when available.
+- Parsing behavior matches `Parse`.
+
+## Example
+
 ```asp
 <%
-Dim json, config
+Option Explicit
+Dim json, cfg
 Set json = Server.CreateObject("G3JSON")
-Set config = json.LoadFile("/config/settings.json")
 
-If Not IsEmpty(config) Then
-    Response.Write "App Name: " & config("appName")
+Set cfg = json.LoadFile("/config/settings.json")
+If IsObject(cfg) Then
+    Response.Write cfg("appName")
 End If
 
+Set cfg = Nothing
 Set json = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3JSON`
+- **Method**: `LoadFile`
+- **Arguments**: `path` (String, required)
+- **Returns**: Dictionary, Array, scalar primitive, Null, or Empty on failure

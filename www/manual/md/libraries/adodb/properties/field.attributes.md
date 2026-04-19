@@ -1,39 +1,43 @@
 ﻿# Field.Attributes Property
 
-## Overview
-
-The Field.Attributes property is exposed by the ADODB.Connection object in AxonASP.
+Returns the attribute flags for the field metadata.
 
 ## Syntax
 
 ```asp
-value = obj.Field.Attributes
-obj.Field.Attributes = newValue
+flags = rs.Fields("columnName").Attributes
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns a bitmask describing field capabilities and metadata flags.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- This property is read-only.
+- Flag values are provider-dependent.
+- Common uses include checking nullable and auto-increment behavior.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Field.Attributes
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.Execute("SELECT id, name FROM users")
+If Not rs.EOF Then
+	Response.Write "Field attributes: " & CStr(rs.Fields("id").Attributes)
+End If
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

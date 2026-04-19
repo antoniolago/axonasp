@@ -1,27 +1,49 @@
-# Get Minimum Integer Values
+# Get the Minimum Platform Integer Value
 
-Returns the minimum integer value supported by the system.
+## Overview
+
+Returns the minimum value that a signed 64-bit integer can hold on the current platform.
 
 ## Prerequisites
-The `G3AXON.FUNCTIONS` object must be instantiated to use this method.
-This feature is available in the G3Pix AxonASP environment.
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
-```vbscript
-Number (Long) = obj.AxIntegerMin()
+
+```asp
+result = obj.AxIntegerMin()
 ```
+
+## Parameters
+
+This method does not require parameters.
 
 ## Return Value
-Returns a Number (Long).
+
+- **Integer**: Returns `-9,223,372,036,854,775,808` on 64-bit systems.
+
+## Remarks
+
+- Method names are case-insensitive in VBScript dispatch.
 
 ## Example
-```vbscript
-Dim obj, result
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
 
-result = obj.AxIntegerMin()
+```asp
+<%
+Option Explicit
+Dim ax
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-Response.Write result
+Response.Write ax.AxIntegerMin()
+' Output: -9223372036854775808
 
-Set obj = Nothing
+Set ax = Nothing
+%>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxIntegerMin`
+- **Arguments**: none
+- **Returns**: `Integer` (minimum signed 64-bit integer value)

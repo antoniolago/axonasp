@@ -1,41 +1,53 @@
-﻿# Parameters.Append Method
+# Parameters.Append Method
 
-## Overview
-
-The Parameters.Append method is exposed by the ADODB.Connection object in AxonASP.
+Adds a Parameter object to the command Parameters collection.
 
 ## Syntax
 
 ```asp
-result = obj.Parameters.Append(...)
+cmd.Parameters.Append parameterObj
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `parameterObj` | Parameter | Yes | Parameter object created by `CreateParameter`. |
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Empty. The method does not return a value.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- Append adds the parameter to the end of the collection.
+- Parameter order must match placeholder order for positional providers.
+- Append does not execute the command.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Parameters.Append()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+Dim conn, cmd, p
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set cmd = Server.CreateObject("ADODB.Command")
+cmd.ActiveConnection = conn
+cmd.CommandText = "SELECT id, name FROM users WHERE id = ?"
+
+Set p = cmd.CreateParameter("id", 3, 1, 4, 1)
+cmd.Parameters.Append p
+
+Response.Write "Parameters count: " & CStr(cmd.Parameters.Count)
+
+conn.Close
+Set p = Nothing
+Set cmd = Nothing
+Set conn = Nothing
 %>
 ```

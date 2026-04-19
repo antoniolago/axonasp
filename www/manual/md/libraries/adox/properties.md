@@ -1,13 +1,15 @@
-﻿# Properties
+﻿# ADOX.Catalog Properties
 
 ## Overview
+This page summarizes properties exposed by ADOX.Catalog in G3Pix AxonASP.
 
-This page lists properties exposed by ADOX.Catalog.
+## Properties Reference
 
-## Property List
-- Tables
-- ActiveConnection
+| Property | Access | Type | Description |
+|---|---|---|---|
+| ActiveConnection | Read/Write | Object or String or Empty | Stores the current catalog connection source. Assign an ADODB connection object or a connection string. |
+| Tables | Read-only | Object | Returns an ADOX table collection object representing discovered tables and views for ActiveConnection. |
 
 ## Remarks
-
-Read-only properties reject assignment and raise runtime errors when not writable.
+- Property names are case-insensitive.
+- Assigning ActiveConnection resets cached Tables metadata.

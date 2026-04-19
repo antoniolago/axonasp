@@ -102,6 +102,7 @@ All work occurs within the `axonasp2` directory structure:
 
 # 📚 DOCUMENTATION & MANUALS
 
+* **Authoring Guidelines:** Before generating or updating any manual page, you MUST read and strictly follow the guidelines in `./www/manual/md/authoring/write-manual-pages.md`.
 * **When to Write:** Create or update manual pages when new libraries, methods, properties, or significant features are added. Always ensure that documentation is up-to-date with the latest implementation.
 * **Location:** `www\manual\md\` for markdown content, `www\manual\menu.md` for the navigable menu.
 * **Format:** Follow Microsoft Writing Style Guide (action-oriented titles, brief overview, prerequisites, code examples, extra information for how the code works and API references). *Don't create markdown links inside the content pages. Use markdown links only in `menu.md` for navigation.*

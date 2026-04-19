@@ -1,44 +1,43 @@
-# Remove Method
+# Remove a Dictionary Entry
 
 ## Overview
-
-The Remove method is exposed by the Scripting.Dictionary library object. Use it to execute this library operation from Classic ASP/VBScript with AxonASP runtime behavior.
+Use Remove to delete one dictionary entry by key.
 
 ## Syntax
 
 ```asp
-result = obj.Remove(...)
-`````
+dict.Remove key
+```
 
-## Parameters and Arguments
+## Parameters
+- key (Variant, required): Key to remove.
 
-- Parameters (Variant, Optional): This method accepts arguments according to the runtime dispatch of the Scripting.Dictionary object.
-- Argument validation: invalid count or type raises runtime errors.
+## Return Value
+Returns Empty.
 
-## Return Values
-
-Returns a Variant result. Depending on the operation, this can be String, Boolean, Number, Array, Dictionary/object handle, or Empty.
+## How It Works
+- Remove deletes both key and value and rebuilds the internal index map.
+- Remove raises an error when the key does not exist.
 
 ## Remarks
+- Remove requires one argument.
+- Member names are case-insensitive.
 
-- Method names are case-insensitive.
-- Prefer explicit variable assignment and defensive checks before using returned values.
-- For object values, use Set when assigning the return value.
-
-## Code Example
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("Scripting.Dictionary")
-result = obj.Remove()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+
+Dim dict
+Set dict = Server.CreateObject("Scripting.Dictionary")
+
+dict.Add "Token", "ABC"
+dict.Remove "Token"
+
+Response.Write "Count=" & dict.Count
+
+Set dict = Nothing
 %>
-`````
+```
 

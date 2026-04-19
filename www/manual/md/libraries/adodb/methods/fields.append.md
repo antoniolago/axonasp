@@ -1,41 +1,44 @@
-﻿# Fields.Append Method
+# Fields.Append Method
 
-## Overview
-
-The Fields.Append method is exposed by the ADODB.Connection object in AxonASP.
+Appends a new field definition to a Fields collection.
 
 ## Syntax
 
 ```asp
-result = obj.Fields.Append(...)
+fields.Append name[, type[, definedSize[, attributes]]]
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `name` | String | Yes | Field name to append. |
+| `type` | Integer | No | ADODB data type code. |
+| `definedSize` | Integer | No | Declared size for variable-length fields. |
+| `attributes` | Integer | No | Field attribute bitmask. |
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Empty. The method does not return a value.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- Append is used for dynamic schema creation scenarios.
+- Provider support for runtime schema mutation can vary.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Fields.Append()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+Dim rs
+
+Set rs = Server.CreateObject("ADODB.Recordset")
+rs.Fields.Append "TempName", 200, 100
+
+Response.Write "Field appended"
+
+Set rs = Nothing
 %>
 ```

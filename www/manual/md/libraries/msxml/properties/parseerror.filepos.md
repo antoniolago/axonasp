@@ -1,33 +1,29 @@
 # ParseError.FilePos Property
 
-## Overview
-Reads or writes the FilePos property on the MSXML2 ParseError compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.FilePos
-```
+Returns the byte offset in the source document where the parse error was detected.
 
 ## Access
-Read Only
 
-## Return Values
-Returns a Variant-compatible value.
+Read-only.
+
+## Type
+
+Integer.
 
 ## Remarks
-- Error byte/file offset.
-- Property names are case-insensitive.
+
+- Returns 0 when there is no error or when the position cannot be determined.
+- Use `Line` and `LinePos` for line-and-column positioning.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.FilePos)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+If Not oXML.LoadXML("<a><b></a>") Then
+    Response.Write "Error at byte offset: " & oXML.ParseError.FilePos
+End If
+Set oXML = Nothing
 %>
 ```

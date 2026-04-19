@@ -1,33 +1,30 @@
 # XMLElement.Children Property
 
-## Overview
-Reads or writes the Children property on the MSXML2 XMLElement compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.Children
-```
+Returns a list of all direct child nodes of this element. This is an alias for `ChildNodes`.
 
 ## Access
-Read Only
 
-## Return Values
-Returns a Variant-compatible value.
+Read-only.
+
+## Type
+
+XMLNodeList.
 
 ## Remarks
-- Children collection alias.
-- Property names are case-insensitive.
+
+- Identical in behaviour to `ChildNodes`. Either property can be used interchangeably.
+- Returns an empty XMLNodeList if the element has no children.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.Children)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oRoot, oList
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<root><x/><y/></root>"
+Set oRoot = oXML.DocumentElement
+Set oList = oRoot.Children
+Response.Write "Child count: " & oList.Length
+Set oXML = Nothing
 %>
 ```

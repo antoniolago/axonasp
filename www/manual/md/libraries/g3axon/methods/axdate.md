@@ -1,53 +1,79 @@
-# axdate
+# Format a Date and Time String
 
 ## Overview
 
-The `axdate` method formats a Unix timestamp (or the current time if omitted) into a readable string using PHP-like formatting tokens.
+Formats a Unix timestamp (or the current server time if omitted) into a readable string using PHP-compatible format tokens.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
 
 ```asp
-result = obj.axdate(format [, timestamp])
+result = ax.AxDate(format [, timestamp])
 ```
 
-## Parameters and Arguments
+## Parameters
 
-- **format** (String): A string representing the desired date/time format. It supports PHP-like tokens (e.g., "Y-m-d H:i:s").
-- **timestamp** (Integer, Optional): The Unix timestamp to format. If omitted, the current system time is used.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **format** | String | Yes | A format string composed of PHP-like tokens. |
+| **timestamp** | Integer | No | A Unix timestamp (seconds since 1970-01-01 UTC). Defaults to the current server time when omitted. |
 
-## Return Values
+**Supported format tokens:**
 
-Returns a String containing the formatted date and time.
+| Token | Description | Example |
+|---|---|---|
+| `Y` | 4-digit year | `2025` |
+| `m` | Month with leading zero | `01`–`12` |
+| `d` | Day of month with leading zero | `01`–`31` |
+| `H` | Hour in 24-hour format with leading zero | `00`–`23` |
+| `i` | Minutes with leading zero | `00`–`59` |
+| `s` | Seconds with leading zero | `00`–`59` |
+| `a` | Lowercase ante/post meridiem | `am` / `pm` |
+| `A` | Uppercase ante/post meridiem | `AM` / `PM` |
+| `F` | Full month name | `January` |
+| `M` | Abbreviated month name | `Jan` |
+| `l` | Full weekday name | `Monday` |
+| `D` | Abbreviated weekday name | `Mon` |
+| `N` | ISO-8601 day of the week (1=Monday, 7=Sunday) | `1`–`7` |
+| `j` | Day of month without leading zero | `1`–`31` |
+| `n` | Month without leading zero | `1`–`12` |
+| `G` | Hour in 24-hour format without leading zero | `0`–`23` |
+| `U` | Unix timestamp | Integer |
+
+## Return Value
+
+- **String**: The input format string with all recognized tokens replaced by their corresponding date/time values.
 
 ## Remarks
 
-- This method is part of the G3Pix AxonASP library.
-- It supports localized month and weekday names based on the VM configuration.
-- Common tokens:
-    - **Y**: 4-digit year.
-    - **m**: Month with leading zeros (01-12).
-    - **d**: Day of the month with leading zeros (01-31).
-    - **H**: 24-hour format of an hour (00-23).
-    - **i**: Minutes with leading zeros (00-59).
-    - **s**: Seconds with leading zeros (00-59).
-- Method names in G3Pix AxonASP are case-insensitive.
+- Month and weekday names use the locale configured for the AxonASP VM.
+- Unrecognized characters in the format string are passed through unchanged.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim ax, formattedDate
+Dim ax
 Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-' Format current date
-formattedDate = ax.axdate("Y-m-d H:i:s")
-Response.Write "Current Date: " & formattedDate & "<br>"
+Response.Write ax.AxDate("Y-m-d H:i:s") & "<br>"
+' Output (example): 2025-06-15 14:30:00
 
-' Format specific timestamp (e.g., 1735689600 for 2025-01-01)
-formattedDate = ax.axdate("l, F j, Y", 1735689600)
-Response.Write "Specific Date: " & formattedDate
+Response.Write ax.AxDate("l, F j, Y", 1735689600) & "<br>"
+' Output (example): Wednesday, January 1, 2025
 
 Set ax = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxDate`
+- **Arguments**: `format` (String, required), `timestamp` (Integer, optional)
+- **Returns**: String — formatted date/time string

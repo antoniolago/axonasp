@@ -1,48 +1,39 @@
 # Driver Property
 
 ## Overview
+Gets or sets the normalized database driver name.
 
-The **Driver** property gets or sets the database driver name for the G3Pix AxonASP database connection.
+## Prerequisites
+```asp
+Set db = Server.CreateObject("G3DB")
+```
 
 ## Syntax
-
-To set the property:
 ```asp
-obj.Driver = "mysql"
-```
-To get the property:
-```asp
-result = obj.Driver
+db.Driver = "mysql"
+driverName = db.Driver
 ```
 
-## Return Values
-
-Returns a **String** representing the canonical driver name (e.g., "mysql", "postgres", "mssql", "sqlite", "oracle").
+## Return Value
+Returns a **String** with the current normalized driver value.
 
 ## Remarks
+- This property is read/write.
+- Assigned values are normalized to canonical driver names.
 
-- This property can be set manually before calling the **Open** or **OpenFromEnv** methods.
-- After a successful connection, this property returns the normalized driver name used for the current connection.
-- Supported aliases are automatically converted to their canonical forms (e.g., "mariadb" becomes "mysql").
-
-## Code Example
-
+## Example
 ```asp
 <%
-Dim db, driverName
+Dim db
 Set db = Server.CreateObject("G3DB")
 
-' Pre-configure the driver
-db.Driver = "mysql"
-
-Response.Write "Configured Driver: " & db.Driver & "<br>"
-
-' Attempt to open a connection
-If db.OpenFromEnv() Then
-    Response.Write "Connected using driver: " & db.Driver
-    db.Close
-End If
+db.Driver = "postgresql"
+Response.Write db.Driver
 
 Set db = Nothing
 %>
 ```
+
+## API Reference
+- **Type:** String
+- **Access:** Read/write

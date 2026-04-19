@@ -2,43 +2,50 @@
 
 ## Overview
 
-The FolderExists method is exposed by the Scripting.FileSystemObject library object. Use it to execute this library operation from Classic ASP/VBScript with AxonASP runtime behavior.
+Determines whether a folder exists at the specified path.
 
 ## Syntax
 
 ```asp
-result = obj.FolderExists(...)
-`````
+result = fso.FolderExists(folderspec)
+```
 
-## Parameters and Arguments
+## Parameters
 
-- Parameters (Variant, Optional): This method accepts arguments according to the runtime dispatch of the Scripting.FileSystemObject object.
-- Argument validation: invalid count or type raises runtime errors.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| folderspec | String | Yes | The path to the folder to check. |
 
-## Return Values
+## Return Value
 
-Returns a Variant result. Depending on the operation, this can be String, Boolean, Number, Array, Dictionary/object handle, or Empty.
+Returns **True** if a directory exists at the resolved path. Returns **False** if the directory does not exist, if the path resolves to a file, if the path cannot be resolved, or if no argument is supplied.
+
+## How It Works
+
+The path is resolved against the web root. The runtime calls `os.Stat` on the resolved path and returns True only when the call succeeds and the result is a directory entry. No error is raised; the method always returns a Boolean.
 
 ## Remarks
 
-- Method names are case-insensitive.
-- Prefer explicit variable assignment and defensive checks before using returned values.
-- For object values, use Set when assigning the return value.
+- `FolderExists` does not distinguish between a missing folder and a permission error. Both cases return False.
+- To check for a file, use `FileExists` instead.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("Scripting.FileSystemObject")
-result = obj.FolderExists()
-If IsObject(result) Then
-    Response.Write "Object returned"
+Dim fso, uploadDir
+Set fso = Server.CreateObject("Scripting.FileSystemObject")
+
+uploadDir = Server.MapPath("uploads")
+If Not fso.FolderExists(uploadDir) Then
+    fso.CreateFolder uploadDir
+    Response.Write "Upload folder created."
 Else
-    Response.Write CStr(result)
+    Response.Write "Upload folder already exists."
 End If
-Set obj = Nothing
+
+Set fso = Nothing
 %>
-`````
+```
 

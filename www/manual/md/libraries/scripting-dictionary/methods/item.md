@@ -1,44 +1,50 @@
-# Item Method
+# Get or Set a Dictionary Item
 
 ## Overview
-
-The Item method is exposed by the Scripting.Dictionary library object. Use it to execute this library operation from Classic ASP/VBScript with AxonASP runtime behavior.
+Use Item to read or assign a value by key.
 
 ## Syntax
 
 ```asp
-result = obj.Item(...)
-`````
+value = dict.Item(key)
+dict.Item(key) = value
+```
 
-## Parameters and Arguments
+## Parameters
+- key (Value, required): Entry key.
+- value (Value, required in assignment form): Value assigned when using set form.
 
-- Parameters (Variant, Optional): This method accepts arguments according to the runtime dispatch of the Scripting.Dictionary object.
-- Argument validation: invalid count or type raises runtime errors.
+## Return Value
+With one argument, returns the stored value for key.
 
-## Return Values
+When key does not exist in get form, Item returns Empty and creates the key with Empty value.
 
-Returns a Variant result. Depending on the operation, this can be String, Boolean, Number, Array, Dictionary/object handle, or Empty.
+With assignment form, Item returns Empty.
+
+## How It Works
+- Lookup respects CompareMode.
+- Assignment updates existing keys or creates new keys.
 
 ## Remarks
+- Member names are case-insensitive.
+- The same behavior is available through default-index syntax: `dict(key)`.
 
-- Method names are case-insensitive.
-- Prefer explicit variable assignment and defensive checks before using returned values.
-- For object values, use Set when assigning the return value.
-
-## Code Example
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("Scripting.Dictionary")
-result = obj.Item()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+
+Dim dict, missingValue
+Set dict = Server.CreateObject("Scripting.Dictionary")
+
+dict.Item("Mode") = "Production"
+missingValue = dict.Item("UndefinedKey")
+
+Response.Write "Mode=" & dict.Item("Mode") & "<br>"
+Response.Write "Missing is empty=" & CStr(IsEmpty(missingValue))
+
+Set dict = Nothing
 %>
-`````
+```
 

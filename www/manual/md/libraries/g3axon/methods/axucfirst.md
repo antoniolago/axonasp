@@ -1,27 +1,56 @@
-# Make the First Character Uppercase
+# Uppercase the First Character
 
-Makes a string's first character uppercase.
+## Overview
+
+Returns a copy of the input string with the first Unicode character converted to uppercase.
 
 ## Prerequisites
-The `G3AXON.FUNCTIONS` object must be instantiated to use this method.
-This feature is available in the G3Pix AxonASP environment.
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
-```vbscript
-String = obj.AxUcfirst(input)
+
+```asp
+result = obj.AxUcfirst(str)
 ```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| str | String | Yes | The source string. |
 
 ## Return Value
-Returns a String.
+
+- **String**: Returns `str` with the first character converted to uppercase and remaining characters unchanged.
+- **String**: Returns an empty string when `str` is empty or no argument is provided.
+
+## Remarks
+
+- Method names are case-insensitive in VBScript dispatch.
+- Only the first Unicode character is uppercased; all other characters are left as-is.
 
 ## Example
-```vbscript
-Dim obj, result
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
 
-result = obj.AxUcfirst(input)
+```asp
+<%
+Option Explicit
+Dim ax
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-Response.Write result
+Response.Write ax.AxUcfirst("hello world")
+' Output: Hello world
 
-Set obj = Nothing
+Response.Write ax.AxUcfirst("axonASP")
+' Output: AxonASP
+
+Set ax = Nothing
+%>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxUcfirst`
+- **Arguments**: `str As String`
+- **Returns**: `String` (string with uppercased first character)

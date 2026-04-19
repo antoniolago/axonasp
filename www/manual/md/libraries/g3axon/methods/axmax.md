@@ -1,33 +1,56 @@
-# axmax
+# Return the Maximum Value
 
 ## Overview
-Returns the largest numeric value from the provided arguments in G3Pix AxonASP.
+
+Returns the largest numeric value from all provided arguments.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
+
 ```asp
-result = obj.axmax(n1, n2, ..., nN)
+result = obj.AxMax(n1, n2, ...)
 ```
 
-## Parameters and Arguments
-- **n1, n2, ..., nN** (Numeric): A variable number of numeric values to be compared.
+## Parameters
 
-## Return Values
-Returns a Double representing the maximum value found among all arguments. If no arguments are provided, it returns 0.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| n1, n2, ... | Double | Yes (at least one) | One or more numeric values to compare. All values are coerced to Double before comparison. |
+
+## Return Value
+
+- **Double**: Returns the largest value among all arguments.
+- **Integer**: Returns `0` when no arguments are provided.
 
 ## Remarks
-The function automatically converts non-numeric values to their numeric equivalent before comparison.
 
-## Code Example
+- All values are coerced to Double before comparison.
+- Method names are case-insensitive in VBScript dispatch.
+
+## Example
+
 ```asp
 <%
 Option Explicit
-Dim obj, maxVal
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
+Dim ax
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-' Returns 45.7
-maxVal = obj.axmax(10, 45.7, 32, -5)
-Response.Write "Max value: " & maxVal
+Response.Write ax.AxMax(10, 45.7, 32, -5)
+' Output: 45.7
 
-Set obj = Nothing
+Response.Write ax.AxMax(100, 200, 150)
+' Output: 200
+
+Set ax = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxMax`
+- **Arguments**: `n1 As Double, n2 As Double, ...` (variadic)
+- **Returns**: `Double` (largest value among arguments)

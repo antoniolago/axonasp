@@ -1,41 +1,43 @@
-﻿# Connection.Open Method
+# Connection.Open Method
 
-## Overview
-
-The Connection.Open method is exposed by the ADODB.Connection object in AxonASP.
+Opens the database connection using the configured connection string.
 
 ## Syntax
 
 ```asp
-result = obj.Connection.Open(...)
+conn.Open [connectionString]
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `connectionString` | String | No | Overrides `ConnectionString` for this call. |
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Empty. The method does not return a value.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- If no parameter is provided, `ConnectionString` must already be set.
+- After a successful call, `State` becomes `1`.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Connection.Open()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+Dim conn
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Response.Write "State: " & CStr(conn.State)
+
+conn.Close
+Set conn = Nothing
 %>
 ```

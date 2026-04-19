@@ -1,14 +1,15 @@
 # G3MD Properties
 
 ## Overview
-This page provides a summary of the properties available in the **G3MD** library for configuring the Markdown processor.
+This page summarizes properties available in the G3MD library for Markdown rendering configuration.
 
-## Property List
+## Properties Reference
 
-- **HardWraps**: Read/Write. Determines if soft line breaks in the source should be converted to `<br>` tags. Returns a **Boolean**.
-- **Unsafe**: Read/Write. Determines if raw HTML and potentially dangerous links should be rendered. Returns a **Boolean**.
+| Property | Access | Type | Description |
+|---|---|---|---|
+| HardWraps | Read/Write | Boolean | When True, converts soft line breaks into HTML line breaks. |
+| Unsafe | Read/Write | Boolean | When True, allows raw HTML and non-sanitized links in rendered output. |
 
 ## Remarks
 - Property names are case-insensitive.
-- Setting these properties affects all subsequent calls to the **Process** method on the same object instance.
-- By default, both properties are set to **False**.
+- Property values affect subsequent Process calls on the same instance.

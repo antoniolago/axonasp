@@ -1,37 +1,54 @@
-# Md5 Method
+# Compute an MD5 Digest
 
 ## Overview
 
-Computes an MD5 (Message Digest 5) hash from the provided input string or byte array using the G3Pix AxonASP G3CRYPTO library.
+Computes the MD5 digest of the input and returns the result as a lowercase hexadecimal string.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3CRYPTO")`.
 
 ## Syntax
 
 ```asp
-result = obj.Md5(input)
+result = crypto.MD5(input)
 ```
 
 ## Parameters
 
-- **input** (String or Array): The data to be hashed.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **input** | String or Array | No | Input data as text or a VBScript byte array. When omitted, the method hashes an empty string. |
 
-## Return Values
+## Return Value
 
-Returns a String containing the 128-bit hash result encoded as a lowercase hexadecimal string.
+- **String**: 32-character lowercase hexadecimal MD5 digest.
 
 ## Remarks
 
-- Instantiated via `Server.CreateObject("G3CRYPTO")`.
-- MD5 is widely used for checksums and basic data integrity verification.
-- **Security Note:** MD5 is no longer considered cryptographically secure for high-value applications or password hashing; use SHA-256 or bcrypt instead.
+- MD5 is fast and useful for checksums but is not recommended for password hashing or collision-resistant security scenarios.
+- The method accepts byte arrays and string inputs.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
 ```asp
 <%
-Dim crypto, hash
+Option Explicit
+Dim crypto, digest
 Set crypto = Server.CreateObject("G3CRYPTO")
-hash = crypto.Md5("Hello World")
-Response.Write "MD5 Hash: " & hash
+
+digest = crypto.MD5("Hello World")
+Response.Write digest
+' Output: b10a8db164e0754105b7a99be72e3fe5
+
 Set crypto = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3CRYPTO`
+- **Method**: `MD5`
+- **Arguments**: `input` (String or Array, optional)
+- **Returns**: String — 32-character lowercase hexadecimal digest

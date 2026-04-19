@@ -1,41 +1,48 @@
-﻿# Connection.BeginTrans Method
+# Connection.BeginTrans Method
 
-## Overview
-
-The Connection.BeginTrans method is exposed by the ADODB.Connection object in AxonASP.
+Starts a transaction on the current connection.
 
 ## Syntax
 
 ```asp
-result = obj.Connection.BeginTrans(...)
+level = conn.BeginTrans
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+No parameters.
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Integer. Returns `1` when the transaction starts successfully; returns `0` otherwise.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- Pair this method with `CommitTrans` or `RollbackTrans`.
+- Use transactions when multiple statements must succeed or fail together.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Connection.BeginTrans()
-If IsObject(result) Then
-    Response.Write "Object returned"
+Dim conn, level
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+level = conn.BeginTrans
+If level = 1 Then
+    conn.Execute "UPDATE users SET active = 1 WHERE id = 1"
+    conn.CommitTrans
+    Response.Write "Committed"
 Else
-    Response.Write CStr(result)
+    Response.Write "Transaction not started"
 End If
-Set obj = Nothing
+
+conn.Close
+Set conn = Nothing
 %>
 ```

@@ -1,33 +1,56 @@
-# axmin
+# Return the Minimum Value
 
 ## Overview
-Returns the smallest numeric value from the provided arguments in G3Pix AxonASP.
+
+Returns the smallest numeric value from all provided arguments.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
+
 ```asp
-result = obj.axmin(n1, n2, ..., nN)
+result = obj.AxMin(n1, n2, ...)
 ```
 
-## Parameters and Arguments
-- **n1, n2, ..., nN** (Numeric): A variable number of numeric values to be compared.
+## Parameters
 
-## Return Values
-Returns a Double representing the minimum value found among all arguments. If no arguments are provided, it returns 0.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| n1, n2, ... | Double | Yes (at least one) | One or more numeric values to compare. All values are coerced to Double before comparison. |
+
+## Return Value
+
+- **Double**: Returns the smallest value among all arguments.
+- **Integer**: Returns `0` when no arguments are provided.
 
 ## Remarks
-The function automatically converts non-numeric values to their numeric equivalent before comparison.
 
-## Code Example
+- All values are coerced to Double before comparison.
+- Method names are case-insensitive in VBScript dispatch.
+
+## Example
+
 ```asp
 <%
 Option Explicit
-Dim obj, minVal
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
+Dim ax
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-' Returns -5.2
-minVal = obj.axmin(10, 45, 32, -5.2)
-Response.Write "Min value: " & minVal
+Response.Write ax.AxMin(10, 45, 32, -5.2)
+' Output: -5.2
 
-Set obj = Nothing
+Response.Write ax.AxMin(100, 200, 150)
+' Output: 100
+
+Set ax = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxMin`
+- **Arguments**: `n1 As Double, n2 As Double, ...` (variadic)
+- **Returns**: `Double` (smallest value among arguments)

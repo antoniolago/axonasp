@@ -1,37 +1,53 @@
-# axenvironmentlist
+# List All Environment Variables
 
 ## Overview
-Retrieves a list of all environment variables for the current G3Pix AxonASP process.
+
+Returns a snapshot of all environment variables currently defined in the process as a VBArray.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
+
 ```asp
-result = obj.axenvironmentlist()
+result = obj.AxEnvironmentList()
 ```
 
-## Parameters and Arguments
-None.
+## Parameters
 
-## Return Values
-Returns an Array of Strings, where each element represents an environment variable in "KEY=VALUE" format.
+This method does not require parameters.
+
+## Return Value
+
+- **Array**: Returns a zero-based VBArray of String values, each in `KEY=VALUE` format.
 
 ## Remarks
-Internal or pseudo-environment variables (such as those starting with '=' on Windows) are automatically filtered from the results.
 
-## Code Example
+- Pseudo-environment entries (such as entries starting with `=` on Windows) are filtered out automatically.
+- The order of elements depends on the operating system.
+- Method names are case-insensitive in VBScript dispatch.
+
+## Example
+
 ```asp
 <%
 Option Explicit
-Dim obj, envList, item
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
+Dim ax, envList, i
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-envList = obj.axenvironmentlist()
+envList = ax.AxEnvironmentList()
+For i = 0 To UBound(envList)
+    Response.Write Server.HTMLEncode(envList(i)) & "<br>"
+Next
 
-If IsArray(envList) Then
-    For Each item In envList
-        Response.Write item & "<br>"
-    Next
-End If
-
-Set obj = Nothing
+Set ax = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxEnvironmentList`
+- **Arguments**: none
+- **Returns**: `Array` (zero-based VBArray of `KEY=VALUE` strings)

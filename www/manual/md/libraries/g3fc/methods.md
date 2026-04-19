@@ -1,19 +1,19 @@
-﻿# Methods for G3FC
+﻿# G3FC Methods
 
 ## Overview
+This page summarizes the methods exposed by the G3FC archive library in G3Pix AxonASP.
 
-This page lists methods exposed by the G3FC library in AxonASP.
+## Methods Reference
 
-## Method List
-
-- Create: Creates a new G3FC archive.
-- Extract: Extracts all files from a G3FC archive.
-- ExtractSingle: Extracts a single file from a G3FC archive.
-- Find: Finds matching files inside a G3FC archive.
-- Info: Exports detailed header information from a G3FC archive.
-- List: Lists all files inside a G3FC archive.
+| Method | Returns | Description |
+|---|---|---|
+| Create | Boolean | Creates a new G3FC archive from one or more source paths. |
+| Extract | Boolean | Extracts all items from a G3FC archive to a target directory. |
+| List | Array of Dictionary or Empty | Lists archive entries with size and path metadata. Returns Empty on invalid arguments or read failure. |
+| Info | Boolean | Exports archive metadata details to an output file. |
+| Find | Array of Dictionary or Empty | Searches entries by substring or regular expression and returns matching items. Returns Empty on invalid arguments or read failure. |
+| ExtractSingle | Boolean | Extracts one file entry from an archive to a target path. |
 
 ## Remarks
-
 - Method names are case-insensitive.
-- Validate input types and return values in production code.
+- ExtractSingle also accepts aliases extract-single and extract_single.

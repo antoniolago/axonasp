@@ -1,39 +1,46 @@
-﻿# Recordset.ActiveConnection Property
+# Recordset.ActiveConnection Property
 
-## Overview
-
-The Recordset.ActiveConnection property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets the connection used by the recordset.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.ActiveConnection
-obj.Recordset.ActiveConnection = newValue
+Set connRef = rs.ActiveConnection
+Set rs.ActiveConnection = conn
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Object. Returns an ADODB.Connection object reference.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Use `Set` for object assignment.
+- Set before opening recordsets when source does not embed connection context.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.ActiveConnection
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs, connRef
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = Server.CreateObject("ADODB.Recordset")
+Set rs.ActiveConnection = conn
+rs.Open "SELECT id, name FROM users", conn
+Set connRef = rs.ActiveConnection
+
+Response.Write "State: " & CStr(connRef.State)
+
+rs.Close
+conn.Close
+Set connRef = Nothing
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

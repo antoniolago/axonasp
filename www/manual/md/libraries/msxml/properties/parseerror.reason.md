@@ -1,33 +1,29 @@
 # ParseError.Reason Property
 
-## Overview
-Reads or writes the Reason property on the MSXML2 ParseError compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.Reason
-```
+Returns a human-readable description of the parse error.
 
 ## Access
-Read Only
 
-## Return Values
-Returns a Variant-compatible value.
+Read-only.
+
+## Type
+
+String.
 
 ## Remarks
-- Parser error message.
-- Property names are case-insensitive.
+
+- Returns an empty String when `ErrorCode` is 0 (no error).
+- For HTTP load failures, the reason string describes the network or server error.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.Reason)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+If Not oXML.LoadXML("<open") Then
+    Response.Write "Reason: " & oXML.ParseError.Reason
+End If
+Set oXML = Nothing
 %>
 ```

@@ -1,41 +1,50 @@
-﻿# Recordset.GetRows Method
+# Recordset.GetRows Method
 
-## Overview
-
-The Recordset.GetRows method is exposed by the ADODB.Connection object in AxonASP.
+Returns recordset rows as a two-dimensional array.
 
 ## Syntax
 
 ```asp
-result = obj.Recordset.GetRows(...)
+rows = rs.GetRows
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+No parameters.
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Array or Empty. Returns a 2D array in `[columnIndex][rowIndex]` order. Returns Empty when the recordset is closed or has no rows.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- This method reads the full remaining rowset into memory.
+- Use for bulk processing when array access is preferred.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Recordset.GetRows()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
+Dim conn, rs, rows, i
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.Execute("SELECT id, name FROM users")
+rows = rs.GetRows
+
+If IsArray(rows) Then
+    For i = 0 To UBound(rows, 2)
+        Response.Write rows(0, i) & " - " & rows(1, i) & "<br>"
+    Next
 End If
-Set obj = Nothing
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

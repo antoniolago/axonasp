@@ -1,41 +1,47 @@
-﻿# Recordset.Fields Method
+# Recordset.Fields Method
 
-## Overview
-
-The Recordset.Fields method is exposed by the ADODB.Connection object in AxonASP.
+Returns the Fields collection associated with the current recordset.
 
 ## Syntax
 
 ```asp
-result = obj.Recordset.Fields(...)
+Set fieldsCollection = rs.Fields
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+No parameters.
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Object. Returns an ADODB.Fields collection object.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- Use the collection to inspect schema and read field values.
+- Combine with `Fields.Count` and `Fields.Item` for dynamic processing.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Recordset.Fields()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+Dim conn, rs, fieldsCollection
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.Execute("SELECT id, name FROM users")
+Set fieldsCollection = rs.Fields
+
+Response.Write "Fields: " & CStr(fieldsCollection.Count)
+
+rs.Close
+conn.Close
+Set fieldsCollection = Nothing
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

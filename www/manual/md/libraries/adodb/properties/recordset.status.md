@@ -1,39 +1,41 @@
-﻿# Recordset.Status Property
+# Recordset.Status Property
 
-## Overview
-
-The Recordset.Status property is exposed by the ADODB.Connection object in AxonASP.
+Returns or sets record status flags for the current row context.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.Status
-obj.Recordset.Status = newValue
+value = rs.Status
+rs.Status = newStatus
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns record status bit flags.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Status values are provider/runtime dependent.
+- Use for advanced state inspection in update workflows.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.Status
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+Set rs = conn.Execute("SELECT id, name FROM users")
+
+If Not rs.EOF Then Response.Write CStr(rs.Status)
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

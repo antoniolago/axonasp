@@ -1,32 +1,52 @@
-# axpathlistseparator
+# Get the Path List Separator Character
 
 ## Overview
-Retrieves the operating system's path list separator character in G3Pix AxonASP.
+
+Returns the character the operating system uses to separate entries in a path list, such as the `PATH` environment variable.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
+
 ```asp
-result = obj.axpathlistseparator()
+result = ax.AxPathListSeparator()
 ```
 
-## Parameters and Arguments
-None.
+## Parameters
 
-## Return Values
-Returns a String containing the character used by the operating system to separate multiple paths in a list (e.g., in the PATH environment variable).
+This method does not accept any parameters.
+
+## Return Value
+
+- **String**: `";"` on Windows. `":"` on Unix-like systems.
 
 ## Remarks
-Typically returns ";" on Windows systems and ":" on Unix-like systems.
 
-## Code Example
+- Use this method to build portable path list strings without hardcoding platform-specific separator characters.
+- Method names are case-insensitive.
+
+## Example
+
 ```asp
 <%
 Option Explicit
-Dim obj, listSeparator
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
+Dim ax, sep, pathList
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-listSeparator = obj.axpathlistseparator()
-Response.Write "System Path List Separator: " & listSeparator
+sep = ax.AxPathListSeparator()
+pathList = "/usr/bin" & sep & "/usr/local/bin" & sep & "/opt/go/bin"
 
-Set obj = Nothing
+Response.Write "PATH list: " & Server.HTMLEncode(pathList)
+
+Set ax = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxPathListSeparator`
+- **Arguments**: None
+- **Returns**: String — `";"` on Windows, `":"` on Unix

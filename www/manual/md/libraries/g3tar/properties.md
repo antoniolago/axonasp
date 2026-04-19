@@ -1,13 +1,18 @@
-﻿# Properties
+﻿# G3TAR Properties
 
 ## Overview
-This page lists properties exposed by the G3TAR library.
 
-## Property List
-- Path: Gets the active file path associated with the archive.
-- Mode: Gets the current operation mode of the archive.
-- Count: Gets the total number of entries within the active archive.
-- LastError: Gets the description of the last error encountered.
+This page lists the properties exposed by `G3TAR`.
+
+## Properties
+
+| Property | Access | Type | Description |
+|---|---|---|---|
+| `Path` | Read-only | String | Active TAR archive path. |
+| `Mode` | Read-only | String | Current mode (`r` for read or `w` for write). |
+| `Count` | Read-only | Integer | Number of indexed entries in the current TAR context. |
+| `LastError` | Read-only | String | Latest TAR operation error text. |
 
 ## Remarks
-- All properties are read-only and return values reflecting the current internal state of the G3TAR object.
+
+- Instantiate the library with `Server.CreateObject("G3TAR")`.

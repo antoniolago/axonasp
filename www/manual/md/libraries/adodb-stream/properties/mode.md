@@ -2,38 +2,46 @@
 
 ## Overview
 
-The Mode property is exposed by the ADODB.Stream object in AxonASP.
+Gets or sets stream access mode flags.
 
 ## Syntax
 
 ```asp
-value = obj.Mode
-obj.Mode = newValue
+value = stm.Mode
+stm.Mode = newValue
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns the current mode flag value.
 
 ## Remarks
 
-- Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Property names are case-insensitive in G3Pix AxonASP.
+- This property is exposed for ADODB compatibility and can be assigned before opening the stream.
+- Runtime enforcement of specific lock/share semantics can vary by host environment.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Stream")
-value = obj.Mode
-Response.Write CStr(value)
-Set obj = Nothing
+Dim stm
+
+Set stm = Server.CreateObject("ADODB.Stream")
+stm.Mode = 3
+stm.Open
+
+Response.Write "Mode: " & CStr(stm.Mode)
+
+stm.Close
+Set stm = Nothing
 %>
 ```
+
+## API Reference
+
+- Object: ADODB.Stream
+- Property: Mode
+- Access: Read/Write
+- Type: Integer

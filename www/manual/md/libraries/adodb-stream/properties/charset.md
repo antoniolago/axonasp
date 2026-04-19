@@ -2,38 +2,49 @@
 
 ## Overview
 
-The Charset property is exposed by the ADODB.Stream object in AxonASP.
+Gets or sets the text encoding used by `ReadText` and `WriteText`.
 
 ## Syntax
 
 ```asp
-value = obj.Charset
-obj.Charset = newValue
+value = stm.Charset
+stm.Charset = newValue
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+String. Returns the active charset name.
 
 ## Remarks
 
-- Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Property names are case-insensitive in G3Pix AxonASP.
+- This property affects text mode (`Type = 2`) operations.
+- New stream objects default to `unicode`.
+- Assigning an empty charset value resets to `utf-8` in current runtime behavior.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Stream")
-value = obj.Charset
-Response.Write CStr(value)
-Set obj = Nothing
+Dim stm
+
+Set stm = Server.CreateObject("ADODB.Stream")
+stm.Type = 2
+stm.Charset = "utf-8"
+stm.Open
+stm.WriteText "cafe"
+
+Response.Write "Charset: " & stm.Charset
+
+stm.Close
+Set stm = Nothing
 %>
 ```
+
+## API Reference
+
+- Object: ADODB.Stream
+- Property: Charset
+- Access: Read/Write
+- Type: String

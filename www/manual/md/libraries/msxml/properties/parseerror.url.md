@@ -1,33 +1,30 @@
 # ParseError.URL Property
 
-## Overview
-Reads or writes the URL property on the MSXML2 ParseError compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.URL
-```
+Returns the URL or file path that was being loaded when the error occurred.
 
 ## Access
-Read Only
 
-## Return Values
-Returns a Variant-compatible value.
+Read-only.
+
+## Type
+
+String.
 
 ## Remarks
-- Source URL/path for parser error.
-- Property names are case-insensitive.
+
+- Populated when `Load` fails, and contains the URL or resolved file path that was requested.
+- Returns an empty String when the document was loaded via `LoadXML` or when there is no error.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.URL)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+If Not oXML.Load("https://example.com/missing.xml") Then
+    Response.Write "Failed to load: " & oXML.ParseError.URL
+    Response.Write " (" & oXML.ParseError.Reason & ")"
+End If
+Set oXML = Nothing
 %>
 ```

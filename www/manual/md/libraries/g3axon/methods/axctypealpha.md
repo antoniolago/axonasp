@@ -1,48 +1,55 @@
-# axctypealpha
+# Check If a String Contains Only Alphabetic Characters
 
 ## Overview
 
-The `axctypealpha` method checks if a given string consists entirely of alphabetic characters (a-z and A-Z).
+Determines whether every character in a string is an ASCII alphabetic letter (a–z or A–Z).
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
 
 ```asp
-result = obj.axctypealpha(inputString)
+result = ax.AxCtypeAlpha(str)
 ```
 
-## Parameters and Arguments
+## Parameters
 
-- **inputString** (String): The string to check for alphabetic characters.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **str** | String | Yes | The string to test. |
 
-## Return Values
+## Return Value
 
-Returns a Boolean indicating whether the string contains only alphabetic characters. Returns `True` if all characters are alphabetic, otherwise `False`. It also returns `False` for empty strings.
+- **Boolean `True`**: All characters in the string are ASCII alphabetic letters.
+- **Boolean `False`**: The string contains non-alphabetic characters, the string is empty, or no argument was supplied.
 
 ## Remarks
 
-- This method is part of the G3Pix AxonASP library.
-- It only considers ASCII alphabetic characters.
-- Method names in G3Pix AxonASP are case-insensitive.
+- Only ASCII characters `A`–`Z` and `a`–`z` are considered alphabetic. Accented characters and Unicode letters return `False`.
+- An empty string always returns `False`.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim ax, str1, str2
+Dim ax
 Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-str1 = "AxonASP"
-str2 = "AxonASP 2.0"
-
-If ax.axctypealpha(str1) Then
-    Response.Write str1 & " is alphabetic.<br>"
-End If
-
-If Not ax.axctypealpha(str2) Then
-    Response.Write str2 & " contains non-alphabetic characters.<br>"
-End If
+Response.Write ax.AxCtypeAlpha("AxonASP") & "<br>"   ' True
+Response.Write ax.AxCtypeAlpha("Axon2") & "<br>"    ' False (digit)
+Response.Write ax.AxCtypeAlpha("") & "<br>"         ' False (empty)
 
 Set ax = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxCtypeAlpha`
+- **Arguments**: `str` (String, required)
+- **Returns**: Boolean — `True` if all characters are ASCII alphabetic; `False` otherwise

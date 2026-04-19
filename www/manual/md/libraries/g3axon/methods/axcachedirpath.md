@@ -1,29 +1,50 @@
-# Axcachedirpath
+# Get the Cache Directory Path
 
 ## Overview
 
-Returns the full cache directory path for .temp/cache/ with a trailing path separator.
+Returns the absolute path to the AxonASP cache directory (`.temp/cache/`), including a trailing path separator.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
 
 ```asp
-result = obj.Axcachedirpath()
+result = obj.AxCacheDirPath()
 ```
 
-## Return Values
+## Parameters
 
-- Returns a String.
+This method does not require parameters.
 
+## Return Value
 
-## Code Example
+- **String**: Returns the absolute path to the cache directory, always ending with a path separator character.
+
+## Remarks
+
+- Method names are case-insensitive in VBScript dispatch.
+
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, p
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
-p = obj.Axcachedirpath()
-Response.Write Server.HTMLEncode(p)
-Set obj = Nothing
+Dim ax, cachePath
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
+
+cachePath = ax.AxCacheDirPath()
+Response.Write "Cache: " & cachePath
+' Example output on Windows: C:\axonasp\.temp\cache\
+
+Set ax = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxCacheDirPath`
+- **Arguments**: none
+- **Returns**: `String` (absolute path to `.temp/cache/` with trailing separator)

@@ -1,17 +1,21 @@
 # G3JSON Methods
 
 ## Overview
-This page provides a summary of the methods available in the **G3JSON** library for JSON processing within the AxonASP environment.
 
-## Method List
+This page summarizes every method exposed by `G3JSON` in G3Pix AxonASP.
 
-- **LoadFile**: Reads a JSON file from the disk and parses it into a native object or array.
-- **NewArray**: Creates a new, empty VBScript-compatible array.
-- **NewObject**: Creates a new, empty **Scripting.Dictionary** object.
-- **Parse**: Converts a JSON-formatted string into a native AxonASP structure.
-- **Stringify**: Serializes an AxonASP structure (Dictionary, Array, or primitive) into a JSON string.
+## Methods
+
+| Method | Returns | Description |
+|---|---|---|
+| `LoadFile(path)` | Dictionary, Array, scalar, Null, or Empty | Reads JSON from a file path and parses it to native values; returns Empty when path is missing, read fails, or JSON is invalid. |
+| `NewArray()` | Array | Creates an empty VBScript array for JSON composition. |
+| `NewObject()` | Scripting.Dictionary | Creates an empty dictionary object for JSON composition. |
+| `Parse(jsonText)` | Dictionary, Array, scalar, Null, or Empty | Parses JSON text to native values; returns Empty when input is missing, empty, or invalid. |
+| `Stringify(value)` | String | Serializes a native value to JSON text; returns empty string when argument is missing or serialization fails. |
 
 ## Remarks
+
+- Instantiate the library with `Server.CreateObject("G3JSON")`.
 - Method names are case-insensitive.
-- Parsing returns a **Scripting.Dictionary** object for JSON objects and a standard **Array** for JSON arrays.
-- Stringification supports nested objects and arrays.
+- Parsing methods return Empty on operational failure.

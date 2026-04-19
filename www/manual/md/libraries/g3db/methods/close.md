@@ -1,46 +1,51 @@
-# Close Method
+# Close a Database Connection
 
 ## Overview
 
-The **Close** method shuts down the database connection and releases the underlying connection pool in G3Pix AxonASP.
+Closes the current database pool managed by the G3DB object.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3DB")`.
 
 ## Syntax
 
 ```asp
-result = obj.Close()
+ok = db.Close()
 ```
 
-## Parameters and Arguments
+## Parameters
 
 None.
 
-## Return Values
+## Return Value
 
-Returns a **Boolean** value. It returns **True** if the connection was successfully closed or if no connection was currently open, and **False** if an error occurred during the closing process.
+- **Boolean `True`**: Connection closed successfully, or no connection was open.
+- **Boolean `False`**: Close operation returned an error.
 
 ## Remarks
 
-- This method should be called when database operations are complete to ensure system resources are properly released.
-- After calling **Close**, the **IsOpen** property will return **False**.
-- Re-opening a closed connection requires a new call to the **Open** or **OpenFromEnv** method.
+- On successful close, `IsOpen` becomes `False`.
 
-## Code Example
+## Example
 
 ```asp
 <%
-Dim db, isConnected
+Option Explicit
+Dim db, ok
 Set db = Server.CreateObject("G3DB")
 
-If db.Open("sqlite", "local_data.db") Then
-    ' Database operations...
-    
-    If db.Close() Then
-        Response.Write "Connection closed successfully."
-    Else
-        Response.Write "Error closing connection: " & db.LastError
-    End If
-End If
+db.Open "sqlite", "data.db"
+ok = db.Close()
+Response.Write ok
 
 Set db = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3DB`
+- **Method**: `Close`
+- **Arguments**: none
+- **Returns**: Boolean — `True` on success, `False` on close error

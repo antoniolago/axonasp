@@ -2,43 +2,61 @@
 
 ## Overview
 
-The DeleteFolder method is exposed by the Scripting.FileSystemObject library object. Use it to execute this library operation from Classic ASP/VBScript with AxonASP runtime behavior.
+Deletes the specified folder and all of its contents from disk.
 
 ## Syntax
 
 ```asp
-result = obj.DeleteFolder(...)
-`````
+fso.DeleteFolder folderspec
+```
 
-## Parameters and Arguments
+## Parameters
 
-- Parameters (Variant, Optional): This method accepts arguments according to the runtime dispatch of the Scripting.FileSystemObject object.
-- Argument validation: invalid count or type raises runtime errors.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| folderspec | String | Yes | The full path to the folder to delete. |
 
-## Return Values
+## Return Value
 
-Returns a Variant result. Depending on the operation, this can be String, Boolean, Number, Array, Dictionary/object handle, or Empty.
+Returns **Empty**. The method does not return a value.
+
+## How It Works
+
+The path is resolved against the web root. The runtime first releases any open FSO handles (TextStream, File, or Folder objects) that point to paths within the target directory. It then sets file permissions to writable on all contained entries and removes the directory tree recursively. On Windows, the delete is retried up to five times with a short delay to absorb transient sharing locks.
+
+## Error Conditions
+
+| Condition | VBScript Error |
+|---|---|
+| Folder does not exist | 76 — Path not found |
+| Path resolves to a file | 76 — Path not found |
+| Access denied by the OS | 70 — Permission denied |
 
 ## Remarks
 
-- Method names are case-insensitive.
-- Prefer explicit variable assignment and defensive checks before using returned values.
-- For object values, use Set when assigning the return value.
+- All files and sub-folders inside the target are deleted. This operation cannot be undone.
+- Use `FolderExists` before calling `DeleteFolder` to avoid errors when the folder may not exist.
+- Use `On Error Resume Next` to handle deletion failures gracefully.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("Scripting.FileSystemObject")
-result = obj.DeleteFolder()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
+Dim fso, folderPath
+Set fso = Server.CreateObject("Scripting.FileSystemObject")
+
+folderPath = Server.MapPath("temp/session_cache")
+If fso.FolderExists(folderPath) Then
+    On Error Resume Next
+    fso.DeleteFolder folderPath
+    If Err.Number <> 0 Then
+        Response.Write "Delete failed: " & Err.Description
+    End If
+    On Error GoTo 0
 End If
-Set obj = Nothing
+
+Set fso = Nothing
 %>
-`````
+```
 

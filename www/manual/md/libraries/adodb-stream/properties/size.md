@@ -2,38 +2,46 @@
 
 ## Overview
 
-The Size property is exposed by the ADODB.Stream object in AxonASP.
+Returns the current stream length in bytes.
 
 ## Syntax
 
 ```asp
-value = obj.Size
-obj.Size = newValue
+value = stm.Size
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns total byte count stored in the stream buffer.
 
 ## Remarks
 
-- Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Property names are case-insensitive in G3Pix AxonASP.
+- This property is read-only.
+- `Size` changes after `Write`, `WriteText`, `LoadFromFile`, `CopyTo`, or `SetEOS`.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Stream")
-value = obj.Size
-Response.Write CStr(value)
-Set obj = Nothing
+Dim stm
+
+Set stm = Server.CreateObject("ADODB.Stream")
+stm.Type = 2
+stm.Open
+stm.WriteText "hello"
+
+Response.Write "Size in bytes: " & CStr(stm.Size)
+
+stm.Close
+Set stm = Nothing
 %>
 ```
+
+## API Reference
+
+- Object: ADODB.Stream
+- Property: Size
+- Access: Read-only
+- Type: Integer

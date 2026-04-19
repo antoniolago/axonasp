@@ -1,39 +1,39 @@
 # XMLNodeList.NextNode Method
 
-## Overview
-Calls the NextNode member on the MSXML2 XMLNodeList compatibility object.
+Returns the next node in a forward-only iteration over the list.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-Set n = list.NextNode()
+Set oNode = oList.NextNode()
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+None.
+
+## Return Value
+
+XMLElement. The next node in iteration order. Returns Null when all nodes have been visited.
 
 ## Remarks
-- Moves enumerator and returns next node.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- The iterator position is maintained internally within the XMLNodeList object.
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-obj.NextNode
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
-End If
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oList, oNode
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<items><item>A</item><item>B</item><item>C</item></items>"
+Set oList = oXML.GetElementsByTagName("item")
+Set oNode = oList.NextNode()
+Do While Not IsNull(oNode)
+    Response.Write oNode.Text & "<br>"
+    Set oNode = oList.NextNode()
+Loop
+Set oXML = Nothing
 %>
 ```

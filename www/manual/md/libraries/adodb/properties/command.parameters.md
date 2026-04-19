@@ -1,39 +1,43 @@
-﻿# Command.Parameters Property
+# Command.Parameters Property
 
-## Overview
-
-The Command.Parameters property is exposed by the ADODB.Connection object in AxonASP.
+Returns the Parameters collection bound to the command.
 
 ## Syntax
 
 ```asp
-value = obj.Command.Parameters
-obj.Command.Parameters = newValue
+Set params = cmd.Parameters
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Object. Returns an ADODB.Parameters collection object.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- This property is read-only.
+- Use `CreateParameter` and `Parameters.Append` to populate the collection.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Command.Parameters
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, cmd, params
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set cmd = Server.CreateObject("ADODB.Command")
+Set cmd.ActiveConnection = conn
+Set params = cmd.Parameters
+
+Response.Write "Parameter count: " & CStr(params.Count)
+
+conn.Close
+Set params = Nothing
+Set cmd = Nothing
+Set conn = Nothing
 %>
 ```

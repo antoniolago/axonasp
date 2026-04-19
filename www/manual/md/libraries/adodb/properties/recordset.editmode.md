@@ -1,39 +1,44 @@
-﻿# Recordset.EditMode Property
+# Recordset.EditMode Property
 
-## Overview
-
-The Recordset.EditMode property is exposed by the ADODB.Connection object in AxonASP.
+Returns the current edit state for the active row.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.EditMode
-obj.Recordset.EditMode = newValue
+value = rs.EditMode
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns edit mode flag (for example, not editing, editing, or add-new state).
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- This property is read-only.
+- Use to detect pending edits before `Update` or `CancelUpdate`.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.EditMode
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+Set rs = conn.Execute("SELECT * FROM users WHERE id = 1")
+
+If Not rs.EOF Then
+    Response.Write "Before: " & CStr(rs.EditMode) & "<br>"
+    rs.Fields("name").Value = "Temp"
+    Response.Write "After: " & CStr(rs.EditMode)
+End If
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

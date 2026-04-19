@@ -1,39 +1,40 @@
-﻿# Field.Precision Property
+# Field.Precision Property
 
-## Overview
-
-The Field.Precision property is exposed by the ADODB.Connection object in AxonASP.
+Returns numeric precision metadata for the field.
 
 ## Syntax
 
 ```asp
-value = obj.Field.Precision
-obj.Field.Precision = newValue
+value = rs.Fields("columnName").Precision
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns declared precision for numeric columns; provider-specific fallback may apply.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- This property is read-only.
+- Use with `NumericScale` to validate decimal handling.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Field.Precision
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+Set rs = conn.Execute("SELECT price FROM products")
+
+If Not rs.EOF Then Response.Write CStr(rs.Fields("price").Precision)
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

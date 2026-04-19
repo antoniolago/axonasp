@@ -1,39 +1,39 @@
 # XMLElement.AppendChild Method
 
-## Overview
-Calls the AppendChild member on the MSXML2 XMLElement compatibility object.
+Appends a child node to this element and returns the appended node.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-Set out = node.AppendChild(child)
+Set oResult = oElement.AppendChild(child)
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `child` | XMLElement | Yes | The node to append as a direct child of this element. |
+
+## Return Value
+
+XMLElement. Returns the appended `child` node.
 
 ## Remarks
-- Appends child node under current element.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-obj.AppendChild
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
-End If
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oParent, oChild
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<root></root>"
+Set oParent = oXML.DocumentElement
+Set oChild = oXML.CreateElement("entry")
+oChild.Text = "New entry"
+oParent.AppendChild oChild
+Response.Write oXML.XML
+Set oXML = Nothing
 %>
 ```

@@ -1,39 +1,41 @@
 # DOMDocument.SelectNodes Method
 
-## Overview
-Calls the SelectNodes member on the MSXML2 DOMDocument compatibility object.
+Evaluates an XPath expression against the document and returns all matching nodes.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-Set list = obj.SelectNodes("//item")
+Set oList = objXML.SelectNodes(xpath)
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `xpath` | String | Yes | An XPath 1.0 expression to evaluate against the document. |
+
+## Return Value
+
+XMLNodeList. All nodes that satisfy the XPath expression in document order. Returns an empty XMLNodeList if no nodes match or the expression is empty.
 
 ## Remarks
-- Returns list of matching nodes.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- XPath is evaluated from the document root.
+- The `//` axis, attribute predicates, positional predicates, `contains()`, `starts-with()`, `not()`, `and`, `or`, and namespace-qualified expressions are all supported.
+- Use `SelectionNamespaces` on the document to bind namespace prefixes before querying.
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-obj.SelectNodes
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
-End If
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oList, i
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<items><item cat='A'>One</item><item cat='B'>Two</item><item cat='A'>Three</item></items>"
+Set oList = oXML.SelectNodes("//item[@cat='A']")
+For i = 0 To oList.Length - 1
+    Response.Write oList.Item(i).Text & "<br>"
+Next
+Set oXML = Nothing
 %>
 ```

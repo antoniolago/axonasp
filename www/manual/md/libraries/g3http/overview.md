@@ -1,50 +1,50 @@
 # Use the G3HTTP Library
 
 ## Overview
-The **G3HTTP** library provides a streamlined interface for making outbound HTTP requests from G3Pix AxonASP applications. It enables the consumption of remote REST APIs and web services by abstracting the complexities of network communication. The library automatically detects JSON responses and parses them into native AxonASP data structures, such as Dictionaries and Arrays, for immediate use in server-side scripts.
+Use **G3HTTP** to execute outbound HTTP requests from G3Pix AxonASP scripts. The library supports configurable HTTP methods, optional request bodies, and automatic JSON parsing when the response content type is JSON.
 
-## Syntax
-To instantiate the library, use the following syntax:
+## Prerequisites
+- Outbound network access to the destination host.
+- Valid TLS trust configuration for HTTPS endpoints.
+- Create the object with the primary ProgID:
+
 ```asp
 Set http = Server.CreateObject("G3HTTP")
 ```
 
-## Prerequisites
-- **Network Connectivity**: The server hosting AxonASP must have outbound access to the target URLs.
-- **SSL/TLS Certificates**: For HTTPS requests, ensure the server trusts the certificate authority of the remote endpoint.
-
-## How it Works
-The G3HTTP object utilizes the high-performance network stack of the AxonASP engine. When a request is initiated via the **Fetch** or **Request** methods, the library performs a synchronous operation with a default timeout of 10 seconds. 
-
-If the remote server responds with a `Content-Type` of `application/json`, the library automatically passes the payload to the internal JSON engine. This results in a **Scripting.Dictionary** (for JSON objects) or a standard **Array** (for JSON arrays). All other content types are returned as a plain **String**.
+## How It Works
+- `Fetch` and `Request` share the same implementation.
+- Default HTTP method is `GET` when not provided.
+- When a request body is provided, `Content-Type` is set to `application/json`.
+- Requests use a 10-second timeout.
+- If response `Content-Type` contains `application/json`, the body is parsed through G3JSON.
+- If JSON parsing fails, the raw response body is returned as text.
 
 ## API Reference
 
 ### Methods
-- **Fetch**: Performs an HTTP request and returns the response body, automatically parsing JSON content.
-- **Request**: An alias for the **Fetch** method, providing identical functionality.
+- **Fetch(url[, method][, body])**: Sends an HTTP request and returns parsed JSON or text.
+- **Request(url[, method][, body])**: Alias of `Fetch`.
 
-## Code Example
-The following example demonstrates how to perform a GET request to a JSON API and access its data.
+### Properties
+G3HTTP does not expose public properties.
 
+## Example
 ```asp
 <%
-Dim http, apiData, url
+Dim http, result
 Set http = Server.CreateObject("G3HTTP")
 
-url = "https://api.example.com/v1/status"
+result = http.Fetch("https://api.example.com/status")
 
-' Perform the request
-Set apiData = http.Fetch(url)
-
-' Check if the request returned a valid object
-If IsObject(apiData) Then
-    Response.Write "API Status: " & apiData("status") & "<br>"
-    Response.Write "Server Time: " & apiData("server_time")
-ElseIf Not IsEmpty(apiData) Then
-    Response.Write "Raw Response: " & apiData
+If IsObject(result) Then
+    Response.Write result("status")
+ElseIf IsArray(result) Then
+    Response.Write "Array response"
+ElseIf Not IsEmpty(result) Then
+    Response.Write result
 Else
-    Response.Write "Request failed."
+    Response.Write "Request failed"
 End If
 
 Set http = Nothing

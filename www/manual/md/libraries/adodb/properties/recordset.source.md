@@ -1,39 +1,35 @@
-﻿# Recordset.Source Property
+# Recordset.Source Property
 
-## Overview
-
-The Recordset.Source property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets the source used to populate the recordset.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.Source
-obj.Recordset.Source = newValue
+value = rs.Source
+rs.Source = "SELECT id, name FROM users"
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Variant. Returns the source expression, typically SQL text or command reference.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Set Source before opening the recordset.
+- Source can be SQL text, table name, or a command object depending on runtime path.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.Source
-Response.Write CStr(value)
-Set obj = Nothing
+Dim rs
+
+Set rs = Server.CreateObject("ADODB.Recordset")
+rs.Source = "SELECT id, name FROM users"
+Response.Write CStr(rs.Source)
+
+Set rs = Nothing
 %>
 ```

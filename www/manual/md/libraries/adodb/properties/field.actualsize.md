@@ -1,39 +1,43 @@
 ﻿# Field.ActualSize Property
 
-## Overview
-
-The Field.ActualSize property is exposed by the ADODB.Connection object in AxonASP.
+Returns the actual size of the current field value.
 
 ## Syntax
 
 ```asp
-value = obj.Field.ActualSize
-obj.Field.ActualSize = newValue
+length = rs.Fields("columnName").ActualSize
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns the current value length in characters for text data, or byte-length semantics as provided by the driver for binary-like values.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- This property is read-only.
+- ActualSize reflects the current row value, not the schema maximum.
+- Use DefinedSize for declared column capacity.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Field.ActualSize
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.Execute("SELECT name FROM users WHERE id = 1")
+If Not rs.EOF Then
+	Response.Write "Actual size: " & CStr(rs.Fields("name").ActualSize)
+End If
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

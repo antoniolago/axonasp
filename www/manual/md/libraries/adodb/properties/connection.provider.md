@@ -1,39 +1,38 @@
 ﻿# Connection.Provider Property
 
-## Overview
-
-The Connection.Provider property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets the provider name used by the connection.
 
 ## Syntax
 
 ```asp
-value = obj.Connection.Provider
-obj.Connection.Provider = newValue
+name = conn.Provider
+conn.Provider = "MSDASQL"
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+String. Returns the provider identifier.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Provider can be set directly or inferred from ConnectionString.
+- When both are set, provider resolution depends on the active driver/provider rules.
+- Use a provider supported by your host environment.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Connection.Provider
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.Provider = "MSDASQL"
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+
+Response.Write "Provider: " & conn.Provider
+
+Set conn = Nothing
 %>
 ```

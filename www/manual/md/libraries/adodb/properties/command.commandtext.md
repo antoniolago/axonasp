@@ -1,39 +1,44 @@
 ﻿# Command.CommandText Property
 
-## Overview
-
-The Command.CommandText property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets the SQL statement or stored procedure name executed by the command.
 
 ## Syntax
 
 ```asp
-value = obj.Command.CommandText
-obj.Command.CommandText = newValue
+sql = cmd.CommandText
+cmd.CommandText = "SELECT id, name FROM users"
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+String. Returns the current command text.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Set CommandText before calling Execute.
+- For parameterized statements, use placeholders and append parameters in the same order.
+- CommandText can contain SELECT, INSERT, UPDATE, DELETE, or provider-supported statements.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Command.CommandText
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, cmd
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set cmd = Server.CreateObject("ADODB.Command")
+Set cmd.ActiveConnection = conn
+cmd.CommandText = "SELECT id, name FROM users WHERE active = 1"
+
+Response.Write "Command text: " & cmd.CommandText
+
+conn.Close
+Set cmd = Nothing
+Set conn = Nothing
 %>
 ```

@@ -1,39 +1,37 @@
 # XMLElement.Item Method
 
-## Overview
-Calls the Item member on the MSXML2 XMLElement compatibility object.
+Returns the direct child node at a given zero-based index.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-Set n = node.Item(index)
+Set oChild = oElement.Item(index)
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `index` | Integer | Yes | Zero-based position among the direct children of this element. |
+
+## Return Value
+
+XMLElement. The child node at the specified index. Returns Null if the index is out of range.
 
 ## Remarks
-- Returns child node by index.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-obj.Item
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
-End If
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oRoot, oChild
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<root><a>1</a><b>2</b></root>"
+Set oRoot = oXML.DocumentElement
+Set oChild = oRoot.Item(0)
+Response.Write oChild.NodeName & ": " & oChild.Text
+Set oXML = Nothing
 %>
 ```

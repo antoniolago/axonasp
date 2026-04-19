@@ -1,39 +1,43 @@
-﻿# Recordset.EOF Property
+# Recordset.EOF Property
 
-## Overview
-
-The Recordset.EOF property is exposed by the ADODB.Connection object in AxonASP.
+Indicates whether the cursor is positioned after the last row.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.EOF
-obj.Recordset.EOF = newValue
+eofFlag = rs.EOF
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Boolean. Returns True when cursor is beyond the final row; otherwise False.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- This property is read-only.
+- Combine with BOF to detect empty result sets.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.EOF
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+Set rs = conn.Execute("SELECT id, name FROM users")
+
+Do While Not rs.EOF
+    Response.Write rs.Fields("name").Value & "<br>"
+    rs.MoveNext
+Loop
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

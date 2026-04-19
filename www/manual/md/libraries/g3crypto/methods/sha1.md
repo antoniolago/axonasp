@@ -1,37 +1,54 @@
-# Sha1 Method
+# Compute a SHA-1 Digest
 
 ## Overview
 
-Computes a SHA-1 (Secure Hash Algorithm 1) hash from the provided input string or byte array using the G3Pix AxonASP G3CRYPTO library.
+Computes the SHA-1 digest of the input and returns the result as a lowercase hexadecimal string.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3CRYPTO")`.
 
 ## Syntax
 
 ```asp
-result = obj.Sha1(input)
+result = crypto.SHA1(input)
 ```
 
 ## Parameters
 
-- **input** (String or Array): The data to be hashed.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **input** | String or Array | No | Input data as text or a VBScript byte array. When omitted, the method hashes an empty string. |
 
-## Return Values
+## Return Value
 
-Returns a String containing the 160-bit hash result encoded as a lowercase hexadecimal string.
+- **String**: 40-character lowercase hexadecimal SHA-1 digest.
 
 ## Remarks
 
-- Instantiated via `Server.CreateObject("G3CRYPTO")`.
-- SHA-1 was widely used for integrity checks and digital signatures.
-- **Security Note:** SHA-1 is no longer considered secure against well-funded attackers; it is recommended to use SHA-256 or higher for security-sensitive applications.
+- SHA-1 is retained for compatibility and non-security-sensitive checks.
+- Use SHA-256 or stronger algorithms for new security-critical features.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
 ```asp
 <%
-Dim crypto, hash
+Option Explicit
+Dim crypto, digest
 Set crypto = Server.CreateObject("G3CRYPTO")
-hash = crypto.Sha1("Hello World")
-Response.Write "SHA-1 Hash: " & hash
+
+digest = crypto.SHA1("Hello World")
+Response.Write digest
+' Output: 0a4d55a8d778e5022fab701977c5d840bbc486d0
+
 Set crypto = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3CRYPTO`
+- **Method**: `SHA1`
+- **Arguments**: `input` (String or Array, optional)
+- **Returns**: String — 40-character lowercase hexadecimal digest

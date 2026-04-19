@@ -1,41 +1,53 @@
-﻿# Recordset.Find Method
+# Recordset.Find Method
 
-## Overview
-
-The Recordset.Find method is exposed by the ADODB.Connection object in AxonASP.
+Searches the recordset for the next row that matches a criteria expression.
 
 ## Syntax
 
 ```asp
-result = obj.Recordset.Find(...)
+rs.Find criteria
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `criteria` | String | Yes | Match expression, such as `"id = 10"` or `"name = 'Ana'"`. |
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Empty. The method does not return a value.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- Find moves the current cursor position to the first matching row at or after the current position.
+- If no row matches, EOF becomes True.
+- Criteria parsing supports the runtime-compatible subset used by AxonASP ADODB.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Recordset.Find()
-If IsObject(result) Then
-    Response.Write "Object returned"
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.Execute("SELECT id, name FROM users")
+rs.Find "id = 1"
+
+If Not rs.EOF Then
+    Response.Write "Found: " & rs.Fields("name").Value
 Else
-    Response.Write CStr(result)
+    Response.Write "No match"
 End If
-Set obj = Nothing
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

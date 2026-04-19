@@ -1,44 +1,53 @@
-# SetConnMaxLifetime Method
+# Set Maximum Connection Lifetime
 
 ## Overview
 
-The **SetConnMaxLifetime** method sets the maximum duration in seconds that a database connection may be reused in G3Pix AxonASP.
+Sets the maximum reuse lifetime for pooled connections on the active database handle.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3DB")`.
 
 ## Syntax
 
 ```asp
-obj.SetConnMaxLifetime(seconds)
+db.SetConnMaxLifetime seconds
 ```
 
-## Parameters and Arguments
+## Parameters
 
-- **seconds** (Integer, Required): The maximum lifetime for a connection in seconds. Use 0 for no limit.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **seconds** | Integer | Yes | Maximum connection lifetime in seconds. |
 
-## Return Values
+## Return Value
 
-Returns **Empty**.
+- **Empty**: Always returned.
 
 ## Remarks
 
-- Connections older than the specified duration will be closed and removed from the pool, regardless of their idle state.
-- This ensures that long-lived connections are periodically recycled, preventing potential memory leaks or stale connection issues on the database server.
-- The default behavior is typically governed by the database driver, but this method allows for explicit control within G3Pix AxonASP.
+- Setting is applied only when a connection is open.
 
-## Code Example
+## Example
 
 ```asp
 <%
+Option Explicit
 Dim db
 Set db = Server.CreateObject("G3DB")
 
-' Set connection lifetime to 1 hour (3600 seconds)
-db.SetConnMaxLifetime 3600
-
-If db.Open("mysql", "user:pass@tcp(localhost)/dbname") Then
-    ' Operations...
+If db.Open("mysql", "user:pass@tcp(localhost)/db") Then
+    db.SetConnMaxLifetime 3600
     db.Close
 End If
 
 Set db = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3DB`
+- **Method**: `SetConnMaxLifetime`
+- **Arguments**: `seconds` (Integer, required)
+- **Returns**: Empty

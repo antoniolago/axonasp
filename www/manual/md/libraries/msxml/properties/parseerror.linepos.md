@@ -1,33 +1,29 @@
 # ParseError.LinePos Property
 
-## Overview
-Reads or writes the LinePos property on the MSXML2 ParseError compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.LinePos
-```
+Returns the 1-based column position within the error line where the parse error was detected.
 
 ## Access
-Read Only
 
-## Return Values
-Returns a Variant-compatible value.
+Read-only.
+
+## Type
+
+Integer.
 
 ## Remarks
-- Error column number.
-- Property names are case-insensitive.
+
+- Returns 0 when there is no error.
+- Pair with `Line` for a precise error location.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.LinePos)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+If Not oXML.LoadXML("<root><bad") Then
+    Response.Write "Line " & oXML.ParseError.Line & ", Col " & oXML.ParseError.LinePos
+End If
+Set oXML = Nothing
 %>
 ```

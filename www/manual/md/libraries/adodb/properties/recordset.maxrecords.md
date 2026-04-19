@@ -1,39 +1,35 @@
-﻿# Recordset.MaxRecords Property
+# Recordset.MaxRecords Property
 
-## Overview
-
-The Recordset.MaxRecords property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets the maximum number of rows the recordset should return.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.MaxRecords
-obj.Recordset.MaxRecords = newValue
+value = rs.MaxRecords
+rs.MaxRecords = newValue
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns maximum rows limit.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Set this before opening the recordset.
+- `0` usually means no explicit limit.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.MaxRecords
-Response.Write CStr(value)
-Set obj = Nothing
+Dim rs
+
+Set rs = Server.CreateObject("ADODB.Recordset")
+rs.MaxRecords = 100
+Response.Write CStr(rs.MaxRecords)
+
+Set rs = Nothing
 %>
 ```

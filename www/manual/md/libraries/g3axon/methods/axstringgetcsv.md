@@ -1,34 +1,61 @@
-# Parse CSV String
+# Parse a CSV Row String
 
 ## Overview
 
-Parses a comma-separated values (CSV) string and returns an array of values.
+Parses one CSV-formatted row string and returns its fields as a zero-based VBArray.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
 
-```vbscript
-arrayResult = obj.axstringgetcsv(str[, delimiter])
+```asp
+arr = obj.AxStringGetCSV(str [, delimiter])
 ```
 
 ## Parameters
 
-- **str** (String): The CSV string to parse.
-- **delimiter** (String, Optional): The delimiter character. Defaults to `,`.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| str | String | Yes | A single CSV row string to parse. Quoted fields and embedded delimiters are handled correctly. |
+| delimiter | String | Optional | The field separator character. Only the first character in the string is used. Defaults to `,`. |
 
 ## Return Value
 
-Variant (Array of Strings). Contains the parsed values from the CSV string.
+- **Array**: Returns a zero-based VBArray of String fields parsed from `str`.
+- **Array**: Returns an empty array when no argument is provided or when parsing fails.
 
 ## Remarks
 
-If the string is empty or parsing fails, an empty array is returned.
+- Only the first row of a multi-row CSV string is parsed.
+- Quoted fields with embedded commas are handled correctly by the underlying CSV parser.
+- Method names are case-insensitive in VBScript dispatch.
 
-## Code Example
+## Example
 
-```vbscript
-Dim obj, arr, str
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
-str = "apple,banana,orange"
-arr = obj.axstringgetcsv(str)
-Response.Write arr(0) ' Outputs: apple
+```asp
+<%
+Option Explicit
+Dim ax, fields
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
+
+fields = ax.AxStringGetCSV("apple,\"banana,split\",cherry")
+Response.Write fields(0) & "<br>" ' apple
+Response.Write fields(1) & "<br>" ' banana,split
+Response.Write fields(2) & "<br>" ' cherry
+
+' Tab-delimited
+fields = ax.AxStringGetCSV("col1" & Chr(9) & "col2", Chr(9))
+Response.Write fields(0)          ' col1
+
+Set ax = Nothing
+%>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxStringGetCSV`
+- **Arguments**: `str As String [, delimiter As String]`
+- **Returns**: `Array` (zero-based VBArray of String fields)

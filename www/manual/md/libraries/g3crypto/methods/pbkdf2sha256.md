@@ -1,41 +1,58 @@
-# Pbkdf2Sha256 Method
+# Derive a Key with PBKDF2-SHA256
 
 ## Overview
 
-Derives a cryptographic key from a password and salt using the PBKDF2 (Password-Based Key Derivation Function 2) with HMAC-SHA256 in the G3Pix AxonASP G3CRYPTO library.
+Derives a key from a password and salt using PBKDF2 with HMAC-SHA256.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3CRYPTO")`.
 
 ## Syntax
 
 ```asp
-result = obj.Pbkdf2Sha256(password, salt, [iterations], [keyLength])
+result = crypto.Pbkdf2Sha256(password, salt [, iterations] [, keyLength])
 ```
 
 ## Parameters
 
-- **password** (String): The master password to derive the key from.
-- **salt** (String): A random salt string used to ensure unique output for identical passwords.
-- **iterations** (Integer, Optional): The number of hashing iterations. Defaults to 100,000.
-- **keyLength** (Integer, Optional): The desired length of the derived key in bytes. Defaults to 32 (256 bits).
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **password** | String | Yes | Password or passphrase input. |
+| **salt** | String | Yes | Salt value. Use a unique random salt per password. |
+| **iterations** | Integer | No | Iteration count. Values less than or equal to `0` are replaced with `100000`. |
+| **keyLength** | Integer | No | Derived key length in bytes. Values less than or equal to `0` are replaced with `32`. |
 
-## Return Values
+## Return Value
 
-Returns a String containing the derived key encoded as a lowercase hexadecimal string.
+- **String**: Lowercase hexadecimal representation of the derived key. Length is `keyLength * 2` characters after normalization.
+- **String (empty)**: Returned when required arguments are missing.
 
 ## Remarks
 
-- Instantiated via `Server.CreateObject("G3CRYPTO")`.
-- PBKDF2 is designed to be computationally expensive to resist brute-force attacks on passwords.
-- The resulting key is also stored in the `Hash` property as a byte array.
+- On success, this method also updates the `Hash` property with raw derived-key bytes.
+- PBKDF2 is intentionally CPU-intensive and suitable for password-based key derivation.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
 ```asp
 <%
-Dim crypto, salt, derivedKey
+Option Explicit
+Dim crypto, salt, keyHex
 Set crypto = Server.CreateObject("G3CRYPTO")
-salt = "random_salt_value"
-derivedKey = crypto.Pbkdf2Sha256("mySecretPassword", salt, 100000, 32)
-Response.Write "Derived Key: " & derivedKey
+
+salt = "user-specific-random-salt"
+keyHex = crypto.Pbkdf2Sha256("mySecretPassword", salt, 150000, 32)
+Response.Write keyHex
+
 Set crypto = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3CRYPTO`
+- **Method**: `Pbkdf2Sha256`
+- **Arguments**: `password` (String, required), `salt` (String, required), `iterations` (Integer, optional), `keyLength` (Integer, optional)
+- **Returns**: String — lowercase hexadecimal derived key, or empty string when required arguments are missing

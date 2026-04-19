@@ -1,27 +1,61 @@
 # Reverse an Array
 
-Returns an array with elements in reverse order.
+## Overview
+
+Returns a new array with the elements in reverse order. The original array is not modified.
 
 ## Prerequisites
-The `G3AXON.FUNCTIONS` object must be instantiated to use this method.
-This feature is available in the G3Pix AxonASP environment.
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
-```vbscript
-Array = obj.AxArrayReverse(array)
+
+```asp
+reversed = obj.AxArrayReverse(inputArray)
 ```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| inputArray | Array | Yes | The source VBArray whose elements will be reversed. |
 
 ## Return Value
-Returns a Array.
+
+- **Array**: Returns a zero-based VBArray containing the same elements as `inputArray` in reverse order.
+- **Array**: Returns an empty array when `inputArray` is not a valid array.
+
+## Remarks
+
+- Method names are case-insensitive in VBScript dispatch.
+- The function does not modify the original array in place; it returns a new array.
 
 ## Example
-```vbscript
-Dim obj, result
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
 
-result = obj.AxArrayReverse(array)
+```asp
+<%
+Option Explicit
+Dim ax, colors, reversed, i
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-Response.Write result
+colors = Array("Red", "Green", "Blue")
+reversed = ax.AxArrayReverse(colors)
 
-Set obj = Nothing
+For i = 0 To UBound(reversed)
+    Response.Write reversed(i) & "<br>"
+Next
+' Output:
+' Blue
+' Green
+' Red
+
+Set ax = Nothing
+%>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxArrayReverse`
+- **Arguments**: `inputArray As Array`
+- **Returns**: `Array` (reversed copy of the input array)

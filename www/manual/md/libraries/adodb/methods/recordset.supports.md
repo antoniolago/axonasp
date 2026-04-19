@@ -1,41 +1,47 @@
-﻿# Recordset.Supports Method
+# Recordset.Supports Method
 
-## Overview
-
-The Recordset.Supports method is exposed by the ADODB.Connection object in AxonASP.
+Checks whether a recordset feature flag is supported.
 
 ## Syntax
 
 ```asp
-result = obj.Recordset.Supports(...)
+ok = rs.Supports(feature)
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `feature` | Integer | Yes | Feature capability constant to test. |
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Boolean. Returns True when the feature is supported; otherwise False.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- Use this before calling optional operations like bookmarks or batch updates.
+- Supported features vary by provider and cursor configuration.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Recordset.Supports()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+Dim conn, rs, ok
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+Set rs = conn.Execute("SELECT id, name FROM users")
+
+ok = rs.Supports(16)
+Response.Write "Supports flag 16: " & CStr(ok)
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

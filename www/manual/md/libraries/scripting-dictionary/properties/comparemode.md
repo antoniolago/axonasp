@@ -1,41 +1,48 @@
-# CompareMode Property
+# Set Dictionary CompareMode
 
 ## Overview
-
-The CompareMode property is exposed by the Scripting.Dictionary library object and returns the current state/value associated with this member.
+Use CompareMode to control how keys are compared during lookup and existence checks.
 
 ## Syntax
 
 ```asp
-value = obj.CompareMode
-obj.CompareMode = newValue
-`````
+mode = dict.CompareMode
+dict.CompareMode = modeValue
+```
 
-## Parameters and Arguments
+## Parameters
+- modeValue (Integer, required for assignment):
+  - `0` = BinaryCompare (case-sensitive)
+  - `1` = TextCompare (case-insensitive)
 
-- Getter: no arguments.
-- Setter (when supported): one Variant value.
+## Return Value
+Getter returns an Integer representing the current comparison mode.
 
-## Return Values
+Setter returns no value.
 
-Returns the current property value as Variant. Read-only members reject assignments.
+## How It Works
+- CompareMode changes key normalization rules used by Exists, Item, Add, Remove, and Key.
+- CompareMode can be changed only while the dictionary is empty.
 
 ## Remarks
+- Assigning CompareMode after entries already exist raises an error.
+- Member names are case-insensitive.
 
-- Property names are case-insensitive.
-- Setters are validated by dispatch logic and can raise runtime errors.
-- For object-typed values, assign with Set.
-
-## Code Example
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("Scripting.Dictionary")
-value = obj.CompareMode
-Response.Write CStr(value)
-Set obj = Nothing
+
+Dim dict
+Set dict = Server.CreateObject("Scripting.Dictionary")
+
+dict.CompareMode = 1
+dict.Add "Token", "A"
+
+Response.Write CStr(dict.Exists("token"))
+
+Set dict = Nothing
 %>
-`````
+```
 

@@ -1,27 +1,50 @@
-# Get Float Precision Digits
+# Get the Float Precision Digit Count
 
-Returns the number of digits of precision for float values.
+## Overview
+
+Returns the standard number of significant decimal digits for IEEE-754 double-precision floating-point values.
 
 ## Prerequisites
-The `G3AXON.FUNCTIONS` object must be instantiated to use this method.
-This feature is available in the G3Pix AxonASP environment.
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
-```vbscript
-Number (Integer) = obj.AxFloatPrecisionDigits()
+
+```asp
+result = obj.AxFloatPrecisionDigits()
 ```
+
+## Parameters
+
+This method does not require parameters.
 
 ## Return Value
-Returns a Number (Integer).
+
+- **Integer**: Always returns `15`.
+
+## Remarks
+
+- This is a constant reflecting IEEE-754 double-precision capability.
+- Method names are case-insensitive in VBScript dispatch.
 
 ## Example
-```vbscript
-Dim obj, result
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
 
-result = obj.AxFloatPrecisionDigits()
+```asp
+<%
+Option Explicit
+Dim ax
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-Response.Write result
+Response.Write ax.AxFloatPrecisionDigits()
+' Output: 15
 
-Set obj = Nothing
+Set ax = Nothing
+%>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxFloatPrecisionDigits`
+- **Arguments**: none
+- **Returns**: `Integer` (always `15`)

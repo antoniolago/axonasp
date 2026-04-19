@@ -1,39 +1,46 @@
-﻿# Recordset.Bookmark Property
+# Recordset.Bookmark Property
 
-## Overview
-
-The Recordset.Bookmark property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets a bookmark that identifies the current row position.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.Bookmark
-obj.Recordset.Bookmark = newValue
+bm = rs.Bookmark
+rs.Bookmark = bm
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Variant. Returns the bookmark token for the current row.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Bookmark support depends on cursor/provider capabilities.
+- Save bookmark values to return to a previously visited row.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.Bookmark
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs, bm
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+Set rs = conn.Execute("SELECT id, name FROM users")
+
+If Not rs.EOF Then
+    bm = rs.Bookmark
+    rs.MoveNext
+    rs.Bookmark = bm
+    Response.Write rs.Fields("name").Value
+End If
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

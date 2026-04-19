@@ -1,39 +1,40 @@
-﻿# Fields.Count Property
+# Fields.Count Property
 
-## Overview
-
-The Fields.Count property is exposed by the ADODB.Connection object in AxonASP.
+Returns the number of fields in the current Fields collection.
 
 ## Syntax
 
 ```asp
-value = obj.Fields.Count
-obj.Fields.Count = newValue
+count = rs.Fields.Count
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns total field entries in the collection.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- This property is read-only.
+- Use with indexed `Fields.Item(i)` loops.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Fields.Count
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+Set rs = conn.Execute("SELECT id, name FROM users")
+
+Response.Write CStr(rs.Fields.Count)
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

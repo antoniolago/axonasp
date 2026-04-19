@@ -1,44 +1,53 @@
-# SetMaxIdleConns Method
+# Set Maximum Idle Connections
 
 ## Overview
 
-The **SetMaxIdleConns** method sets the maximum number of idle database connections to be retained in the connection pool in G3Pix AxonASP.
+Sets the maximum number of idle pooled connections for the active database handle.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3DB")`.
 
 ## Syntax
 
 ```asp
-obj.SetMaxIdleConns(n)
+db.SetMaxIdleConns count
 ```
 
-## Parameters and Arguments
+## Parameters
 
-- **n** (Integer, Required): The maximum number of idle connections to keep in the pool. A value of 0 or less will result in no idle connections being kept.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **count** | Integer | Yes | Maximum number of idle pooled connections. |
 
-## Return Values
+## Return Value
 
-Returns **Empty**.
+- **Empty**: Always returned.
 
 ## Remarks
 
-- This method allows for fine-tuning the resource balance between connection reuse and system overhead.
-- Maintaining some idle connections can improve performance for subsequent requests by avoiding the cost of establishing new connections.
-- If the number of idle connections exceeds this limit, the pool will close the extra connections.
+- Setting is applied only when a connection is open.
 
-## Code Example
+## Example
 
 ```asp
 <%
+Option Explicit
 Dim db
 Set db = Server.CreateObject("G3DB")
 
-' Keep up to 10 idle connections in the pool
-db.SetMaxIdleConns 10
-
-If db.Open("mysql", "user:pass@tcp(localhost)/dbname") Then
-    ' Database operations...
+If db.Open("mysql", "user:pass@tcp(localhost)/db") Then
+    db.SetMaxIdleConns 10
     db.Close
 End If
 
 Set db = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3DB`
+- **Method**: `SetMaxIdleConns`
+- **Arguments**: `count` (Integer, required)
+- **Returns**: Empty

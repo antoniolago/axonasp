@@ -1,41 +1,50 @@
-﻿# Connection.RollbackTrans Method
+# Connection.RollbackTrans Method
 
-## Overview
-
-The Connection.RollbackTrans method is exposed by the ADODB.Connection object in AxonASP.
+Rolls back the active transaction and discards pending changes.
 
 ## Syntax
 
 ```asp
-result = obj.Connection.RollbackTrans(...)
+conn.RollbackTrans
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+No parameters.
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Empty. The method does not return a value.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- Call this method after `BeginTrans` when execution fails.
+- Rollback restores the state from before transaction start.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Connection.RollbackTrans()
-If IsObject(result) Then
-    Response.Write "Object returned"
+Dim conn
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+conn.BeginTrans
+On Error Resume Next
+conn.Execute "UPDATE users SET active = 0 WHERE id = 1"
+If Err.Number <> 0 Then
+    conn.RollbackTrans
+    Response.Write "Transaction rolled back"
 Else
-    Response.Write CStr(result)
+    conn.CommitTrans
 End If
-Set obj = Nothing
+On Error GoTo 0
+
+conn.Close
+Set conn = Nothing
 %>
 ```

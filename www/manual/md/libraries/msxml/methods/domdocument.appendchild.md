@@ -1,39 +1,40 @@
 # DOMDocument.AppendChild Method
 
-## Overview
-Calls the AppendChild member on the MSXML2 DOMDocument compatibility object.
+Attaches a child element to the document root. If the document has no root yet, the element becomes the root; otherwise it is appended as a child of the existing root.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-Set out = obj.AppendChild(node)
+Set oResult = objXML.AppendChild(child)
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `child` | XMLElement | Yes | The element node to attach to the document. |
+
+## Return Value
+
+XMLElement. Returns the appended `child` node.
 
 ## Remarks
-- Appends node to document root context.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- To build a complete document tree, call `CreateElement` on each node, build the sub-tree with `XMLElement.AppendChild`, then call `DOMDocument.AppendChild` with the root element.
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-obj.AppendChild
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
-End If
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oRoot, oItem
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+Set oRoot = oXML.CreateElement("products")
+Set oItem = oXML.CreateElement("product")
+oItem.Text = "Widget"
+oRoot.AppendChild oItem
+oXML.AppendChild oRoot
+Response.Write oXML.XML
+Set oXML = Nothing
 %>
 ```

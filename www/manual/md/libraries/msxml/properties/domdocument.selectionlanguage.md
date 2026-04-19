@@ -1,33 +1,33 @@
 # DOMDocument.SelectionLanguage Property
 
-## Overview
-Reads or writes the SelectionLanguage property on the MSXML2 DOMDocument compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.SelectionLanguage
-```
+Gets or sets the query language used by `SelectSingleNode` and `SelectNodes`.
 
 ## Access
-Read/Write
 
-## Return Values
-Returns a Variant-compatible value.
+Read/Write.
+
+## Type
+
+String.
+
+## Default
+
+`"XPath"`
 
 ## Remarks
-- Selection language setting.
-- Property names are case-insensitive.
+
+- The only currently supported value is `XPath`.
+- Setting this property is equivalent to calling `SetProperty "SelectionLanguage", value`.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.SelectionLanguage)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.SelectionLanguage = "XPath"
+oXML.LoadXML "<root><item>A</item></root>"
+Response.Write oXML.SelectSingleNode("//item").Text
+Set oXML = Nothing
 %>
 ```

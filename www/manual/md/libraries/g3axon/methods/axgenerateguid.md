@@ -1,30 +1,34 @@
-# axgenerateguid
+# Generate a GUID
 
 ## Overview
 
-The `axgenerateguid` method generates a cryptographically secure version 4 Globally Unique Identifier (GUID) string.
+Generates a cryptographically secure version 4 GUID (Globally Unique Identifier) string.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
 
 ```asp
-result = obj.axgenerateguid()
+result = ax.AxGenerateGuid()
 ```
 
-## Parameters and Arguments
+## Parameters
 
 This method does not accept any parameters.
 
-## Return Values
+## Return Value
 
-Returns a String containing a unique 36-character GUID (e.g., `f47ac10b-58cc-4372-a567-0e02b2c3d479`).
+- **String**: A 36-character RFC 4122 version 4 GUID in the form `xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx`, where `x` is a random lowercase hexadecimal digit and `y` is one of `8`, `9`, `a`, or `b`.
 
 ## Remarks
 
-- This method is part of the G3Pix AxonASP library.
-- It uses a cryptographically secure random number generator to ensure uniqueness.
-- Method names in G3Pix AxonASP are case-insensitive.
+- The GUID is generated using a cryptographically secure random number generator.
+- Each call produces a statistically unique value. Collisions are possible but astronomically unlikely.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
 ```asp
 <%
@@ -32,10 +36,17 @@ Option Explicit
 Dim ax, guid
 Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-guid = ax.axgenerateguid()
-
-Response.Write "Generated GUID: " & guid
+guid = ax.AxGenerateGuid()
+Response.Write guid
+' Output example: f47ac10b-58cc-4372-a567-0e02b2c3d479
 
 Set ax = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxGenerateGuid`
+- **Arguments**: None
+- **Returns**: String — 36-character RFC 4122 v4 GUID

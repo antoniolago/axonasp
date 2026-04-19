@@ -1,39 +1,42 @@
-﻿# Recordset.Filter Property
+# Recordset.Filter Property
 
-## Overview
-
-The Recordset.Filter property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets a filter expression for visible rows in the recordset.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.Filter
-obj.Recordset.Filter = newValue
+value = rs.Filter
+rs.Filter = newFilter
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+String or Integer. Returns the current filter setting.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Filter syntax support depends on provider/runtime capabilities.
+- Use simple predicates for maximum compatibility.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.Filter
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+Set rs = conn.Execute("SELECT id, name FROM users")
+
+rs.Filter = "id = 1"
+If Not rs.EOF Then Response.Write rs.Fields("name").Value
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

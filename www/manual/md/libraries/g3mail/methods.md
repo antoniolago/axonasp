@@ -1,18 +1,22 @@
-﻿# Methods
+﻿# G3MAIL Methods
 
 ## Overview
 
-This page lists methods exposed by G3MAIL.
+This page summarizes every method exposed by `G3MAIL` in G3Pix AxonASP.
 
-## Method List
-- AddAddress: Adds Address to the current operation context.
-- AddBCC: Adds BCC to the current operation context.
-- AddCC: Adds CC to the current operation context.
-- Clear: Clears the current operation context.
-- Send: Sends data using the current transport configuration.
+## Methods
+
+| Method | Returns | Description |
+|---|---|---|
+| `AddAddress(address)` | Boolean | Adds one recipient address to the To list. Returns `True`. |
+| `AddCC(address)` | Boolean | Adds one recipient address to the CC list. Returns `True`. |
+| `AddBCC(address)` | Boolean | Adds one recipient address to the BCC list. Returns `True`. |
+| `Clear()` | Boolean | Clears To/CC/BCC/Subject/Body context and resets HTML mode. Returns `True`. |
+| `Send()` | Boolean or String | Sends using configured properties and returns `True` on success; returns an error String when SMTP configuration is incomplete or send fails. |
+| `Send(to, subject, body)` | Boolean or String | CDONTS-style overload that first sets To/Subject/Body, then sends. Returns `True` on success; returns an error String on failure. |
 
 ## Remarks
 
+- Instantiate the library with `Server.CreateObject("G3MAIL")`.
 - Method names are case-insensitive.
-- Validate input types and return values in production code.
-- Use Set when assigning object return values.
+- `Send` does not return Empty for operational failure; it returns an error string.

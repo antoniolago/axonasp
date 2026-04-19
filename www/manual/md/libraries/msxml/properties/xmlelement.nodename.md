@@ -1,33 +1,30 @@
 # XMLElement.NodeName Property
 
-## Overview
-Reads or writes the NodeName property on the MSXML2 XMLElement compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.NodeName
-```
+Returns the tag name of the element node.
 
 ## Access
-Read Only
 
-## Return Values
-Returns a Variant-compatible value.
+Read-only.
+
+## Type
+
+String.
 
 ## Remarks
-- Node name.
-- Property names are case-insensitive.
+
+- For element nodes, this is the XML tag name (e.g., `"product"`, `"item"`).
+- For text nodes created with `CreateTextNode`, the value is `"#text"`.
+- For attribute nodes created with `CreateAttribute`, the value is the attribute name.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.NodeName)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oNode
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<catalog><item>Widget</item></catalog>"
+Set oNode = oXML.SelectSingleNode("//item")
+Response.Write oNode.NodeName
+Set oXML = Nothing
 %>
 ```

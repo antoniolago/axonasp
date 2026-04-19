@@ -1,34 +1,42 @@
 # G3IMAGE Methods
 
 ## Overview
-This page provides a summary of the methods available in the **G3IMAGE** library for image processing and 2D drawing within the AxonASP environment.
 
-## Method List
+This page summarizes every method exposed by `G3IMAGE` in G3Pix AxonASP.
 
-- **Close**: Releases all active image contexts and memory buffers.
-- **DrawCircle**: Draws a circular outline or path on the current canvas.
-- **DrawEllipse**: Draws an elliptical outline or path on the current canvas.
-- **DrawImage**: Overlays a loaded image onto the current drawing context.
-- **DrawLine**: Draws a line segment between two specified coordinate points.
-- **DrawRectangle**: Draws a rectangular outline or path on the current canvas.
-- **DrawString**: Renders a text string at a specific position on the canvas.
-- **DrawStringAnchored**: Renders text with precise horizontal and vertical anchor points.
-- **Fill**: Fills the interior of the current drawing path with the active color.
-- **LoadFontFace**: Loads a TrueType or OpenType font for subsequent text rendering.
-- **LoadImage**: Loads an image from a file path into the internal image buffer.
-- **LoadJPG**: Decodes a JPEG image file from a specified path.
-- **LoadPNG**: Decodes a PNG image file from a specified path.
-- **MeasureString**: Calculates the pixel dimensions (width and height) of a text string.
-- **NewContext**: Creates a blank image canvas with specified dimensions.
-- **RenderViaTemp**: Renders the current canvas to a byte array using a temporary file.
-- **SaveJPG**: Encodes the current canvas as a JPEG file and saves it to disk.
-- **SavePNG**: Encodes the current canvas as a PNG file and saves it to disk.
-- **SetColor**: Sets the active drawing color using RGB or RGBA components.
-- **SetHexColor**: Sets the active drawing color using a hexadecimal color code.
-- **SetLineWidth**: Configures the thickness of subsequent strokes and outlines.
-- **Stroke**: Outlines the current drawing path with the active color.
+## Methods
+
+| Method | Returns | Description |
+|---|---|---|
+| `Close()` | Boolean | Releases drawing/image resources and resets internal state. Returns `True`. |
+| `NewContext(width, height)` | Boolean or Empty | Creates a new drawing context. Returns `True` on success, Empty when arguments are invalid. |
+| `LoadImage(path)` | Boolean or Empty | Loads image from file using auto-decoding. Returns `True` on success, Empty on failure. |
+| `LoadPNG(path)` | Boolean or Empty | Loads PNG image from file. Returns `True` on success, Empty on failure. |
+| `LoadJPG(path)` | Boolean or Empty | Loads JPEG image from file. Returns `True` on success, Empty on failure. |
+| `ContextForImage()` | Boolean | Creates drawing context from last loaded image. Returns `True` on success, `False` when no image is loaded. |
+| `SavePNG(path)` | Boolean | Saves active context as PNG. Returns `True` on success; otherwise `False`. |
+| `SaveJPG(path [, quality])` | Boolean | Saves active context as JPEG. Returns `True` on success; otherwise `False`. |
+| `SetHexColor(hexColor)` | Empty | Sets current drawing color from hexadecimal value. |
+| `SetColor(colorText)` | Empty | Sets current drawing color from color text value. |
+| `Clear()` | Empty | Clears the active context. |
+| `SetLineWidth(width)` | Empty | Sets stroke width for subsequent path operations. |
+| `DrawLine(x1, y1, x2, y2)` | Empty | Adds a line path segment to the active context. |
+| `DrawRectangle(x, y, width, height)` | Empty | Adds a rectangle path to the active context. |
+| `DrawCircle(x, y, radius)` | Empty | Adds a circle path to the active context. |
+| `DrawEllipse(x, y, rx, ry)` | Empty | Adds an ellipse path to the active context. |
+| `Stroke()` | Empty | Strokes the current path. |
+| `Fill()` | Empty | Fills the current path. |
+| `FillPreserve()` | Empty | Fills the current path and preserves path data. |
+| `StrokePreserve()` | Empty | Strokes the current path and preserves path data. |
+| `LoadFontFace(path, points)` | Boolean | Loads a font face and applies it to active context when present. Returns `True` on success; otherwise `False`. |
+| `DrawString(text, x, y)` | Empty | Draws text at coordinates. |
+| `DrawStringAnchored(text, x, y, ax, ay)` | Empty | Draws anchored text with alignment factors. |
+| `MeasureString(text)` | Array or Empty | Returns two-element array `[width, height]` as Double values, or Empty when no context is active. |
+| `DrawImage(x, y)` | Empty | Draws last loaded image at destination coordinates in the active context. |
+| `RenderViaTemp([format] [, quality])` | Array or Empty | Renders current image and returns byte array; returns Empty on render failure. |
 
 ## Remarks
+
+- Instantiate the library with `Server.CreateObject("G3IMAGE")`.
 - Method names are case-insensitive.
-- Most drawing methods require an active context initialized via **NewContext** or **ContextForImage**.
-- Geometric methods like **DrawLine** define paths that must be followed by **Stroke** or **Fill** to appear.
+- Inspect `LastError` when methods return `False` or Empty.

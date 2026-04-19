@@ -1,44 +1,53 @@
-# CreateObject Method
+# Use CreateObject from WScript.Shell
 
 ## Overview
-
-The CreateObject method is exposed by the WScript.Shell library object. Use it to execute this library operation from Classic ASP/VBScript with AxonASP runtime behavior.
+Use CreateObject to instantiate another COM-style object through the same runtime path used by Server.CreateObject.
 
 ## Syntax
 
 ```asp
-result = obj.CreateObject(...)
-`````
+Set result = shell.CreateObject(progID)
+```
 
-## Parameters and Arguments
+## Parameters
 
-- Parameters (Variant, Optional): This method accepts arguments according to the runtime dispatch of the WScript.Shell object.
-- Argument validation: invalid count or type raises runtime errors.
+- progID (String, required): Programmatic identifier of the object to create, such as G3JSON, Scripting.Dictionary, or WScript.Shell.
 
-## Return Values
+## Return Value
 
-Returns a Variant result. Depending on the operation, this can be String, Boolean, Number, Array, Dictionary/object handle, or Empty.
+Returns an object reference when creation succeeds.
+
+Returns Empty when progID is missing, blank, or object creation fails.
+
+## How It Works
+
+- WScript.Shell.CreateObject delegates to the same backend object factory used by Server.CreateObject.
+- The method does not return a Boolean status. Check the returned value with IsObject.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Prefer explicit variable assignment and defensive checks before using returned values.
-- For object values, use Set when assigning the return value.
+- Use Set when assigning the returned object reference.
 
-## Code Example
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("WScript.Shell")
-result = obj.CreateObject()
-If IsObject(result) Then
-    Response.Write "Object returned"
+
+Dim shell, dict
+Set shell = Server.CreateObject("WScript.Shell")
+Set dict = shell.CreateObject("Scripting.Dictionary")
+
+If IsObject(dict) Then
+    dict.Add "engine", "G3Pix AxonASP"
+    Response.Write dict.Item("engine")
 Else
-    Response.Write CStr(result)
+    Response.Write "CreateObject failed"
 End If
-Set obj = Nothing
+
+Set dict = Nothing
+Set shell = Nothing
 %>
-`````
+```
 

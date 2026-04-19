@@ -1,27 +1,56 @@
 # Repeat a String
 
-Repeats a string a specified number of times.
+## Overview
+
+Returns a new string formed by repeating the source string a specified number of times.
 
 ## Prerequisites
-The `G3AXON.FUNCTIONS` object must be instantiated to use this method.
-This feature is available in the G3Pix AxonASP environment.
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
-```vbscript
-String = obj.AxRepeat(input, multiplier)
+
+```asp
+result = obj.AxRepeat(str, count)
 ```
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| str | String | Yes | The string to repeat. |
+| count | Integer | Yes | The number of times to repeat `str`. Negative values are treated as `0`. |
 
 ## Return Value
-Returns a String.
+
+- **String**: Returns `str` concatenated `count` times.
+- **String**: Returns an empty string when `count` is `0` or negative, or when fewer than two arguments are provided.
+
+## Remarks
+
+- Method names are case-insensitive in VBScript dispatch.
 
 ## Example
-```vbscript
-Dim obj, result
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
 
-result = obj.AxRepeat(input, multiplier)
+```asp
+<%
+Option Explicit
+Dim ax
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-Response.Write result
+Response.Write ax.AxRepeat("AB", 4)
+' Output: ABABABAB
 
-Set obj = Nothing
+Response.Write ax.AxRepeat("-", 20)
+' Output: --------------------
+
+Set ax = Nothing
+%>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxRepeat`
+- **Arguments**: `str As String, count As Integer`
+- **Returns**: `String` (repeated string)

@@ -1,35 +1,57 @@
-# Axchangetimes
+# Change File Timestamps
 
 ## Overview
 
-Changes file access and modification timestamps using Unix epoch seconds.
+Changes the access and modification timestamps of a file using Unix epoch seconds.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
 
 ```asp
-result = obj.Axchangetimes(path, accessTime, modifiedTime)
+result = obj.AxChangeTimes(path, accessTime, modifyTime)
 ```
 
 ## Parameters
 
-- path (String): Target file path.
-- accessTime (Numeric): Access timestamp in Unix epoch seconds.
-- modifiedTime (Numeric): Modified timestamp in Unix epoch seconds.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| path | String | Yes | The file path whose timestamps will be updated. |
+| accessTime | Integer | Yes | The new access time as a Unix epoch timestamp (seconds since 1970-01-01 UTC). |
+| modifyTime | Integer | Yes | The new modification time as a Unix epoch timestamp. |
 
-## Return Values
+## Return Value
 
-- Returns a Boolean.
+- **Boolean**: Returns `True` when the timestamps were changed successfully.
+- **Boolean**: Returns `False` when the path is empty, the file does not exist, or the operation fails due to permissions.
 
+## Remarks
 
-## Code Example
+- Requires at least three arguments; returns `False` with fewer.
+- Method names are case-insensitive in VBScript dispatch.
+
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, ok
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
-ok = obj.Axchangetimes("C:\\temp\\sample.txt", 1700000000, 1700000001)
-Response.Write CStr(ok)
-Set obj = Nothing
+Dim ax, ok
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
+
+ok = ax.AxChangeTimes("C:\\temp\\file.txt", 1700000000, 1700000001)
+If ok Then
+    Response.Write "Timestamps updated."
+End If
+
+Set ax = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxChangeTimes`
+- **Arguments**: `path As String, accessTime As Integer, modifyTime As Integer`
+- **Returns**: `Boolean` (`True` on success, `False` on failure)

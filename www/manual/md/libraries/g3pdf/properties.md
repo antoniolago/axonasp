@@ -1,18 +1,20 @@
-﻿# Properties
+﻿# G3PDF Properties
 
 ## Overview
+This page summarizes properties exposed by the G3PDF library in G3Pix AxonASP.
 
-This page lists properties exposed by G3PDF.
+## Properties Reference
 
-## Property List
-- LastError
-- Page
-- X
-- Y
-- W
-- H
-- Version
+| Property | Access | Type | Description |
+|---|---|---|---|
+| LastError | Read-only | String | Stores the most recent library error message. |
+| Page | Read-only | Integer | Returns the current page number. |
+| X | Read/Write | Double | Gets or sets the current horizontal cursor position. |
+| Y | Read/Write | Double | Gets or sets the current vertical cursor position. |
+| W | Read-only | Double | Returns current page width. |
+| H | Read-only | Double | Returns current page height. |
+| Version | Read-only | String | Returns the implementation version string for this library. |
 
 ## Remarks
-
-Read-only properties reject assignment and raise runtime errors when not writable.
+- Property names are case-insensitive.
+- PageWidth and PageHeight are accepted aliases for W and H.

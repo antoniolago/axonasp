@@ -1,39 +1,37 @@
 # DOMDocument.GetProperty Method
 
-## Overview
-Calls the GetProperty member on the MSXML2 DOMDocument compatibility object.
+Returns the current value of a named document property.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-v = obj.GetProperty("SelectionLanguage")
+value = objXML.GetProperty(name)
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `name` | String | Yes | The name of the property to retrieve (e.g., `"SelectionLanguage"`, `"SelectionNamespaces"`). |
+
+## Return Value
+
+Variant. The current value of the named property. Returns Empty if the property name is not recognized.
 
 ## Remarks
-- Reads compatible DOM option value.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- This method is equivalent to reading the corresponding named property directly (e.g., `objXML.SelectionNamespaces`).
+- Recognised property names: `SelectionLanguage`, `SelectionNamespaces`, `ResolveExternals`, `ValidateOnParse`, `PreserveWhiteSpace`, `ServerHTTPRequest`, `Async`.
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-obj.GetProperty
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
-End If
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, sLang
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+sLang = oXML.GetProperty("SelectionLanguage")
+Response.Write "SelectionLanguage: " & sLang
+Set oXML = Nothing
 %>
 ```

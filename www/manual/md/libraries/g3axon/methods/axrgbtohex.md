@@ -1,34 +1,61 @@
-# Convert RGB to HTML Hexadecimal Color
+# Convert RGB Values to a Hexadecimal Color Code
 
 ## Overview
 
-Converts individual Red, Green, and Blue color values into an HTML hexadecimal color string.
+Converts individual red, green, and blue color component values to an uppercase HTML hexadecimal color string.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
 
-```vbscript
-strHex = obj.axrgbtohex(r, g, b)
+```asp
+result = ax.AxRgbToHex(r, g, b)
 ```
 
 ## Parameters
 
-- **r** (Integer): The red color component (0-255).
-- **g** (Integer): The green color component (0-255).
-- **b** (Integer): The blue color component (0-255).
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **r** | Integer | Yes | Red component (0–255). Values outside this range are masked with `& 0xFF`. |
+| **g** | Integer | Yes | Green component (0–255). Values outside this range are masked with `& 0xFF`. |
+| **b** | Integer | Yes | Blue component (0–255). Values outside this range are masked with `& 0xFF`. |
 
 ## Return Value
 
-String. The HTML hexadecimal color code.
+- **String**: An uppercase hexadecimal color string in `#RRGGBB` format (e.g., `"#FF8000"`).
+- **String `"#000000"`**: Returned when fewer than three arguments are supplied.
 
 ## Remarks
 
-If fewer than three arguments are provided, it defaults to returning `#000000`.
+- Each component is masked with `& 0xFF` before formatting, so values outside 0–255 wrap rather than cause an error.
+- The hex digits are uppercase (`A`–`F`).
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
-```vbscript
-Dim obj, strHex
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
-strHex = obj.axrgbtohex(255, 128, 0)
-Response.Write strHex ' Outputs: #ff8000
+```asp
+<%
+Option Explicit
+Dim ax, hex
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
+
+hex = ax.AxRgbToHex(255, 128, 0)
+Response.Write hex
+' Output: #FF8000
+
+hex = ax.AxRgbToHex(0, 0, 255)
+Response.Write "<br>" & hex
+' Output: #0000FF
+
+Set ax = Nothing
+%>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxRgbToHex`
+- **Arguments**: `r` (Integer, required), `g` (Integer, required), `b` (Integer, required)
+- **Returns**: String — uppercase `#RRGGBB` hex color code

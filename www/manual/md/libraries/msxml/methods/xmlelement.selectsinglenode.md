@@ -1,39 +1,40 @@
 # XMLElement.SelectSingleNode Method
 
-## Overview
-Calls the SelectSingleNode member on the MSXML2 XMLElement compatibility object.
+Evaluates an XPath expression relative to this element and returns the first matching node.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-Set n = node.SelectSingleNode("./child")
+Set oNode = oElement.SelectSingleNode(xpath)
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `xpath` | String | Yes | An XPath 1.0 expression evaluated relative to this element. |
+
+## Return Value
+
+XMLElement. The first matching node. Returns Null if no node matches or the expression is empty.
 
 ## Remarks
-- Returns first matching descendant from current node.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- When the XPath expression starts with `/`, it is evaluated from the document root rather than the current element.
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-obj.SelectSingleNode
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
+Dim oXML, oSection, oNode
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<root><section><item id='3'>Target</item></section></root>"
+Set oSection = oXML.SelectSingleNode("//section")
+Set oNode = oSection.SelectSingleNode("item[@id='3']")
+If Not IsNull(oNode) Then
+    Response.Write oNode.Text
 End If
-On Error GoTo 0
-Set obj = Nothing
+Set oXML = Nothing
 %>
 ```

@@ -1,11 +1,14 @@
-﻿# Properties
+﻿# WScript.Shell Properties
 
 ## Overview
+This page summarizes properties exposed by the WScript.Shell library in G3Pix AxonASP.
 
-This page lists properties exposed by WScript.Shell.
+## Properties Reference
 
-## Property List
+| Property | Access | Type | Description |
+|---|---|---|---|
+| None | Not applicable | Not applicable | WScript.Shell does not expose dedicated library properties in this runtime. Property-style access is routed to method dispatch. |
 
 ## Remarks
 
-Read-only properties reject assignment and raise runtime errors when not writable.
+- Method-style members provide the supported runtime behavior for this library.

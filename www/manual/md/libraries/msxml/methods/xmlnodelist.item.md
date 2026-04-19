@@ -1,39 +1,37 @@
 # XMLNodeList.Item Method
 
-## Overview
-Calls the Item member on the MSXML2 XMLNodeList compatibility object.
+Returns the node at a given zero-based index from the list.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-Set n = list.Item(index)
+Set oNode = oList.Item(index)
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `index` | Integer | Yes | Zero-based position of the node to retrieve. |
+
+## Return Value
+
+XMLElement. The node at the specified index. Returns Null if the index is negative or greater than or equal to `Length`.
 
 ## Remarks
-- Returns node at index.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-obj.Item
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
-End If
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oList, oNode
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<list><a>1</a><b>2</b><c>3</c></list>"
+Set oList = oXML.DocumentElement.ChildNodes
+Set oNode = oList.Item(1)
+Response.Write oNode.NodeName & ": " & oNode.Text
+Set oXML = Nothing
 %>
 ```

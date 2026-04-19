@@ -1,13 +1,17 @@
 # G3TEMPLATE Methods
 
 ## Overview
-This page provides a summary of the methods available in the **G3TEMPLATE** library for rendering templates in AxonASP.
 
-## Method List
+This page summarizes every method exposed by `G3TEMPLATE` in G3Pix AxonASP.
 
-- **Render**: Parses an external template file and returns a string of the rendered output using an optional data object.
+## Methods
+
+| Method | Returns | Description |
+|---|---|---|
+| `Render(templatePath [, data])` | String | Renders a template file and returns output text; returns an error String when path is missing, template parsing fails, or template execution fails. |
 
 ## Remarks
+
+- Instantiate the library with `Server.CreateObject("G3TEMPLATE")`.
 - Method names are case-insensitive.
-- The **Render** method automatically handles file system paths through the AxonASP host environment.
-- Use the **methods.md** page (this page) for a full reference of available functions.
+- Template paths are resolved through the host environment when available.

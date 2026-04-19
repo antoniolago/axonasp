@@ -1,33 +1,30 @@
 # XMLElement.Text Property
 
-## Overview
-Reads or writes the Text property on the MSXML2 XMLElement compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.Text
-```
+Gets or sets the concatenated text content of the element and all its descendants.
 
 ## Access
-Read/Write
 
-## Return Values
-Returns a Variant-compatible value.
+Read/Write.
+
+## Type
+
+String.
 
 ## Remarks
-- Node text content.
-- Property names are case-insensitive.
+
+- When read, the property traverses the full subtree and concatenates all text node values.
+- When assigned, the element's child nodes are replaced with a single new text node containing the given string.
+- For a node with no text content, returns an empty String.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.Text)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oNode
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<root><a>Hello </a><b>World</b></root>"
+Set oNode = oXML.DocumentElement
+Response.Write oNode.Text
+Set oXML = Nothing
 %>
 ```

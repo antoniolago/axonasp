@@ -1,39 +1,36 @@
 # ServerXMLHTTP.Abort Method
 
-## Overview
-Calls the Abort member on the MSXML2 ServerXMLHTTP compatibility object.
+Cancels the current HTTP request immediately without waiting for a response.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.ServerXMLHTTP")
-obj.Abort
+objHTTP.Abort
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+None.
+
+## Return Value
+
+Empty. This method does not return a value.
 
 ## Remarks
-- Aborts active request context.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- Calling `Abort` sets `ReadyState` to 4 without populating any response properties.
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.ServerXMLHTTP")
+Dim oHTTP
+Set oHTTP = Server.CreateObject("MSXML2.ServerXMLHTTP")
+oHTTP.Open "GET", "https://example.com/large-file", False
 On Error Resume Next
-obj.Abort
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
-End If
+oHTTP.Abort
 On Error GoTo 0
-Set obj = Nothing
+Set oHTTP = Nothing
 %>
 ```

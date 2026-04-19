@@ -1,39 +1,40 @@
-﻿# Recordset.RecordCount Property
+# Recordset.RecordCount Property
 
-## Overview
-
-The Recordset.RecordCount property is exposed by the ADODB.Connection object in AxonASP.
+Returns the number of rows currently represented by the recordset.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.RecordCount
-obj.Recordset.RecordCount = newValue
+count = rs.RecordCount
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns row count, or provider-specific fallback when exact count is unavailable.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- This property is read-only.
+- Some cursor/provider combinations may require movement to finalize count.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.RecordCount
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+Set rs = conn.Execute("SELECT id, name FROM users")
+
+Response.Write CStr(rs.RecordCount)
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

@@ -2,31 +2,54 @@
 
 ## Overview
 
-Escapes special characters in a string to their corresponding HTML entities.
+Escapes the HTML special characters in a string to their corresponding HTML entities, preventing browsers from interpreting them as markup.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
 
-```vbscript
-strEscaped = obj.axhtmlspecialchars(str)
+```asp
+result = ax.AxHtmlSpecialChars(str)
 ```
 
 ## Parameters
 
-- **str** (String): The string to escape.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **str** | String | Yes | The string to escape. |
 
 ## Return Value
 
-String. The HTML escaped string.
+- **String**: The input string with `&`, `<`, `>`, and `"` replaced by their HTML entity equivalents.
+- **String (empty)**: Returned when no argument is supplied.
 
 ## Remarks
 
-Critical for preventing Cross-Site Scripting (XSS) vulnerabilities when rendering user input directly in an HTML page.
+- Characters replaced: `&` → `&amp;`, `<` → `&lt;`, `>` → `&gt;`, `"` → `&#34;`.
+- Use this method when outputting user-supplied data into HTML to prevent cross-site scripting (XSS) attacks.
+- Method names are case-insensitive.
 
-## Code Example
+## Example
 
-```vbscript
-Dim obj, strHTML
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
-strHTML = obj.axhtmlspecialchars("<script>alert(1);</script>")
-Response.Write strHTML
+```asp
+<%
+Option Explicit
+Dim ax, safe
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
+
+safe = ax.AxHtmlSpecialChars("<script>alert('xss')</script>")
+Response.Write safe
+' Output: &lt;script&gt;alert(&#34;xss&#34;)&lt;/script&gt;
+
+Set ax = Nothing
+%>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxHtmlSpecialChars`
+- **Arguments**: `str` (String, required)
+- **Returns**: String — HTML-entity-escaped version of the input

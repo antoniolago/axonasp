@@ -1,39 +1,37 @@
 # ServerXMLHTTP.GetAllResponseHeaders Method
 
-## Overview
-Calls the GetAllResponseHeaders member on the MSXML2 ServerXMLHTTP compatibility object.
+Returns all response headers as a single CRLF-delimited string.
 
 ## Syntax
+
 ```asp
-Dim obj
-Set obj = Server.CreateObject("MSXML2.ServerXMLHTTP")
-v = obj.GetAllResponseHeaders()
+headers = objHTTP.GetAllResponseHeaders()
 ```
 
-## Parameters and Arguments
-- Parameters are validated by runtime dispatch for this object.
-- Invalid argument count or incompatible values can raise runtime errors.
+## Parameters
 
-## Return Values
-Returns a Variant-compatible value or native object handle depending on the operation.
+None.
+
+## Return Value
+
+String. All response headers concatenated in `Header: Value\r\n` format. Returns an empty String if no response has been received.
 
 ## Remarks
-- Returns CRLF-joined response headers text.
-- Member names are case-insensitive.
-- Use Set for object return values.
+
+- Call this method only after `Send` has completed (`ReadyState = 4`).
+- Each line is of the form `Header-Name: value` followed by a carriage return and line feed (`\r\n`).
+- Method names are case-insensitive.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.ServerXMLHTTP")
-On Error Resume Next
-obj.GetAllResponseHeaders
-If Err.Number <> 0 Then
-    Response.Write "Error: " & Err.Description
-    Err.Clear
-End If
-On Error GoTo 0
-Set obj = Nothing
+Dim oHTTP, sHeaders
+Set oHTTP = Server.CreateObject("MSXML2.ServerXMLHTTP")
+oHTTP.Open "GET", "https://example.com/", False
+oHTTP.Send
+sHeaders = oHTTP.GetAllResponseHeaders()
+Response.Write "<pre>" & Server.HTMLEncode(sHeaders) & "</pre>"
+Set oHTTP = Nothing
 %>
 ```

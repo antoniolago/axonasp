@@ -1,15 +1,19 @@
 # G3CRYPTO Properties
 
 ## Overview
-This page lists the properties available in the **G3CRYPTO** library for managing cryptographic state and configuration.
 
-## Property List
+This page lists the properties exposed by `G3CRYPTO`.
 
-- **BCryptCost**: Read/Write. Configures the computational cost for bcrypt operations.
-- **CanReuseTransform**: Read-only. Indicates if the transform can be reused (always True).
-- **Hash**: Read-only. Returns the raw byte array of the most recent hash operation.
-- **HashSize**: Read-only. Returns the bit-size of the most recent hash operation.
+## Properties
+
+| Property | Access | Type | Description |
+|---|---|---|---|
+| `BCryptCost` | Read/Write | Integer | bcrypt work factor used by `HashPassword`. |
+| `CanReuseTransform` | Read-only | Boolean | Always `True`. |
+| `Hash` | Read-only | Array | Raw bytes from the most recent digest operation that updates internal hash state. |
+| `HashSize` | Read-only | Integer | Digest size in bits for the current internal hash context. |
 
 ## Remarks
-- Accessing properties is efficient and does not trigger expensive cryptographic operations.
-- Use the **Hash** property when binary output is required for database storage or protocol transmission.
+
+- Property reads do not perform cryptographic work.
+- Setting `BCryptCost` outside `4..31` is ignored.

@@ -1,54 +1,53 @@
-# Stats Method
+# Read Database Pool Statistics
 
 ## Overview
 
-The **Stats** method retrieves runtime connection pool statistics for the current database connection in G3Pix AxonASP.
+Returns runtime pool statistics for the active G3DB connection.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3DB")`.
 
 ## Syntax
 
 ```asp
-Set result = obj.Stats()
+Set stats = db.Stats()
 ```
 
-## Parameters and Arguments
+## Parameters
 
 None.
 
-## Return Values
+## Return Value
 
-Returns a **Scripting.Dictionary** object containing detailed information about the current state of the database connection pool.
+- **Scripting.Dictionary**: Returned when connection is open.
+- **Empty**: Returned when connection is not open.
 
 ## Remarks
 
-- The dictionary keys returned by this method include:
-    - **MaxOpenConnections**: The maximum number of open connections allowed.
-    - **OpenConnections**: The total number of established connections (in-use + idle).
-    - **InUse**: The number of connections currently active in a transaction or query.
-    - **Idle**: The number of idle connections sitting in the pool.
-    - **WaitCount**: The total number of connections that had to wait before being granted.
-    - **WaitDurationSeconds**: The total duration in seconds that callers blocked waiting for a connection.
-    - **MaxIdleClosed**: The number of connections closed because of the **SetMaxIdleConns** limit.
-    - **MaxIdleTimeClosed**: The number of connections closed because of the **SetConnMaxIdleTime** limit.
-    - **MaxLifetimeClosed**: The number of connections closed because of the **SetConnMaxLifetime** limit.
-- This method is useful for monitoring the performance and health of the database connection pool during runtime.
+- Dictionary keys include `MaxOpenConnections`, `OpenConnections`, `InUse`, `Idle`, `WaitCount`, `WaitDurationSeconds`, `MaxIdleClosed`, `MaxIdleTimeClosed`, and `MaxLifetimeClosed`.
 
-## Code Example
+## Example
 
 ```asp
 <%
+Option Explicit
 Dim db, stats
 Set db = Server.CreateObject("G3DB")
 
-If db.Open("mysql", "user:pass@tcp(localhost)/dbname") Then
-    Set stats = db.Stats()
-    
-    Response.Write "Active Connections: " & stats("InUse") & "<br>"
-    Response.Write "Idle Connections: " & stats("Idle") & "<br>"
-    Response.Write "Total Open: " & stats("OpenConnections") & "<br>"
-    
-    db.Close
+If db.Open("mysql", "user:pass@tcp(localhost)/db") Then
+  Set stats = db.Stats()
+  If IsObject(stats) Then Response.Write stats("OpenConnections")
+  db.Close
 End If
 
 Set db = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3DB`
+- **Method**: `Stats`
+- **Arguments**: none
+- **Returns**: Scripting.Dictionary on open connection, Empty otherwise

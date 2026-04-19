@@ -1,41 +1,52 @@
-﻿# Recordset.Open Method
+# Recordset.Open Method
 
-## Overview
-
-The Recordset.Open method is exposed by the ADODB.Connection object in AxonASP.
+Opens a recordset using a source query and connection.
 
 ## Syntax
 
 ```asp
-result = obj.Recordset.Open(...)
+rs.Open source, activeConnection[, cursorType[, lockType[, options]]]
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `source` | String or Command | Yes | SQL text, table name, or command object. |
+| `activeConnection` | Connection | Yes | Open connection used to fetch rows. |
+| `cursorType` | Integer | No | Cursor behavior flag. |
+| `lockType` | Integer | No | Lock mode flag. |
+| `options` | Integer | No | Provider options bitmask. |
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Empty. The method does not return a value.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- After open, use BOF/EOF and Fields for navigation and values.
+- Always close the recordset after use.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Recordset.Open()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = Server.CreateObject("ADODB.Recordset")
+rs.Open "SELECT id, name FROM users", conn
+
+If Not rs.EOF Then Response.Write rs.Fields("name").Value
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

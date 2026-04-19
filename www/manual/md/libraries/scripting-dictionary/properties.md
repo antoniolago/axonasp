@@ -1,13 +1,15 @@
-﻿# Properties
+﻿# Scripting.Dictionary Properties
 
 ## Overview
+This page summarizes properties exposed by Scripting.Dictionary in G3Pix AxonASP.
 
-This page lists properties exposed by Scripting.Dictionary.
+## Properties Reference
 
-## Property List
-- Count
-- CompareMode
+| Property | Access | Type | Description |
+|---|---|---|---|
+| Count | Read-only | Integer | Returns the number of key-value entries currently stored. |
+| CompareMode | Read/Write | Integer | Gets or sets key comparison mode: 0 for case-sensitive comparison, 1 for case-insensitive comparison. |
 
 ## Remarks
-
-Read-only properties reject assignment and raise runtime errors when not writable.
+- Property names are case-insensitive.
+- Set CompareMode before adding entries. Changing CompareMode after the dictionary contains items raises an error.

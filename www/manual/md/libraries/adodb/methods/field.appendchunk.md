@@ -1,41 +1,51 @@
-﻿# Field.AppendChunk Method
+# Field.AppendChunk Method
 
-## Overview
-
-The Field.AppendChunk method is exposed by the ADODB.Connection object in AxonASP.
+Appends binary or text chunk data to the current field value.
 
 ## Syntax
 
 ```asp
-result = obj.Field.AppendChunk(...)
+fieldObj.AppendChunk data
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `data` | String or Byte Array | Yes | Chunk data appended to the target field. |
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Empty. The method does not return a value.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- AppendChunk is commonly used for long text and binary fields.
+- Multiple AppendChunk calls append data sequentially.
+- Call `Recordset.Update` to persist appended data.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Field.AppendChunk()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.Execute("SELECT * FROM users WHERE id = 1")
+If Not rs.EOF Then
+    rs.Fields("notes").AppendChunk " First chunk."
+    rs.Fields("notes").AppendChunk " Second chunk."
+    rs.Update
 End If
-Set obj = Nothing
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

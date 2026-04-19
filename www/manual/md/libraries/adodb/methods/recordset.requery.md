@@ -1,41 +1,49 @@
-﻿# Recordset.Requery Method
+# Recordset.Requery Method
 
-## Overview
-
-The Recordset.Requery method is exposed by the ADODB.Connection object in AxonASP.
+Re-executes the original query and refreshes the recordset rows.
 
 ## Syntax
 
 ```asp
-result = obj.Recordset.Requery(...)
+rs.Requery
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+No parameters.
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Empty. The method does not return a value.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- Requery uses the recordset source and active connection currently associated with the recordset.
+- Cursor position can change after refresh.
+- Use Requery when underlying table data may have changed.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Recordset.Requery()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = Server.CreateObject("ADODB.Recordset")
+rs.Open "SELECT id, name FROM users", conn
+
+Response.Write "Before requery count: " & CStr(rs.RecordCount) & "<br>"
+rs.Requery
+Response.Write "After requery count: " & CStr(rs.RecordCount)
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

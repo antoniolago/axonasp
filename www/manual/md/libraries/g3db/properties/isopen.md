@@ -1,33 +1,38 @@
 # IsOpen Property
 
 ## Overview
-Indicates whether the database connection pool is currently open and active.
+Reports whether the database connection pool is currently open.
+
+## Prerequisites
+```asp
+Set db = Server.CreateObject("G3DB")
+```
 
 ## Syntax
 ```asp
 status = db.IsOpen
 ```
 
-## Return Values
-Returns a **Boolean** value. It returns **True** if the connection pool is open, and **False** if it is closed or has not yet been opened.
+## Return Value
+Returns a **Boolean**:
+- **True** when connection is open.
+- **False** when connection is closed or not initialized.
 
 ## Remarks
-Use this property to verify the state of the database connection before executing queries or commands to avoid runtime errors.
+- This property is read-only.
 
-## Code Example
+## Example
 ```asp
 <%
 Dim db
 Set db = Server.CreateObject("G3DB")
-db.Open "mysql", "user:pass@tcp(localhost:3306)/db"
 
-If db.IsOpen Then
-    Response.Write "Database is connected"
-Else
-    Response.Write "Database is disconnected"
-End If
+Response.Write db.IsOpen
 
-db.Close
 Set db = Nothing
 %>
 ```
+
+## API Reference
+- **Type:** Boolean
+- **Access:** Read-only

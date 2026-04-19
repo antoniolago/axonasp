@@ -1,39 +1,44 @@
-﻿# Parameters.Count Property
+# Parameters.Count Property
 
-## Overview
-
-The Parameters.Count property is exposed by the ADODB.Connection object in AxonASP.
+Returns the number of parameters in the command Parameters collection.
 
 ## Syntax
 
 ```asp
-value = obj.Parameters.Count
-obj.Parameters.Count = newValue
+count = cmd.Parameters.Count
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns total appended parameter entries.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- This property is read-only.
+- Count reflects only parameters added to the current command object.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Parameters.Count
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, cmd, p
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set cmd = Server.CreateObject("ADODB.Command")
+Set cmd.ActiveConnection = conn
+Set p = cmd.CreateParameter("id", 3, 1, 4, 1)
+cmd.Parameters.Append p
+
+Response.Write CStr(cmd.Parameters.Count)
+
+conn.Close
+Set p = Nothing
+Set cmd = Nothing
+Set conn = Nothing
 %>
 ```

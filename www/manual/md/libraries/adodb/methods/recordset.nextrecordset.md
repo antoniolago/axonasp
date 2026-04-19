@@ -1,41 +1,53 @@
-﻿# Recordset.NextRecordset Method
+# Recordset.NextRecordset Method
 
-## Overview
-
-The Recordset.NextRecordset method is exposed by the ADODB.Connection object in AxonASP.
+Returns the next recordset when a command produces multiple result sets.
 
 ## Syntax
 
 ```asp
-result = obj.Recordset.NextRecordset(...)
+Set nextRs = rs.NextRecordset
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+No parameters.
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Recordset or Nothing. Returns the next ADODB.Recordset object if available; returns Nothing when there are no additional result sets.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- Use NextRecordset only when SQL/provider can emit multiple result sets.
+- Always check if returned object is Nothing before using it.
+- Close each returned recordset when finished.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Recordset.NextRecordset()
-If IsObject(result) Then
-    Response.Write "Object returned"
+Dim conn, rs, nextRs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.Execute("SELECT id FROM users")
+Set nextRs = rs.NextRecordset
+
+If IsObject(nextRs) Then
+    Response.Write "Second recordset available"
+    nextRs.Close
 Else
-    Response.Write CStr(result)
+    Response.Write "No additional recordset"
 End If
-Set obj = Nothing
+
+rs.Close
+conn.Close
+Set nextRs = Nothing
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

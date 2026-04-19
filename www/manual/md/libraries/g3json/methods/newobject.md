@@ -1,27 +1,51 @@
-# NewObject Method
+# Create a New JSON Object Container
 
 ## Overview
-Creates a new, empty **Scripting.Dictionary** object.
+
+Creates an empty Scripting.Dictionary object for JSON composition.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3JSON")`.
 
 ## Syntax
+
 ```asp
-Set dict = json.NewObject()
+Set obj = json.NewObject()
 ```
 
-## Return Values
-Returns a **Scripting.Dictionary** object handle.
+## Parameters
+
+None.
+
+## Return Value
+
+- **Scripting.Dictionary**: Empty dictionary object.
 
 ## Remarks
-This method is a helper for creating native dictionary objects that are compatible with the **Stringify** method. It is functionally equivalent to `Server.CreateObject("Scripting.Dictionary")`.
 
-## Code Example
+- Use this method to build object payloads before calling `Stringify`.
+
+## Example
+
 ```asp
 <%
-Dim json, dict
+Option Explicit
+Dim json, obj
 Set json = Server.CreateObject("G3JSON")
-Set dict = json.NewObject()
-dict.Add "key", "value"
-Response.Write "Dictionary created and populated"
+
+Set obj = json.NewObject()
+obj.Add "status", "ok"
+Response.Write obj("status")
+
+Set obj = Nothing
 Set json = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3JSON`
+- **Method**: `NewObject`
+- **Arguments**: none
+- **Returns**: Scripting.Dictionary — empty dictionary object

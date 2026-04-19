@@ -1,39 +1,36 @@
 ﻿# Connection.Mode Property
 
-## Overview
-
-The Connection.Mode property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets the access mode for the connection.
 
 ## Syntax
 
 ```asp
-value = obj.Connection.Mode
-obj.Connection.Mode = newValue
+mode = conn.Mode
+conn.Mode = 3
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns the current mode flag.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Typical flags include read-only and read-write combinations.
+- Set Mode before calling Open.
+- Unsupported mode flags can be ignored or rejected by provider.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Connection.Mode
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.Mode = 3
+Response.Write "Mode: " & CStr(conn.Mode)
+
+Set conn = Nothing
 %>
 ```

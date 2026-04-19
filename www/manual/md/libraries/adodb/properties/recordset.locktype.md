@@ -1,39 +1,35 @@
-﻿# Recordset.LockType Property
+# Recordset.LockType Property
 
-## Overview
-
-The Recordset.LockType property is exposed by the ADODB.Connection object in AxonASP.
+Gets or sets the lock strategy used for record updates.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.LockType
-obj.Recordset.LockType = newValue
+value = rs.LockType
+rs.LockType = newLockType
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Integer. Returns lock mode flag.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Set before opening the recordset.
+- Lock strategy affects concurrency and update behavior.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.LockType
-Response.Write CStr(value)
-Set obj = Nothing
+Dim rs
+
+Set rs = Server.CreateObject("ADODB.Recordset")
+rs.LockType = 3
+Response.Write CStr(rs.LockType)
+
+Set rs = Nothing
 %>
 ```

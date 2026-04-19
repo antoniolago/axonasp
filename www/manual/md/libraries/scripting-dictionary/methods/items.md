@@ -1,44 +1,45 @@
-# Items Method
+# Enumerate Dictionary Values
 
 ## Overview
-
-The Items method is exposed by the Scripting.Dictionary library object. Use it to execute this library operation from Classic ASP/VBScript with AxonASP runtime behavior.
+Use Items to retrieve all stored values as an array.
 
 ## Syntax
 
 ```asp
-result = obj.Items(...)
-`````
+values = dict.Items()
+```
 
-## Parameters and Arguments
+## Parameters
+- No parameters.
 
-- Parameters (Variant, Optional): This method accepts arguments according to the runtime dispatch of the Scripting.Dictionary object.
-- Argument validation: invalid count or type raises runtime errors.
+## Return Value
+Returns a zero-based Variant array containing dictionary values in insertion order.
 
-## Return Values
-
-Returns a Variant result. Depending on the operation, this can be String, Boolean, Number, Array, Dictionary/object handle, or Empty.
+## How It Works
+- The returned array length equals Count.
+- Values are copied from the dictionary storage order.
 
 ## Remarks
+- Member names are case-insensitive.
 
-- Method names are case-insensitive.
-- Prefer explicit variable assignment and defensive checks before using returned values.
-- For object values, use Set when assigning the return value.
-
-## Code Example
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("Scripting.Dictionary")
-result = obj.Items()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+
+Dim dict, values, i
+Set dict = Server.CreateObject("Scripting.Dictionary")
+
+dict.Add "A", 10
+dict.Add "B", 20
+values = dict.Items()
+
+For i = 0 To UBound(values)
+    Response.Write "Value(" & i & ")=" & values(i) & "<br>"
+Next
+
+Set dict = Nothing
 %>
-`````
+```
 

@@ -1,41 +1,50 @@
-﻿# Command.Parameters.Refresh Method
+# Command.Parameters.Refresh Method
 
-## Overview
-
-The Command.Parameters.Refresh method is exposed by the ADODB.Connection object in AxonASP.
+Refreshes the command parameter metadata from the provider.
 
 ## Syntax
 
 ```asp
-result = obj.Command.Parameters.Refresh(...)
+cmd.Parameters.Refresh
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+No parameters.
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Empty. The method does not return a value.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- In the current G3Pix AxonASP ADODB implementation, this method is a compatibility no-op.
+- Use explicit `CreateParameter` and `Parameters.Append` when defining parameters.
+- Call this method only for compatibility with existing scripts.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Command.Parameters.Refresh()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+Dim conn, cmd
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set cmd = Server.CreateObject("ADODB.Command")
+cmd.ActiveConnection = conn
+cmd.CommandText = "SELECT id FROM users WHERE id = ?"
+
+' Compatibility no-op in current runtime.
+cmd.Parameters.Refresh
+
+Response.Write "Parameters.Refresh executed"
+
+conn.Close
+Set cmd = Nothing
+Set conn = Nothing
 %>
 ```

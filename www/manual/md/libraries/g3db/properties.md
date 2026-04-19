@@ -1,15 +1,19 @@
 # G3DB Properties
 
 ## Overview
-This page provides a summary of the properties available in the **G3DB** library for inspecting the state of a database connection.
 
-## Property List
+This page lists the properties exposed by `G3DB`.
 
-- **Driver**: Read-only. Returns the canonical name of the database driver being used (e.g., `mysql`, `postgres`, `sqlite`).
-- **DSN**: Read-only. Returns the Data Source Name (connection string) used to establish the connection.
-- **IsOpen**: Read-only. Returns a **Boolean** indicating whether the database connection pool is currently active and open.
-- **LastError**: Read-only. Returns the last error message recorded by the database connection object.
+## Properties
+
+| Property | Access | Type | Description |
+|---|---|---|---|
+| `Driver` | Read/Write | String | Normalized database driver name used by the connection object. |
+| `DSN` | Read/Write | String | Current connection string stored in the object. |
+| `IsOpen` | Read-only | Boolean | Indicates whether the database pool is currently open. |
+| `LastError` | Read-only | String | Latest error text recorded by the object. |
 
 ## Remarks
-- Properties are read-only and will raise a runtime error if an assignment is attempted.
-- Property access is efficient and does not trigger new database operations.
+
+- Instantiate the library with `Server.CreateObject("G3DB")`.
+- `Driver` and `DSN` can be assigned before opening a connection.

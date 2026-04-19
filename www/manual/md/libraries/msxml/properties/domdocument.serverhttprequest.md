@@ -1,33 +1,32 @@
 # DOMDocument.ServerHTTPRequest Property
 
-## Overview
-Reads or writes the ServerHTTPRequest property on the MSXML2 DOMDocument compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.ServerHTTPRequest
-```
+Gets or sets whether HTTP requests issued by the document use the server HTTP stack.
 
 ## Access
-Read/Write
 
-## Return Values
-Returns a Variant-compatible value.
+Read/Write.
+
+## Type
+
+Boolean.
+
+## Default
+
+False.
 
 ## Remarks
-- Compatibility flag for server HTTP behavior.
-- Property names are case-insensitive.
+
+- This property controls the HTTP client stack used when `Load` fetches content from an HTTP or HTTPS URL.
+- Accepted for compatibility; the current implementation uses the same HTTP client regardless of this setting.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.ServerHTTPRequest)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.ServerHTTPRequest = True
+oXML.Load "https://example.com/data.xml"
+Set oXML = Nothing
 %>
 ```

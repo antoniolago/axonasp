@@ -1,39 +1,65 @@
-# axsysteminfo
+# Get System Information
 
 ## Overview
-Retrieves various system and runtime environment information in G3Pix AxonASP.
+
+Retrieves operating system and runtime environment details for the current server process.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
+
 ```asp
-result = obj.axsysteminfo([mode])
+result = ax.AxSystemInfo([mode])
 ```
 
-## Parameters and Arguments
-- **mode** (String, Optional): A single character specifying the type of information to return:
-  - "s": Operating system name (e.g., "windows", "linux").
-  - "n": Hostname of the machine.
-  - "v": Go runtime version.
-  - "m": Machine architecture (e.g., "amd64", "arm64").
-  - "a": All available information (default).
+## Parameters
 
-## Return Values
-Returns a String containing the requested system information. If no mode is provided, it defaults to returning all information in a single string.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **mode** | String | No | A single character selecting the category of information to return. Omit or pass any unrecognized value to receive all categories combined. |
+
+**mode values:**
+
+| Value | Returns |
+|---|---|
+| `"s"` | Operating system name (e.g., `"windows"`, `"linux"`, `"darwin"`). |
+| `"n"` | Hostname of the machine. |
+| `"v"` | Go runtime version (e.g., `"go1.22.0"`). |
+| `"m"` | Machine architecture (e.g., `"amd64"`, `"arm64"`). |
+| `"a"` or omitted | All categories combined in a single string. |
+
+## Return Value
+
+- **String**: The requested system information. Returns all categories combined when `mode` is omitted or unrecognized.
 
 ## Remarks
-If an invalid or empty mode is provided, the function defaults to "a".
 
-## Code Example
+- Any unrecognized or empty mode value defaults to `"a"` (all information).
+- Method names are case-insensitive.
+
+## Example
+
 ```asp
 <%
 Option Explicit
-Dim obj
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
+Dim ax
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-Response.Write "OS: " & obj.axsysteminfo("s") & "<br>"
-Response.Write "Host: " & obj.axsysteminfo("n") & "<br>"
-Response.Write "Architecture: " & obj.axsysteminfo("m") & "<br>"
-Response.Write "Full Info: " & obj.axsysteminfo("a")
+Response.Write "OS: " & ax.AxSystemInfo("s") & "<br>"
+Response.Write "Hostname: " & ax.AxSystemInfo("n") & "<br>"
+Response.Write "Architecture: " & ax.AxSystemInfo("m") & "<br>"
+Response.Write "Go version: " & ax.AxSystemInfo("v") & "<br>"
+Response.Write "Full info: " & ax.AxSystemInfo() & "<br>"
 
-Set obj = Nothing
+Set ax = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxSystemInfo`
+- **Arguments**: `mode` (String, optional) — `"s"`, `"n"`, `"v"`, `"m"`, or `"a"`
+- **Returns**: String — system information for the selected category

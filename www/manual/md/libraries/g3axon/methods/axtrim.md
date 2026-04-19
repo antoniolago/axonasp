@@ -1,33 +1,57 @@
-# Trim String Whitespace or Characters
+# Trim Characters from Both Ends of a String
 
 ## Overview
 
-Removes whitespace or specified characters from the beginning and end of a string.
+Removes leading and trailing characters from a string. Defaults to stripping standard whitespace.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
 
-```vbscript
-strResult = obj.axtrim(str[, chars])
+```asp
+result = obj.AxTrim(str [, chars])
 ```
 
 ## Parameters
 
-- **str** (String): The string to trim.
-- **chars** (String, Optional): Specific characters to remove. If omitted, defaults to standard whitespace characters.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| str | String | Yes | The string to trim. |
+| chars | String | Optional | A set of characters to strip from both ends. When omitted, the default set `" \t\n\r\v\f"` is used. |
 
 ## Return Value
 
-String. The trimmed string.
+- **String**: Returns `str` with all leading and trailing occurrences of any character in `chars` removed.
+- **String**: Returns an empty string when no argument is provided.
 
 ## Remarks
 
-Useful for cleaning up user input or formatted text data.
+- `chars` works as a character set, not as a literal substring — any character in `chars` is trimmed.
+- Method names are case-insensitive in VBScript dispatch.
 
-## Code Example
+## Example
 
-```vbscript
-Dim obj, strTrimmed
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
-strTrimmed = obj.axtrim("  Hello World  ")
-Response.Write strTrimmed ' Outputs: Hello World
+```asp
+<%
+Option Explicit
+Dim ax
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
+
+Response.Write ax.AxTrim("   Hello World   ")
+' Output: Hello World
+
+Response.Write ax.AxTrim("***data***", "*")
+' Output: data
+
+Set ax = Nothing
+%>
 ```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxTrim`
+- **Arguments**: `str As String [, chars As String]`
+- **Returns**: `String` (trimmed string)

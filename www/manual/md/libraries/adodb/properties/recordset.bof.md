@@ -1,39 +1,40 @@
-﻿# Recordset.BOF Property
+# Recordset.BOF Property
 
-## Overview
-
-The Recordset.BOF property is exposed by the ADODB.Connection object in AxonASP.
+Indicates whether the cursor is before the first row.
 
 ## Syntax
 
 ```asp
-value = obj.Recordset.BOF
-obj.Recordset.BOF = newValue
+flag = rs.BOF
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Boolean. Returns True when cursor is before the first row; otherwise False.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- This property is read-only.
+- Use together with EOF to detect empty rowsets.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Recordset.BOF
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+Set rs = conn.Execute("SELECT id, name FROM users")
+
+Response.Write "BOF: " & CStr(rs.BOF)
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

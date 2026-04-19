@@ -1,33 +1,31 @@
 # XMLElement.LastChild Property
 
-## Overview
-Reads or writes the LastChild property on the MSXML2 XMLElement compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.LastChild
-```
+Returns the last direct child node of this element.
 
 ## Access
-Read Only
 
-## Return Values
-Returns a Variant-compatible value.
+Read-only.
+
+## Type
+
+XMLElement or Null.
 
 ## Remarks
-- Last child node.
-- Property names are case-insensitive.
+
+- Returns Null if the element has no children.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.LastChild)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML, oRoot, oLast
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+oXML.LoadXML "<root><a>First</a><b>Second</b></root>"
+Set oRoot = oXML.DocumentElement
+Set oLast = oRoot.LastChild
+If Not IsNull(oLast) Then
+    Response.Write oLast.Text
+End If
+Set oXML = Nothing
 %>
 ```

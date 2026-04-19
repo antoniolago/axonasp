@@ -1,44 +1,42 @@
-# Add Method
+# Add a Dictionary Entry
 
 ## Overview
-
-The Add method is exposed by the Scripting.Dictionary library object. Use it to execute this library operation from Classic ASP/VBScript with AxonASP runtime behavior.
+Use Add to insert a new key-value pair into the dictionary.
 
 ## Syntax
 
 ```asp
-result = obj.Add(...)
-`````
+dict.Add key, value
+```
 
-## Parameters and Arguments
+## Parameters
+- key (Variant, required): Entry key.
+- value (Variant, required): Entry value.
 
-- Parameters (Variant, Optional): This method accepts arguments according to the runtime dispatch of the Scripting.Dictionary object.
-- Argument validation: invalid count or type raises runtime errors.
+## Return Value
+Returns Empty.
 
-## Return Values
-
-Returns a Variant result. Depending on the operation, this can be String, Boolean, Number, Array, Dictionary/object handle, or Empty.
+## How It Works
+- Add inserts the key and value at the end of insertion order.
+- If the key already exists, Add raises an error and does not overwrite the value.
 
 ## Remarks
+- Add requires exactly two arguments.
+- Member names are case-insensitive.
 
-- Method names are case-insensitive.
-- Prefer explicit variable assignment and defensive checks before using returned values.
-- For object values, use Set when assigning the return value.
-
-## Code Example
+## Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("Scripting.Dictionary")
-result = obj.Add()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+
+Dim dict
+Set dict = Server.CreateObject("Scripting.Dictionary")
+
+dict.Add "Language", "VBScript"
+Response.Write dict.Item("Language")
+
+Set dict = Nothing
 %>
-`````
+```
 

@@ -1,41 +1,46 @@
-﻿# Recordset.Resync Method
+# Recordset.Resync Method
 
-## Overview
-
-The Recordset.Resync method is exposed by the ADODB.Connection object in AxonASP.
+Refreshes the current row values from the data source.
 
 ## Syntax
 
 ```asp
-result = obj.Recordset.Resync(...)
+rs.Resync
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+No parameters.
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Empty. The method does not return a value.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- In the current G3Pix AxonASP ADODB implementation, this method is a compatibility no-op.
+- Use it to keep compatibility with legacy scripts that call Resync.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Recordset.Resync()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
-End If
-Set obj = Nothing
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.Execute("SELECT id, name FROM users")
+rs.Resync
+
+Response.Write "Resync executed"
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

@@ -1,39 +1,42 @@
-﻿# Fields.Item Property
+# Fields.Item Property
 
-## Overview
-
-The Fields.Item property is exposed by the ADODB.Connection object in AxonASP.
+Returns a field object from the Fields collection by index or name.
 
 ## Syntax
 
 ```asp
-value = obj.Fields.Item
-obj.Fields.Item = newValue
+Set fld = rs.Fields.Item(indexOrName)
 ```
-## Parameters and Arguments
 
-- Getter: No arguments.
-- Setter (when supported): One Variant value.
+## Return Value
 
-## Return Values
-
-Returns the current property value as Variant. Read-only members reject assignments.
+Object. Returns an ADODB.Field object.
 
 ## Remarks
 
 - Property names are case-insensitive.
-- Setters are validated by runtime dispatch and can raise runtime errors.
-- For object-typed values, assign with Set.
+- Invalid references raise runtime errors.
+- Prefer names for readability and indexes for loops.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, value
-Set obj = Server.CreateObject("ADODB.Connection")
-value = obj.Fields.Item
-Response.Write CStr(value)
-Set obj = Nothing
+Dim conn, rs, fld
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+Set rs = conn.Execute("SELECT id, name FROM users")
+
+Set fld = rs.Fields.Item("name")
+Response.Write fld.Value
+
+rs.Close
+conn.Close
+Set fld = Nothing
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

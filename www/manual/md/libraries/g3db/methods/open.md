@@ -1,52 +1,58 @@
-# Open Method
+# Open a Database Connection
 
 ## Overview
 
-The **Open** method establishes a connection to a database using the specified driver and Data Source Name (DSN) in G3Pix AxonASP.
+Opens a database connection pool and validates connectivity with an internal ping.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3DB")`.
 
 ## Syntax
 
 ```asp
-result = obj.Open(driver, dsn)
+ok = db.Open(driver, dsn)
 ```
 
-## Parameters and Arguments
+## Parameters
 
-- **driver** (String, Required): The name of the database driver. Supported values include "mysql", "postgres", "mssql", "sqlite", and "oracle".
-- **dsn** (String, Required): The driver-specific connection string containing credentials, host, and database name.
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| **driver** | String | Yes | Database driver name. |
+| **dsn** | String | Yes | Driver-specific connection string. |
 
-## Return Values
+## Return Value
 
-Returns a **Boolean** value. It returns **True** if the connection was established and verified successfully, and **False** if the connection failed or if a connection is already open.
+- **Boolean `True`**: Connection opened and ping validation succeeded.
+- **Boolean `False`**: Arguments are missing, driver is unsupported, connection is already open, or open/ping failed.
 
 ## Remarks
 
-- The method performs an internal 5-second ping to verify the database availability before returning.
-- If the connection fails, the error message can be retrieved using the **LastError** property or **GetError** method.
-- Supported driver aliases:
-    - MySQL: "mysql", "mariadb"
-    - PostgreSQL: "postgres", "postgresql", "pgsql"
-    - MS SQL Server: "mssql", "sqlserver"
-    - SQLite: "sqlite", "sqlite3"
-    - Oracle: "oracle", "ora", "oci"
+- Driver names are normalized before opening.
+- On failure, error details are available in `LastError`.
 
-## Code Example
+## Example
 
 ```asp
 <%
-Dim db, isConnected
+Option Explicit
+Dim db, ok
 Set db = Server.CreateObject("G3DB")
 
-' Example for MySQL
-isConnected = db.Open("mysql", "user:password@tcp(127.0.0.1:3306)/my_database")
-
-If isConnected Then
-    Response.Write "Database connected successfully."
+ok = db.Open("mysql", "user:pass@tcp(127.0.0.1:3306)/app")
+If ok Then
     db.Close
 Else
-    Response.Write "Connection failed: " & db.LastError
+    Response.Write db.LastError
 End If
 
 Set db = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3DB`
+- **Method**: `Open`
+- **Arguments**: `driver` (String, required), `dsn` (String, required)
+- **Returns**: Boolean — `True` on success, `False` on failure

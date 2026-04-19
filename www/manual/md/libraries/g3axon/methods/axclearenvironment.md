@@ -1,36 +1,53 @@
-# axclearenvironment
+# Clear All Environment Variables
 
 ## Overview
-Removes all environment variables from the current G3Pix AxonASP process environment.
+
+Removes all environment variables from the current AxonASP process environment.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3AXON.FUNCTIONS")`.
 
 ## Syntax
+
 ```asp
-result = obj.axclearenvironment()
+result = obj.AxClearEnvironment()
 ```
 
-## Parameters and Arguments
-None.
+## Parameters
 
-## Return Values
-Returns a Boolean (True) indicating that the environment has been cleared.
+This method does not require parameters.
+
+## Return Value
+
+- **Boolean**: Always returns `True` after execution.
 
 ## Remarks
-This operation is destructive and affects the current process only. Use this function with extreme care as it may cause system utilities or other libraries to fail if they depend on specific environment variables.
 
-## Code Example
+- This is a destructive, process-wide operation. All inherited and set environment variables are removed.
+- Use with extreme care because system utilities and libraries may fail if they depend on specific environment variables.
+- Method names are case-insensitive in VBScript dispatch.
+
+## Example
+
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("G3AXON.FUNCTIONS")
+Dim ax
+Set ax = Server.CreateObject("G3AXON.FUNCTIONS")
 
-' Caution: This will remove ALL environment variables for the current process
-result = obj.axclearenvironment()
+' WARNING: Clears ALL environment variables from the process
+ax.AxClearEnvironment()
+Response.Write "Environment cleared."
 
-If result Then
-    Response.Write "Environment variables have been cleared."
-End If
-
-Set obj = Nothing
+Set ax = Nothing
 %>
+```
+
+## API Reference
+
+- **Object**: `G3AXON.FUNCTIONS`
+- **Method**: `AxClearEnvironment`
+- **Arguments**: none
+- **Returns**: `Boolean` (always `True`)
 ```

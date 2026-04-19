@@ -1,26 +1,51 @@
-# UUID Method
+# Generate a UUID v4
 
 ## Overview
-Generates a cryptographically secure, version 4 Universally Unique Identifier (UUID).
+
+Generates one RFC 4122 version 4 UUID string.
+
+## Prerequisites
+
+Instantiate the library with `Server.CreateObject("G3CRYPTO")`.
 
 ## Syntax
+
 ```asp
 result = crypto.UUID()
 ```
 
-## Return Values
-Returns a **String** containing a randomly generated UUID in the standard 8-4-4-4-12 format (e.g., `550e8400-e29b-41d4-a716-446655440000`).
+## Parameters
+
+This method does not accept any parameters.
+
+## Return Value
+
+- **String**: UUID string in the `8-4-4-4-12` format, using lowercase hexadecimal characters.
+- **String (empty)**: Returned when cryptographic random generation fails.
 
 ## Remarks
-The UUID method uses a cryptographically secure random number generator (CSPRNG) to ensure high entropy and prevent collisions. It is ideal for unique identifiers, session keys, and database primary keys.
 
-## Code Example
+- Use this method for unique identifiers where randomness and uniqueness are required.
+- Method names are case-insensitive.
+
+## Example
+
 ```asp
 <%
-Dim crypto, newID
+Option Explicit
+Dim crypto, id
 Set crypto = Server.CreateObject("G3CRYPTO")
-newID = crypto.UUID()
-Response.Write "New UUID: " & newID
+
+id = crypto.UUID()
+Response.Write id
+
 Set crypto = Nothing
 %>
 ```
+
+## API Reference
+
+- **Object**: `G3CRYPTO`
+- **Method**: `UUID`
+- **Arguments**: None
+- **Returns**: String — UUID v4 text, or empty string on random-source failure

@@ -1,41 +1,47 @@
-﻿# Recordset.Delete Method
+# Recordset.Delete Method
 
-## Overview
-
-The Recordset.Delete method is exposed by the ADODB.Connection object in AxonASP.
+Deletes the current row from the recordset and data source.
 
 ## Syntax
 
 ```asp
-result = obj.Recordset.Delete(...)
+rs.Delete
 ```
-## Parameters and Arguments
 
-- Parameters (Variant, Optional): Accepted arguments depend on runtime dispatch for this object.
-- Argument validation: Invalid argument count or types raise runtime errors.
+## Parameters
 
-## Return Values
+No parameters.
 
-Returns a Variant result. Depending on operation, this can be String, Boolean, Number, Array, object handle, or Empty.
+## Return Value
+
+Empty. The method does not return a value.
 
 ## Remarks
 
 - Method names are case-insensitive.
-- Use Set for object return values.
+- Deletion applies to the current row position.
+- Move to the next valid row after deletion when iterating.
 
 ## Code Example
 
 ```asp
 <%
 Option Explicit
-Dim obj, result
-Set obj = Server.CreateObject("ADODB.Connection")
-result = obj.Recordset.Delete()
-If IsObject(result) Then
-    Response.Write "Object returned"
-Else
-    Response.Write CStr(result)
+Dim conn, rs
+
+Set conn = Server.CreateObject("ADODB.Connection")
+conn.ConnectionString = "Driver={SQLite3};Data Source=" & Server.MapPath("./db.sqlite")
+conn.Open
+
+Set rs = conn.Execute("SELECT * FROM users WHERE id = 1")
+If Not rs.EOF Then
+    rs.Delete
+    Response.Write "Row deleted"
 End If
-Set obj = Nothing
+
+rs.Close
+conn.Close
+Set rs = Nothing
+Set conn = Nothing
 %>
 ```

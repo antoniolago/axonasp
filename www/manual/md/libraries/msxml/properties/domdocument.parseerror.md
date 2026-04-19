@@ -1,33 +1,31 @@
 # DOMDocument.ParseError Property
 
-## Overview
-Reads or writes the ParseError property on the MSXML2 DOMDocument compatibility object.
-
-## Syntax
-```asp
-Dim obj, value
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-value = obj.ParseError
-```
+Returns the ParseError object that describes the outcome of the last `LoadXML` or `Load` call.
 
 ## Access
-Read Only
 
-## Return Values
-Returns a Variant-compatible value.
+Read-only.
+
+## Type
+
+ParseError object.
 
 ## Remarks
-- ParseError object from latest parse/load operation.
-- Property names are case-insensitive.
+
+- This property always returns a ParseError object, even when parsing succeeded.
+- After a successful parse, `ParseError.ErrorCode` is 0.
+- After a failed parse, `ParseError` is populated with the error details, including `Reason`, `Line`, `LinePos`, and `SrcText`.
 
 ## Code Example
+
 ```asp
 <%
-Dim obj
-Set obj = Server.CreateObject("MSXML2.DOMDocument")
-On Error Resume Next
-Response.Write CStr(obj.ParseError)
-On Error GoTo 0
-Set obj = Nothing
+Dim oXML
+Set oXML = Server.CreateObject("MSXML2.DOMDocument")
+If Not oXML.LoadXML("<root><unclosed>") Then
+    Response.Write "Error " & oXML.ParseError.ErrorCode & ": " & oXML.ParseError.Reason
+    Response.Write " (Line " & oXML.ParseError.Line & ", Col " & oXML.ParseError.LinePos & ")"
+End If
+Set oXML = Nothing
 %>
 ```
