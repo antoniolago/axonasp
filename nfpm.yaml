@@ -1,0 +1,42 @@
+# nfpm.yaml
+name: "axonasp"
+arch: "amd64"
+platform: "linux"
+version: "${VERSION}" # Injected by GitHub Actions
+section: "web"
+priority: "extra"
+maintainer: "G3pix Ltda <axonasp@g3pix.com.br>"
+description: "AxonASP Server - ASP Classic web server written in Go with Proxy, FastCGI, CLI, TestSuite and MCP support. Small, fast and secure alternative to IIS for hosting legacy ASP applications on modern platforms."
+vendor: "G3pix Ltda"
+homepage: "https://g3pix.com.br/axonasp"
+license: "MPL-2.0"
+
+contents:
+  # Binaries
+  - src: ./axonasp-http
+    dst: /opt/axonasp/axonasp-http
+  - src: ./axonasp-fastcgi
+    dst: /opt/axonasp/axonasp-fastcgi
+  - src: ./axonasp-cli
+    dst: /opt/axonasp/axonasp-cli
+  - src: ./axonasp-mcp
+    dst: /opt/axonasp/axonasp-mcp
+  - src: ./axonasp-testsuite
+    dst: /opt/axonasp/axonasp-testsuite
+
+  # Standalone files
+  - src: ./LICENSE.txt
+    dst: /opt/axonasp/LICENSE.txt
+  - src: ./global.asa
+    dst: /opt/axonasp/global.asa
+
+  # Directories
+  - src: ./www/
+    dst: /opt/axonasp/www/
+    type: tree
+  - src: ./config/
+    dst: /opt/axonasp/config/
+    type: tree
+  - src: ./mcp/
+    dst: /opt/axonasp/mcp/
+    type: tree

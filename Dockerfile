@@ -25,6 +25,8 @@ FROM golang:1.26-alpine AS builder
 
 ARG TARGETOS=linux
 ARG TARGETARCH=amd64
+# Allows CI to pass the version string directly via --build-arg VERSION=...
+ARG VERSION 
 
 WORKDIR /build
 
@@ -38,53 +40,50 @@ RUN go mod download
 # Copy source tree
 COPY . .
 
-# Extract version from Git and build all binaries
-# Defaulting to 2.0.0.0 if git commands fail (e.g., if not built from a git clone)
-RUN PATCH=$(git rev-list --count HEAD 2>/dev/null || echo "0") && \
-    REVISION=$(git rev-parse --short HEAD 2>/dev/null || echo "0") && \
-    FULL_VERSION="2.0.${PATCH}.${REVISION}" && \
-    echo "Building with version: ${FULL_VERSION}" && \
-    CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -trimpath -ldflags "-s -w -X main.Version=${FULL_VERSION}" -o axonasp-http ./server && \
-    CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -trimpath -ldflags "-s -w -X main.Version=${FULL_VERSION}" -o axonasp-fastcgi ./fastcgi && \
-    CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -trimpath -ldflags "-s -w -X main.Version=${FULL_VERSION}" -o axonasp-cli ./cli && \
-    CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -trimpath -ldflags "-s -w -X main.Version=${FULL_VERSION}" -o axonasp-mcp ./mcp && \
-    CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -trimpath -ldflags "-s -w -X main.Version=${FULL_VERSION}" -o axonasp-testsuite ./testsuite
+# Extract version from Git if not provided via ARG, and build all binaries
+RUN if [ -z "$VERSION" ]; then \
+    PATCH=$(git rev-list --count HEAD 2>/dev/null || echo "0"); \
+    REVISION=$(git rev-parse --short HEAD 2>/dev/null || echo "0"); \
+    VERSION="2.0.${PATCH}.${REVISION}"; \
+    fi && \
+    echo "Building with version: ${VERSION}" && \
+    CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -trimpath -ldflags "-s -w -X main.Version=${VERSION}" -o axonasp-http ./server && \
+    CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -trimpath -ldflags "-s -w -X main.Version=${VERSION}" -o axonasp-fastcgi ./fastcgi && \
+    CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -trimpath -ldflags "-s -w -X main.Version=${VERSION}" -o axonasp-cli ./cli && \
+    CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -trimpath -ldflags "-s -w -X main.Version=${VERSION}" -o axonasp-mcp ./mcp && \
+    CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -trimpath -ldflags "-s -w -X main.Version=${VERSION}" -o axonasp-testsuite ./testsuite
 
 # ─── Stage 2: Runtime ─────────────────────────────────────────────────────────
 FROM alpine:3.21
 
 LABEL org.opencontainers.image.title="AxonASP Server"
-LABEL org.opencontainers.image.description="G3pix AxonASP - ASP Classic / VBScript web server written in Go"
+LABEL org.opencontainers.image.description="AxonASP Server - ASP Classic web server written in Go with Proxy, FastCGI, CLI, TestSuite and MCP support. Small, fast and secure alternative to IIS for hosting legacy ASP applications on modern platforms."
 LABEL org.opencontainers.image.url="https://g3pix.com.br/axonasp"
 LABEL org.opencontainers.image.source="https://github.com/guimaraeslucas/axonasp"
 LABEL org.opencontainers.image.licenses="MPL-2.0"
 
-# CA certificates for HTTPS outbound calls and tzdata for timezone support
+# Combine package installation and user creation to reduce layers
 RUN apk add --no-cache ca-certificates tzdata && \
-    update-ca-certificates
+    update-ca-certificates && \
+    addgroup -S axonasp && adduser -S axonasp -G axonasp
 
-WORKDIR /app
+WORKDIR /opt/axonasp
 
-# Copy all compiled binaries
-COPY --from=builder /build/axonasp-http ./axonasp-http
-COPY --from=builder /build/axonasp-fastcgi ./axonasp-fastcgi
-COPY --from=builder /build/axonasp-cli ./axonasp-cli
-COPY --from=builder /build/axonasp-mcp ./axonasp-mcp
-COPY --from=builder /build/axonasp-testsuite ./axonasp-testsuite
-# Copy runtime-required assets
-COPY --from=builder /build/config/ ./config
-COPY --from=builder /build/www        ./www
-COPY --from=builder /build/mcp        ./mcp
-COPY --from=builder /build/LICENSE.txt   ./LICENSE.txt
-# For CLI tools, global.asa is required to be in the same directory as the binary
-COPY --from=builder /build/global.asa   ./global.asa
+# Copy binaries and assets directly with the correct ownership
+COPY --from=builder --chown=axonasp:axonasp /build/axonasp-http ./axonasp-http
+COPY --from=builder --chown=axonasp:axonasp /build/axonasp-fastcgi ./axonasp-fastcgi
+COPY --from=builder --chown=axonasp:axonasp /build/axonasp-cli ./axonasp-cli
+COPY --from=builder --chown=axonasp:axonasp /build/axonasp-mcp ./axonasp-mcp
+COPY --from=builder --chown=axonasp:axonasp /build/axonasp-testsuite ./axonasp-testsuite
+
+COPY --from=builder --chown=axonasp:axonasp /build/config/ ./config/
+COPY --from=builder --chown=axonasp:axonasp /build/www/ ./www/
+COPY --from=builder --chown=axonasp:axonasp /build/mcp/ ./mcp/
+COPY --from=builder --chown=axonasp:axonasp /build/LICENSE.txt ./LICENSE.txt
+COPY --from=builder --chown=axonasp:axonasp /build/global.asa ./global.asa
 
 # Create required runtime directories
-RUN mkdir -p temp/
-
-# Create a non-root user for security
-RUN addgroup -S axonasp && adduser -S axonasp -G axonasp && \
-    chown -R axonasp:axonasp /app
+RUN mkdir -p temp/ && chown axonasp:axonasp temp/
 
 USER axonasp
 
